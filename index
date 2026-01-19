@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>備蓄プラン提案 | Rolling Stock App</title>
+    <!-- Tailwind CSS (CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        slate: {
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            200: '#e2e8f0',
+                            300: '#cbd5e1',
+                            400: '#94a3b8',
+                            500: '#64748b',
+                            600: '#475569',
+                            700: '#334155',
+                            800: '#1e293b',
+                            900: '#0f172a',
+                        },
+                        teal: {
+                            50: '#f0fdfa',
+                            700: '#0f766e',
+                        }
+                    },
+                    gridTemplateAreas: {
+                        'layout': [
+                            'conditions conditions',
+                            'plan chat',
+                        ],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom Utilities not covered by basic Tailwind */
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-5px);
+                height: 0;
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+                height: auto;
+            }
+        }
+
+        .animate-slide-down {
+            animation: slideDown 0.2s ease-out;
+        }
+    </style>
+</head>
+<!-- 
+  AI_NOTE: Body Layout
+  - Mobile: min-h-screen, overflow-y-auto (縦スクロール許可)
+  - Desktop (lg): h-screen, overflow-hidden (画面固定、内部スクロール)
+-->
+
+<body
+    class="bg-slate-100 text-slate-800 font-sans leading-relaxed min-h-screen flex flex-col lg:h-screen lg:overflow-hidden relative">
+
+    <!-- 
+      AI_NOTE: Header Component
+    -->
+    <header
+        class="bg-white border-b border-slate-300 px-6 h-[50px] flex items-center justify-between shrink-0 z-10 shadow-sm sticky top-0 lg:static">
+        <div class="flex items-center gap-3">
+            <svg class="w-6 h-6 text-teal-700" fill="currentColor" viewBox="0 0 24 24">
+                <path
+                    d="M12 2L2 7l10 5 10-5-10-5zm0 9l2.5-1.25L12 8.5l-2.5 1.25L12 11zm0 2.5l-5-2.5-5 2.5L12 22l10-8.5-5-2.5-5 2.5z" />
+            </svg>
+            <h1 class="text-lg font-bold text-slate-700 m-0">RollingStock Planner</h1>
+        </div>
+        <div id="save-status" class="text-xs flex items-center gap-1 text-slate-500">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+            </svg>
+            <span>保存済み</span>
+        </div>
+    </header>
+
+    <!-- 
+      AI_NOTE: Main Layout Container
+      - Mobile: h-auto (コンテンツ量なり), overflow-visible
+      - Desktop: h-full, overflow-hidden (Grid内でスクロール)
+    -->
+    <div
+        class="flex-1 w-full max-w-[1600px] mx-auto p-4 gap-4 flex flex-col lg:grid lg:grid-cols-[1fr_340px] lg:grid-rows-[auto_1fr] lg:grid-areas-layout lg:h-full lg:overflow-hidden">
+
+        <!-- CONDITIONS BAR (Order 1) -->
+        <section id="conditions-bar"
+            class="bg-white rounded-xl border border-slate-300 p-4 flex flex-wrap items-center gap-6 shrink-0 shadow-sm lg:col-span-2 order-1">
+            <!-- Group 1: People & Days -->
+            <div
+                class="flex flex-wrap items-center gap-4 pr-6 border-r border-slate-200 lg:border-r max-[600px]:border-r-0 max-[600px]:border-b max-[600px]:pb-4 max-[600px]:pr-0 max-[600px]:w-full max-[600px]:justify-between">
+                <div class="flex items-center gap-1">
+                    <label class="text-xs font-bold text-slate-500 whitespace-nowrap mr-1">大人</label>
+                    <input type="number" id="input-adults"
+                        class="py-1.5 px-2 border border-slate-300 rounded text-sm min-w-[60px] focus:outline-none focus:border-teal-700"
+                        value="2" min="1" onchange="updateConditions()">
+                </div>
+                <div class="flex items-center gap-1">
+                    <label class="text-xs font-bold text-slate-500 whitespace-nowrap mr-1">子供</label>
+                    <input type="number" id="input-children"
+                        class="py-1.5 px-2 border border-slate-300 rounded text-sm min-w-[60px] focus:outline-none focus:border-teal-700"
+                        value="1" min="0" onchange="updateConditions()">
+                </div>
+                <div class="flex items-center gap-1">
+                    <label class="text-xs font-bold text-slate-500 whitespace-nowrap mr-1">日数</label>
+                    <input type="number" id="input-days"
+                        class="py-1.5 px-2 border border-slate-300 rounded text-sm min-w-[60px] focus:outline-none focus:border-teal-700"
+                        value="7" min="1" onchange="updateConditions()">
+                </div>
+            </div>
+
+            <!-- Group 2: Constraints -->
+            <div class="flex-1 flex items-center gap-4 min-w-[200px]">
+                <div class="flex-1 flex items-center gap-1">
+                    <label class="text-xs font-bold text-slate-500 whitespace-nowrap mr-1">制約</label>
+                    <select id="input-constraints"
+                        class="py-1.5 px-2 border border-slate-300 rounded text-sm w-full focus:outline-none focus:border-teal-700 bg-white"
+                        onchange="updateConditions()">
+                        <option value="none">なし</option>
+                        <option value="nocook" selected>調理不可 (水・火なし)</option>
+                        <option value="allergy">アレルギー配慮</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <!-- PLAN PANEL (Order 3 on Mobile) -->
+        <section id="plan-panel"
+            class="bg-white rounded-xl border border-slate-300 flex flex-col overflow-hidden shadow-md h-[600px] lg:h-full order-3 lg:order-2 shrink-0">
+            <div class="p-4 border-b border-slate-100 font-bold flex justify-between items-center bg-white z-10">
+                <div class="flex items-center gap-2">
+                    <span>提案プラン</span>
+                </div>
+                <!-- Add Item Button -->
+                <button
+                    class="flex items-center justify-center gap-1 px-3 py-1.5 border border-slate-300 rounded-lg text-sm font-semibold hover:bg-slate-100 transition-colors"
+                    onclick="openAddItemModal()">
+                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                        <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+                    </svg>
+                    アイテム追加
+                </button>
+            </div>
+
+            <!-- Body (Scrollable) -->
+            <div class="p-4 overflow-y-auto flex-1">
+                <!-- 
+                  AI_NOTE: Stats / Nutrition Overview
+                -->
+                <div class="flex flex-wrap gap-4 bg-slate-100 p-4 rounded-lg mb-4">
+                    <div
+                        class="flex gap-6 flex-1 min-w-[200px] items-center justify-center border-r border-slate-200 max-[600px]:border-r-0 max-[600px]:border-b max-[600px]:pb-4 max-[600px]:pr-0">
+                        <div class="text-center">
+                            <div class="text-xl font-bold text-slate-700" id="total-days-display">--</div>
+                            <div class="text-[0.65rem] text-slate-500 uppercase">備蓄日数</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-xl font-bold text-slate-700" id="total-weight-display">--kg</div>
+                            <div class="text-[0.65rem] text-slate-500 uppercase">推定重量</div>
+                        </div>
+                    </div>
+                    <div class="flex-[2] min-w-[250px] flex flex-col gap-2 justify-center">
+                        <div class="text-[0.7rem] text-slate-500 font-bold mb-1">
+                            1日あたりの目安（平均）
+                        </div>
+                        <!-- Calories -->
+                        <div class="flex items-center gap-2 text-xs">
+                            <div class="w-[60px] text-slate-500 font-bold">Calorie</div>
+                            <div class="flex-1 h-2 bg-slate-200 rounded-full overflow-hidden">
+                                <div id="bar-cal" class="h-full bg-teal-700 transition-all duration-500"
+                                    style="width: 0%;"></div>
+                            </div>
+                            <div id="val-cal" class="w-[100px] text-right tabular-nums text-[0.8rem]">-- / -- kcal</div>
+                        </div>
+                        <!-- Water -->
+                        <div class="flex items-center gap-2 text-xs">
+                            <div class="w-[60px] text-slate-500 font-bold">Water</div>
+                            <div class="flex-1 h-2 bg-slate-200 rounded-full overflow-hidden">
+                                <div id="bar-water" class="h-full bg-blue-500 transition-all duration-500"
+                                    style="width: 0%;"></div>
+                            </div>
+                            <div id="val-water" class="w-[100px] text-right tabular-nums text-[0.8rem]">-- / -- L</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- View Toolbar (List/Card Toggle) -->
+                <div class="flex justify-between items-center pb-4 border-b border-slate-300 mb-4">
+                    <div class="flex bg-slate-100 p-0.5 rounded-lg">
+                        <button
+                            class="px-3 py-1 rounded text-xs cursor-pointer border-none bg-white text-slate-700 font-bold shadow-sm transition-all"
+                            id="btn-view-list" onclick="switchView('list')">
+                            <svg class="w-4 h-4 inline align-middle mr-1" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z" />
+                            </svg>
+                            リスト
+                        </button>
+                        <button
+                            class="px-3 py-1 rounded text-xs cursor-pointer border-none bg-transparent text-slate-500 hover:text-slate-700 transition-all"
+                            id="btn-view-card" onclick="switchView('card')">
+                            <svg class="w-4 h-4 inline align-middle mr-1" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M4 8h4V4H4v4zm6 12h4v-4h-4v4zm-6 0h4v-4H4v4zm0-6h4v-4H4v4zm6 0h4v-4h-4v4zm6-10v4h4V4h-4zm-6 4h4V4h-4zm6 6h4v-4h-4v4zm0 6h4v-4h-4v4z" />
+                            </svg>
+                            カード
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Items Container -->
+                <div id="items-container" class="flex flex-col">
+                    <!-- JS Injected Content -->
+                </div>
+            </div>
+
+            <!-- Footer (Fixed Toolbar) -->
+            <div class="p-4 border-t border-slate-300 bg-white flex justify-end gap-4 z-10 sticky bottom-0">
+                <button
+                    class="flex items-center justify-center gap-2 px-4 py-2 border border-slate-300 bg-white text-slate-800 rounded-lg font-bold text-sm hover:bg-slate-50 transition-colors"
+                    onclick="autoAdjust()">
+                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                        <path
+                            d="M7.5 5.6L10 7 8.6 4.5 10 2 7.5 3.4 5 2l1.4 2.5L5 7zm12 9.8L17 14l1.4 2.5L17 19l2.5-1.4L22 19l-1.4-2.5L22 14zM22 2l-2.5 1.4L17 2l1.4 2.5L17 7l2.5-1.4L22 7l-1.4-2.5zm-8.8 9.3c.3-.5.5-1.1.5-1.8 0-1.9-1.6-3.5-3.5-3.5S6.7 7.6 6.7 9.5s1.6 3.5 3.5 3.5c.6 0 1.3-.2 1.8-.5l7.3 7.3 1.4-1.4-7.5-7.1z" />
+                    </svg>
+                    自動調整
+                </button>
+                <button
+                    class="flex items-center justify-center gap-2 px-4 py-2 bg-teal-700 text-white rounded-lg font-bold text-sm hover:opacity-90 transition-opacity shadow-md"
+                    onclick="confirmPlan()">
+                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                        <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z" />
+                    </svg>
+                    確定する
+                </button>
+            </div>
+        </section>
+
+        <!-- CHAT PANEL (Order 2 on Mobile) -->
+        <!-- 
+            AI_NOTE: Chat Panel Layout
+            - Mobile: Order 2. Collapsed by default.
+            - `shrink-0`: 潰れ防止
+            - `group`: 親クラスの状態(.is-open)を子要素で検知するため
+        -->
+        <aside id="side-panel"
+            class="bg-white rounded-xl border border-slate-300 flex flex-col overflow-hidden shadow-md order-2 lg:order-3 shrink-0 transition-all duration-300 group h-auto lg:h-full">
+            <div class="p-4 border-b border-slate-100 font-bold flex justify-between items-center bg-white cursor-pointer lg:cursor-default hover:bg-slate-50 lg:hover:bg-white"
+                onclick="toggleChatMobile(event)">
+                <div class="flex items-center gap-2">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z" />
+                    </svg>
+                    <span>AIアシスタント</span>
+                </div>
+                <div class="flex items-center gap-2 lg:hidden">
+                    <span class="text-xs font-normal text-slate-400">(クリックで開閉)</span>
+                    <svg id="chat-toggle-icon" class="w-5 h-5 transition-transform duration-200" fill="currentColor"
+                        viewBox="0 0 24 24">
+                        <path d="M7 10l5 5 5-5z" />
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Chat Body (Collapsible on Mobile) -->
+            <!-- 
+                AI_NOTE: Mobile Height Fix
+                - `min-h-[250px]`: モバイルで開いた時の高さを調整。3つ分の吹き出しが見える程度。
+                - `max-h-[40vh]`: 画面を占有しすぎないように制限。
+                - `hidden`: デフォルトで隠す
+                - `group-[.is-open]:flex`: 親に .is-open がついたら表示
+            -->
+            <div
+                class="flex-1 flex-col w-full hidden lg:flex group-[.is-open]:flex group-[.is-open]:min-h-[250px] group-[.is-open]:max-h-[40vh] lg:min-h-0 lg:max-h-full border-t border-slate-100 lg:border-t-0 overflow-hidden">
+                <div class="flex-1 overflow-y-auto p-2 flex flex-col gap-4 bg-slate-50" id="chat-messages">
+                    <div
+                        class="max-w-[90%] p-3 rounded-lg text-sm bg-white text-slate-800 border border-slate-200 self-start rounded-bl-none shadow-sm">
+                        条件を変更するか、ここで要望を伝えてください。<br>
+                        「子供が多いのでお菓子を増やして」など。
+                    </div>
+                </div>
+                <div class="p-2 border-t border-slate-300 flex gap-2 bg-white" onclick="event.stopPropagation()">
+                    <input type="text"
+                        class="flex-1 p-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:border-teal-700"
+                        id="chat-input" placeholder="要望を入力..." onkeypress="if(event.key==='Enter') sendChat()">
+                    <button
+                        class="p-2 bg-slate-700 text-white rounded-md hover:bg-slate-800 transition-colors w-9 h-9 flex items-center justify-center"
+                        onclick="sendChat()">
+                        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+    </div>
+
+    <!-- 
+      AI_NOTE: Add Item Modal
+      - Fixed positioning overlay
+      - Hidden by default
+    -->
+    <div id="add-item-modal"
+        class="fixed inset-0 bg-slate-900/50 z-50 hidden items-center justify-center backdrop-blur-sm p-4">
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden animate-fade-in">
+            <div class="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                <h3 class="font-bold text-slate-700">アイテムを追加</h3>
+                <button onclick="closeAddItemModal()" class="text-slate-400 hover:text-slate-600 transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                        </path>
+                    </svg>
+                </button>
+            </div>
+            <div class="p-4 flex flex-col gap-4">
+                <!-- Name -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 mb-1">項目名 <span
+                            class="text-red-500">*</span></label>
+                    <input type="text" id="add-name"
+                        class="w-full p-2 border border-slate-300 rounded text-sm focus:outline-none focus:border-teal-700"
+                        placeholder="例: カップ麺">
+                </div>
+
+                <div class="flex gap-4">
+                    <!-- Count -->
+                    <div class="flex-1">
+                        <label class="block text-xs font-bold text-slate-500 mb-1">個数</label>
+                        <input type="number" id="add-count"
+                            class="w-full p-2 border border-slate-300 rounded text-sm focus:outline-none focus:border-teal-700"
+                            value="1" min="1">
+                    </div>
+                    <!-- Unit -->
+                    <div class="w-1/3">
+                        <label class="block text-xs font-bold text-slate-500 mb-1">単位</label>
+                        <select id="add-unit"
+                            class="w-full p-2 border border-slate-300 rounded text-sm focus:outline-none focus:border-teal-700 bg-white">
+                            <option value="個">個</option>
+                            <option value="本">本</option>
+                            <option value="箱">箱</option>
+                            <option value="缶">缶</option>
+                            <option value="食">食</option>
+                            <option value="袋">袋</option>
+                            <option value="パック">パック</option>
+                            <option value="L">L</option>
+                            <option value="kg">kg</option>
+                            <option value="セット">セット</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Category -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 mb-1">カテゴリ</label>
+                    <select id="add-category"
+                        class="w-full p-2 border border-slate-300 rounded text-sm focus:outline-none focus:border-teal-700 bg-white">
+                        <option value="staple">主食 (ご飯・パン・麺)</option>
+                        <option value="main">主菜 (おかず・肉魚)</option>
+                        <option value="side">副菜 (野菜・スープ)</option>
+                        <option value="water">水・飲料</option>
+                        <option value="snack">果物・嗜好品</option>
+                        <option value="other" selected>その他 (日用品など)</option>
+                    </select>
+                </div>
+
+                <!-- Description -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 mb-1">説明・メモ</label>
+                    <textarea id="add-desc"
+                        class="w-full p-2 border border-slate-300 rounded text-sm focus:outline-none focus:border-teal-700 h-20 resize-none"
+                        placeholder="例: 賞味期限が短いので注意"></textarea>
+                </div>
+            </div>
+            <div class="p-4 border-t border-slate-100 flex justify-end gap-2 bg-slate-50">
+                <button onclick="closeAddItemModal()"
+                    class="px-4 py-2 text-sm text-slate-600 font-bold hover:bg-slate-200 rounded-lg transition-colors">キャンセル</button>
+                <button onclick="addItem()"
+                    class="px-4 py-2 text-sm text-white bg-teal-700 font-bold hover:bg-teal-800 rounded-lg shadow transition-colors">追加する</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // =========================================
+        // DATA & STATE
+        // =========================================
+
+        /* * AI_NOTE: データ構造について
+         * 現在はlocalStorageを使用した簡易的な永続化を行っています。
+         * 本番環境（React）では、以下のように状態管理を行ってください。
+         * 1. ユーザー設定（household, constraints）はContextまたはRedux/Zustand等でグローバル管理。
+         * 2. アイテムデータ（items）は 'src/data/itemCatalog.ts' などのマスターデータと照合し、
+         * 'PantryPlan' 型として管理することを想定しています。
+         * 3. 'recommended' 値は、householdの変更をトリガーに動的に再計算されるべき値です（DB保存不要な場合も）。
+         */
+        const initialState = {
+            household: { adults: 2, children: 1, days: 7 },
+            constraints: { noCook: true, allergy: "none" },
+            // Extended Items Data for Nutrition Demo
+            /* * AI_NOTE: アイテムデータについて
+             * ここにある 'cal', 'water', 'desc' はデモ用の仮データです。
+             * 実際には ItemCatalog (DB/API) からこれらのメタデータを取得してください。
+             * カテゴリ分けやタグ付けも、より詳細なロジックが必要です。
+             */
+            items: [
+                { id: 1, name: "保存水 (2L)", category: "water", count: 12, recommended: 12, unit: "本", cal: 0, water: 2000, desc: "5年保存可能。飲料・調理用。" },
+                { id: 2, name: "アルファ米 (五目)", category: "main", count: 10, recommended: 10, unit: "食", cal: 360, water: 0, desc: "お湯または水で戻せるご飯。" },
+                { id: 3, name: "レトルトカレー", category: "main", count: 5, recommended: 6, unit: "袋", cal: 200, water: 0, desc: "温めずにおいしいタイプ推奨。" },
+                { id: 4, name: "缶詰パン", category: "main", count: 6, recommended: 6, unit: "缶", cal: 350, water: 0, desc: "開けてすぐ食べられる。しっとり食感。" },
+                { id: 5, name: "魚の缶詰", category: "main", count: 8, recommended: 8, unit: "缶", cal: 180, water: 0, desc: "DHA/EPAが豊富。汁ごと使える。" },
+                { id: 6, name: "野菜ジュース", category: "other", count: 7, recommended: 7, unit: "本", cal: 80, water: 200, desc: "ビタミン補給。長期保存缶。" },
+                { id: 7, name: "ビスケット/お菓子", category: "other", count: 3, recommended: 5, unit: "箱", cal: 400, water: 0, desc: "高カロリーでエネルギー補給。" },
+                { id: 8, name: "簡易トイレ", category: "other", count: 30, recommended: 35, unit: "回", cal: 0, water: 0, desc: "凝固剤と汚物袋のセット。" },
+                { id: 9, name: "ボディシート", category: "other", count: 2, recommended: 2, unit: "パック", cal: 0, water: 0, desc: "大判タイプ推奨。" },
+                { id: 10, name: "カセットボンベ", category: "other", count: 0, recommended: 6, unit: "本", cal: 0, water: 0, desc: "カセットコンロ用。" }
+            ],
+            lastSaved: "Unsaved"
+        };
+
+        let state = JSON.parse(localStorage.getItem('stockpileStateV5')) || initialState;
+        let currentView = 'list'; // 'list' or 'card'
+
+        // Sync inputs with state
+        document.getElementById('input-adults').value = state.household.adults;
+        document.getElementById('input-children').value = state.household.children;
+        document.getElementById('input-days').value = state.household.days;
+        if (state.constraints.noCook) document.getElementById('input-constraints').value = "nocook";
+
+        // =========================================
+        // LOGIC
+        // =========================================
+
+        function updateConditions() {
+            state.household.adults = parseInt(document.getElementById('input-adults').value);
+            state.household.children = parseInt(document.getElementById('input-children').value);
+            state.household.days = parseInt(document.getElementById('input-days').value);
+
+            const constraintVal = document.getElementById('input-constraints').value;
+            state.constraints.noCook = constraintVal === "nocook";
+            state.constraints.allergy = constraintVal === "allergy" ? "yes" : "none";
+
+            /* * AI_NOTE: ロジックの依存関係
+             * 条件変更時、recalculateRecommended() を呼んでいますが、
+             * Reactでは useEffect(() => { recalculate() }, [household]) のように
+             * 依存配列を用いてリアクティブに推奨値を更新してください。
+             */
+            recalculateRecommended();
+            saveState();
+            renderAll(true); // Animate on major updates
+        }
+
+        function recalculateRecommended() {
+            /* * AI_NOTE: 推奨数算出ロジック (IMPORTANT: LOGIC CONSTRAINTS)
+             * 現在のデモ用計算 (0.5 * days * people 等) は不正確です。本番実装時は以下の制約に従ってください。
+             * * 【制約A: 栄養素ベースの所要量計算】
+             * - 単純な「人数×日数」ではなく、「世帯全体の必要総カロリー・総水分量」を算出し、それを満たすようにアイテム数を決定する。
+             * - 例: 大人2人(2000kcal/日×2) + 子供1人(1400kcal/日×1) = 5400kcal/日 × 3日 = 16,200kcal必要。
+             * これを各アイテムのカロリーで割って個数を出す。
+             *
+             * 【制約B: 配分可能性（整除性）とパッケージング】
+             * - 「家族で分けられる数」問題: 5個を3人で分けるのは管理が面倒。
+             * - 対策:
+             * 1. 不可分なもの（缶詰、レトルトなど）は「Math.ceil(必要数 / 人数) * 人数」のように、人数単位で切り上げて全員に行き渡るようにする。
+             * 2. 可分なもの（大瓶の水、お米など）は総量で計算してよい。
+             *
+             * 【制約C: ローリングストックの回転しやすさ】
+             * - 大量に買いすぎると消費が追いつかないため、消費サイクル（例：週1回食べるなら備蓄もそのペースで回せる量）を考慮する。
+             */
+            const people = state.household.adults + state.household.children * 0.7;
+            const days = state.household.days;
+
+            state.items.forEach(item => {
+                let base = 1;
+                // Mock Logic: 実際のアプリでは上記「制約A, B, C」に基づき書き直すこと
+                if (item.category === 'water') {
+                    base = 0.5 * days * people;
+                } else if (item.category === 'main' || item.category === 'staple') {
+                    // 主食・主菜
+                    base = 0.3 * days * people;
+                } else if (item.category === 'side') {
+                    // 副菜
+                    base = 0.2 * days * people;
+                } else {
+                    // その他、スナック
+                    base = 0.1 * days * people;
+                }
+
+                // カスタムアイテムで固定数が指定されている場合は推奨計算をスキップする場合もありますが、
+                // ここでは一律計算し、ユーザー入力値(count)と比較させます。
+                item.recommended = Math.ceil(base);
+            });
+        }
+
+        function updateQty(id, delta) {
+            const item = state.items.find(i => i.id === id);
+            if (item) {
+                item.count = Math.max(0, item.count + delta);
+                state.lastSaved = "Unsaved";
+                renderItems(false); // No animation
+                renderStats();
+                saveState();
+            }
+        }
+
+        function deleteItem(id) {
+            if (!confirm("このアイテムをリストから削除しますか？")) return;
+            state.items = state.items.filter(i => i.id !== id);
+            state.lastSaved = "Unsaved";
+            renderAll(false); // No animation for smoother delete
+            saveState();
+        }
+
+        function saveState() {
+            localStorage.setItem('stockpileStateV5', JSON.stringify(state));
+            document.getElementById('save-status').innerHTML =
+                state.lastSaved === "Confirmed"
+                    ? `<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg> <span>確定済み</span>`
+                    : `<span class="text-amber-500">●</span> <span>未保存</span>`;
+        }
+
+        function autoAdjust() {
+            /* * AI_NOTE: 自動調整ロジック
+             * 現在は「推奨数に足りない場合のみ推奨数まで増やす」という単純なロジックです。
+             * 将来的には、「優先度の高いものから補充する」などの高度なロジックが検討されます。
+             * 主菜や主食が優先となるかと思います。（主食は日数*3で、その他のカロリーやタンパク質で主菜の計算、ビタミンなどで副菜の計算になるのかな。今のところはカロリー計算のみだが。）
+             */
+            let changed = false;
+            state.items.forEach(item => {
+                if (item.count < item.recommended) {
+                    item.count = item.recommended;
+                    changed = true;
+                }
+            });
+            if (changed) {
+                renderAll(false); // No animation
+                alert("不足分を推奨数まで補充しました。");
+            } else {
+                alert("すでに推奨数を満たしています。");
+            }
+        }
+
+        function confirmPlan() {
+            /* * AI_NOTE: 確定ロジック (連携実装)
+             * カレンダー(calender.html)へデータを渡すため、
+             * 共通のlocalStorageキー 'dorksense_bridge_data' にデータを保存します。
+             * Plannerで算出された数量は「総量」なので、isTotal: true を付与します。
+             */
+
+            // 1. 保存状態を更新
+            state.lastSaved = "Confirmed";
+            saveState();
+
+            // 2. カレンダー用データを作成
+            const bridgeData = {
+                household: state.household,
+                items: state.items.map(item => ({
+                    name: item.name,
+                    count: item.count,
+                    unit: item.unit,
+                    // Plannerの数量は既に必要総量なので isTotal: true とする
+                    isTotal: true
+                }))
+            };
+
+            // 3. データを保存して遷移
+            localStorage.setItem('dorksense_bridge_data', JSON.stringify(bridgeData));
+            window.location.href = 'calender.html';
+        }
+
+        function switchView(view) {
+            if (currentView === view) return; // Prevent re-render if same view
+
+            currentView = view;
+
+            // Toggle classes for active/inactive buttons
+            const btnList = document.getElementById('btn-view-list');
+            const btnCard = document.getElementById('btn-view-card');
+
+            const activeClasses = ['bg-white', 'text-slate-700', 'font-bold', 'shadow-sm'];
+            const inactiveClasses = ['bg-transparent', 'text-slate-500', 'hover:text-slate-700'];
+
+            if (view === 'list') {
+                btnList.classList.add(...activeClasses);
+                btnList.classList.remove(...inactiveClasses);
+                btnCard.classList.remove(...activeClasses);
+                btnCard.classList.add(...inactiveClasses);
+
+                document.getElementById('items-container').className = 'flex flex-col';
+            } else {
+                btnCard.classList.add(...activeClasses);
+                btnCard.classList.remove(...inactiveClasses);
+                btnList.classList.remove(...activeClasses);
+                btnList.classList.add(...inactiveClasses);
+
+                document.getElementById('items-container').className = 'grid grid-cols-[repeat(auto-fill,minmax(160px,1fr))] gap-4 items-start';
+            }
+
+            renderItems(true); // Animate on view switch
+        }
+
+        function toggleDetails(id) {
+            const el = document.getElementById(`details-${id}`);
+            if (el) {
+                if (el.classList.contains('hidden')) {
+                    el.classList.remove('hidden');
+                    el.classList.add('animate-slide-down');
+                } else {
+                    el.classList.add('hidden');
+                    el.classList.remove('animate-slide-down');
+                }
+            }
+        }
+
+        // =========================================
+        // ADD ITEM MODAL
+        // =========================================
+        function openAddItemModal() {
+            const modal = document.getElementById('add-item-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            // Reset fields
+            document.getElementById('add-name').value = '';
+            document.getElementById('add-count').value = '1';
+            document.getElementById('add-unit').value = '個';
+            document.getElementById('add-category').value = 'other';
+            document.getElementById('add-desc').value = '';
+        }
+
+        function closeAddItemModal() {
+            const modal = document.getElementById('add-item-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function addItem() {
+            const name = document.getElementById('add-name').value.trim();
+            if (!name) {
+                alert('項目名を入力してください');
+                return;
+            }
+            const count = parseInt(document.getElementById('add-count').value) || 0;
+            const unit = document.getElementById('add-unit').value;
+            const category = document.getElementById('add-category').value;
+            const desc = document.getElementById('add-desc').value.trim();
+
+            // Create new ID (max + 1)
+            const newId = state.items.length > 0 ? Math.max(...state.items.map(i => i.id)) + 1 : 1;
+
+            const newItem = {
+                id: newId,
+                name: name,
+                category: category,
+                count: count,
+                recommended: count, // Custom items start with recommended = current
+                unit: unit,
+                cal: 0, // Default for custom
+                water: 0, // Default for custom
+                desc: desc,
+                isCustom: true // Flag to indicate custom added item
+            };
+
+            // Recalculate will update recommended based on logic, but we might want to respect user input initially.
+            // Let's allow recalculate to run next time, but for now set recommended.
+            // Actually, calling recalculateRecommended() right after might change recommended based on logic.
+            // For custom items, maybe we want recommended to match count or follow logic?
+            // Let's let the logic decide recommended baseline.
+
+            state.items.push(newItem);
+            recalculateRecommended(); // Apply standard logic to new item
+
+            // If logic set recommended very low but user added many, maybe keep user count?
+            // updateConditions already handles this (it updates state).
+            // But recalculateRecommended overwrites item.recommended. 
+            // This is fine, user sees diff.
+
+            state.lastSaved = "Unsaved";
+            renderAll(true);
+            saveState();
+            closeAddItemModal();
+        }
+
+
+        // =========================================
+        // CHAT & MOBILE TOGGLE
+        // =========================================
+        function sendChat() {
+            const input = document.getElementById('chat-input');
+            const text = input.value.trim();
+            if (!text) return;
+
+            const chatContainer = document.getElementById('chat-messages');
+            chatContainer.innerHTML += `
+                <div class="max-w-[90%] p-3 rounded-lg text-sm bg-slate-700 text-white border border-slate-700 self-end rounded-br-none animate-fade-in">
+                    ${text}
+                </div>`;
+            input.value = '';
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+
+            /* * AI_NOTE: チャット/LLM連携 (MOCK)
+             * 現在はフロントエンドのみで完結する擬似的な応答を返しています。
+             * * 【本来の実装要件】
+             * 1. ユーザー入力をバックエンドAPIに送信。
+             * 2. LLMがユーザーの意図を解析し、UserRequest JSON を返却。
+             * 3. そのJSONに基づいてプランを更新 (Plannerロジック)。
+             * 4. 更新結果の差分説明文をLLMが生成して表示。
+             */
+            setTimeout(() => {
+                chatContainer.innerHTML += `
+                    <div class="max-w-[90%] p-3 rounded-lg text-sm bg-white text-slate-800 border border-slate-200 self-start rounded-bl-none shadow-sm animate-fade-in">
+                        承知しました。「${text}」に対応するアイテム調整を検討します。（デモ）
+                    </div>`;
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }, 600);
+        }
+
+        function toggleChatMobile(e) {
+            if (window.innerWidth > 1024) return;
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'BUTTON') return;
+
+            const panel = document.getElementById('side-panel');
+            const icon = document.getElementById('chat-toggle-icon');
+
+            if (panel.classList.contains('is-open')) {
+                panel.classList.remove('is-open');
+                icon.style.transform = 'rotate(0deg)';
+            } else {
+                panel.classList.add('is-open');
+                icon.style.transform = 'rotate(180deg)';
+            }
+        }
+
+        // =========================================
+        // RENDER
+        // =========================================
+        function renderAll(animate = false) {
+            renderStats();
+            renderItems(animate);
+        }
+
+        function renderStats() {
+            // Basic Stats
+            document.getElementById('total-days-display').textContent = state.household.days + "日";
+
+            /* * AI_NOTE: 重量計算ロジック (MOCK)
+             * 現在は水=2kg, その他=0.3kg という固定値で概算しています。
+             * 本来は ItemCatalog に 'weight_per_unit' を持ち、正確に積算する必要があります。
+             */
+            const weight = state.items.reduce((acc, item) => {
+                const unitWeight = item.category === 'water' ? 2 : 0.3;
+                return acc + (item.count * unitWeight);
+            }, 0);
+            document.getElementById('total-weight-display').textContent = `約${Math.round(weight)}kg`;
+
+            /* * AI_NOTE: 栄養目標値の計算 (MOCK)
+             * 現在は 大人=2000kcal, 子供=1400kcal という固定値を使用しています。
+             * * 【本来の実装要件】
+             * 1. 厚生労働省「日本人の食事摂取基準」や災害時の栄養参照量などをベースにする。
+             * 2. 大人・子供の詳細なマスタデータから目標値を算出すること。
+             * 3. 備蓄における「最低限確保すべきライン」と「理想ライン」を区別して表示すると尚良い。
+             */
+            const adultCount = state.household.adults;
+            const childCount = state.household.children;
+            const days = state.household.days;
+
+            const dailyTargetCal = (adultCount * 2000) + (childCount * 1400);
+            const dailyTargetWater = (adultCount * 3000) + (childCount * 2000); // ml
+
+            const totalCurrentCal = state.items.reduce((acc, item) => acc + (item.count * (item.cal || 0)), 0);
+            const totalCurrentWater = state.items.reduce((acc, item) => acc + (item.count * (item.water || 0)), 0);
+
+            const dailyCurrentCal = totalCurrentCal / days;
+            const dailyCurrentWater = totalCurrentWater / days;
+
+            // Render Nutrition
+            const pctCal = Math.min(100, Math.round((dailyCurrentCal / dailyTargetCal) * 100)) || 0;
+            const pctWater = Math.min(100, Math.round((dailyCurrentWater / dailyTargetWater) * 100)) || 0;
+
+            document.getElementById('bar-cal').style.width = `${pctCal}%`;
+            document.getElementById('val-cal').textContent = `${Math.round(dailyCurrentCal)} / ${dailyTargetCal}`;
+
+            document.getElementById('bar-water').style.width = `${pctWater}%`;
+            document.getElementById('val-water').textContent = `${(dailyCurrentWater / 1000).toFixed(1)} / ${(dailyTargetWater / 1000).toFixed(1)} L`;
+        }
+
+        function renderItems(animate = false) {
+            const container = document.getElementById('items-container');
+            container.innerHTML = "";
+
+            const animClass = animate ? 'animate-fade-in' : '';
+
+            state.items.forEach(item => {
+                // Determine if info exists
+                const hasInfo = item.cal > 0 || item.water > 0 || item.desc;
+
+                // Color calc
+                const diff = item.count - item.recommended;
+                let diffColorClass = 'text-slate-500';
+                if (diff < 0) diffColorClass = 'text-red-500 font-bold';
+                else if (diff > 0) diffColorClass = 'text-teal-700 font-bold';
+
+                // Custom Badge
+                const customBadge = item.isCustom
+                    ? `<span class="ml-2 inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-amber-100 text-amber-800 border border-amber-200">カスタム</span>`
+                    : '';
+
+                /* * AI_NOTE: 描画最適化
+                 * React化の際は、items.map() で ItemRow コンポーネントを展開することになります。
+                 * キーには必ず一意な `item.id` を使用してください。
+                 * アコーディオンの開閉状態は、アイテムごとのローカルステートで管理するのが望ましいです。
+                 */
+
+                // --- LIST ITEM HTML ---
+                const listHtml = `
+                <div class="flex flex-col border-b border-slate-100 cursor-pointer ${animClass} group" onclick="toggleDetails(${item.id})">
+                    <div class="flex items-center p-3 hover:bg-slate-50 transition-colors">
+                        <div class="flex-1 pointer-events-none">
+                            <span class="block font-bold text-slate-800 text-[0.95rem]">
+                                ${item.name}
+                                ${customBadge}
+                            </span>
+                            <div class="flex items-center gap-2 text-xs text-slate-500 mt-0.5">
+                                <span>${item.unit}</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 cursor-default" onclick="event.stopPropagation()">
+                            <button class="w-7 h-7 flex items-center justify-center border border-slate-300 rounded text-slate-600 bg-white hover:bg-slate-100 transition-colors" onclick="updateQty(${item.id}, -1)">
+                                <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M19 13H5v-2h14v2z"/></svg>
+                            </button>
+                            <input type="text" class="w-12 text-center border border-slate-300 rounded text-sm font-bold p-1 bg-white" value="${item.count}" readonly>
+                            <button class="w-7 h-7 flex items-center justify-center border border-slate-300 rounded text-slate-600 bg-white hover:bg-slate-100 transition-colors" onclick="updateQty(${item.id}, 1)">
+                                <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                            </button>
+                            <button class="w-7 h-7 flex items-center justify-center text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors ml-1" onclick="deleteItem(${item.id})" title="削除">
+                                <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="details-${item.id}" class="hidden px-4 pb-4 pt-0 bg-slate-50 text-[0.85rem] text-slate-500 border-t border-dashed border-slate-200" onclick="event.stopPropagation()">
+                        <div class="grid grid-cols-2 gap-2 mt-2">
+                            <div>1個あたり: <strong class="text-slate-700">${item.cal}kcal</strong></div>
+                            <div>水分: <strong class="text-slate-700">${item.water}ml</strong></div>
+                            <div class="col-span-2">特徴: ${item.desc}</div>
+                        </div>
+                    </div>
+                </div>`;
+
+                // --- CARD ITEM HTML ---
+                const cardHtml = `
+                <div class="bg-white border border-slate-200 rounded-lg p-4 flex flex-col items-center text-center relative cursor-pointer hover:-translate-y-0.5 hover:shadow-md transition-all ${animClass}" onclick="toggleDetails(${item.id})">
+                    <span class="mt-2 font-bold text-slate-800 text-sm pointer-events-none">
+                        ${item.name}
+                    </span>
+                    ${customBadge ? '<div class="mb-1">' + customBadge + '</div>' : ''}
+                    <div class="text-xs text-slate-500 mb-2 pointer-events-none">
+                        現在: ${item.count}${item.unit}
+                    </div>
+                    <div class="flex items-center gap-2 mt-auto w-full justify-center cursor-default" onclick="event.stopPropagation()">
+                        <button class="w-7 h-7 flex items-center justify-center border border-slate-300 rounded text-slate-600 bg-white hover:bg-slate-100 transition-colors" onclick="updateQty(${item.id}, -1)">
+                            <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M19 13H5v-2h14v2z"/></svg>
+                        </button>
+                        <input type="text" class="w-10 text-center border border-slate-300 rounded text-sm font-bold p-1 bg-white" value="${item.count}" readonly>
+                        <button class="w-7 h-7 flex items-center justify-center border border-slate-300 rounded text-slate-600 bg-white hover:bg-slate-100 transition-colors" onclick="updateQty(${item.id}, 1)">
+                            <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                        </button>
+                    </div>
+                    <button class="mt-2 text-xs text-slate-400 hover:text-red-500 hover:bg-red-50 rounded px-2 py-0.5 transition-colors" onclick="event.stopPropagation(); deleteItem(${item.id})">
+                        削除
+                    </button>
+                    <!-- Detail Section for Card View -->
+                    <div id="details-${item.id}" class="hidden w-full text-left mt-2 bg-slate-50 rounded p-2 text-xs border-t border-dashed border-slate-200" onclick="event.stopPropagation()">
+                        <div class="grid grid-cols-1 gap-1">
+                            <div>1個: <strong>${item.cal}kcal</strong> / <strong>${item.water}ml</strong></div>
+                            <div class="leading-snug">${item.desc}</div>
+                        </div>
+                    </div>
+                </div>`;
+
+                container.innerHTML += (currentView === 'list' ? listHtml : cardHtml);
+            });
+        }
+
+        // Initialize (with animation)
+        renderAll(true);
+
+    </script>
+</body>
+
+</html>
