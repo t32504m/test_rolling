@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>dorksense // calendar</title>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        /* --- CORE AESTHETICS --- */
+        :root {
+            --bg-color: #f0f0f0;
+            --paper-color: #ffffff;
+            --ink-color: #000000;
+            --accent-1: #375E97;
+            --accent-2: #FB6542;
+            --accent-3: #3F681C;
+            --border-width: 3px;
+            --shadow-offset: 6px;
+        }
+
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: var(--bg-color);
+            color: var(--ink-color);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            overflow-x: hidden;
+            /* Space for mobile bottom bar */
+            padding-bottom: 100px;
+        }
+
+        /* --- UTILITIES --- */
+        .neo-box {
+            background: var(--paper-color);
+            border: var(--border-width) solid var(--ink-color);
+            box-shadow: var(--shadow-offset) var(--shadow-offset) 0px var(--ink-color);
+            transition: all 0.1s ease;
+        }
+
+        .no-print {
+            display: block;
+        }
+
+        /* --- NAVIGATION / BACK LINK --- */
+        .back-link {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #999;
+            /* 普段は薄く目立たない色 */
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            background: rgba(240, 240, 240, 0.5);
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+
+        .back-link:hover {
+            color: var(--accent-1);
+            /* ホバー時にアクセントカラー */
+            background: #fff;
+            box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .back-link i {
+            font-size: 1.1rem;
+        }
+
+        /* --- LAYOUT STRUCTURE --- */
+        #display-wrapper {
+            width: 100%;
+            max-width: 210mm;
+            display: flex;
+            justify-content: center;
+            transform-origin: top center;
+            position: relative;
+            /* For swipe arrows */
+        }
+
+        /* A4 Page Container */
+        .canvas-page {
+            width: 210mm;
+            height: 297mm;
+            background: var(--paper-color);
+            padding: 2rem;
+            box-sizing: border-box;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            overflow: hidden;
+            margin-bottom: 2rem;
+            /* Hardware acceleration for smooth scaling/rendering */
+            transform: translateZ(0);
+        }
+
+        /* Header Area */
+        header {
+            flex: 0 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-bottom: var(--border-width) solid var(--ink-color);
+            padding-bottom: 0.5rem;
+        }
+
+        /* Decoration Bar */
+        .deco-bar {
+            flex: 0 0 auto;
+            display: flex;
+            gap: 0;
+            height: 8px;
+            width: 100%;
+        }
+
+        /* Calendar Grid Area */
+        .calendar-container {
+            flex: 0 0 auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Info/Memo Area */
+        .bottom-area {
+            flex: 1 1 auto;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            min-height: 0;
+            overflow: hidden;
+        }
+
+        .bottom-area .memo-box {
+            display: none;
+        }
+
+        /* Info Boxes */
+        .info-box {
+            border: var(--border-width) solid var(--ink-color);
+            background: var(--paper-color);
+            padding: 0.8rem;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            box-shadow: 4px 4px 0px var(--ink-color);
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        .info-content-wrapper {
+            flex: 1;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- TYPOGRAPHY & DECOR --- */
+        .meta-info {
+            text-align: right;
+            font-weight: bold;
+            font-size: 1.2rem;
+            background: var(--ink-color);
+            color: var(--paper-color);
+            padding: 0.2rem 0.8rem;
+            white-space: nowrap;
+        }
+
+        /* --- CALENDAR GRID (Monthly) --- */
+        .weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            border-top: var(--border-width) solid var(--ink-color);
+            border-left: var(--border-width) solid var(--ink-color);
+            background: var(--ink-color);
+        }
+
+        .weekday {
+            padding: 0.3rem;
+            text-align: center;
+            font-weight: 900;
+            color: var(--paper-color);
+            border-right: var(--border-width) solid var(--ink-color);
+            border-bottom: var(--border-width) solid var(--ink-color);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+
+        .days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            border-left: var(--border-width) solid var(--ink-color);
+            background-color: rgba(204, 255, 0, 0.1);
+        }
+
+        .day {
+            min-height: 80px;
+            border-right: var(--border-width) solid var(--ink-color);
+            border-bottom: var(--border-width) solid var(--ink-color);
+            background: var(--paper-color);
+            position: relative;
+            padding: 4px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* WEEKEND COLORS (Monthly) */
+        .day.saturday .date-num {
+            color: var(--accent-1);
+        }
+
+        .day.sunday .date-num {
+            color: var(--accent-2);
+        }
+
+        .date-num {
+            font-size: 1.2rem;
+            font-weight: 900;
+            position: relative;
+            z-index: 1;
+        }
+
+        .day.today {
+            background: var(--accent-1);
+        }
+
+        /* Ensure text is readable on "today" highlight if it happens to be weekend */
+        .day.today.saturday .date-num,
+        .day.today.sunday .date-num {
+            color: #fff;
+        }
+
+        .day.empty {
+            background: repeating-linear-gradient(45deg, #fff, #fff 10px, #eee 10px, #eee 20px);
+        }
+
+        .day.range-highlight::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 16px;
+            height: 20px;
+            background: rgba(251, 101, 66, 0.35);
+            transform: translateY(-50%) rotate(-2deg);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .day.consumption-start::after {
+            content: '消費！';
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            font-size: 0.6rem;
+            font-weight: 900;
+            color: var(--accent-3);
+            border: 2px solid var(--accent-3);
+            padding: 1px 3px;
+            z-index: 2;
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        /* --- INFO TABLE STYLES (Monthly) --- */
+        .box-header {
+            font-weight: 900;
+            border-bottom: 2px solid var(--ink-color);
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex: 0 0 auto;
+        }
+
+        .info-split-container {
+            display: flex;
+            gap: 0.8rem;
+            width: 100%;
+            height: 100%;
+        }
+
+        .info-split-col {
+            flex: 1;
+            /* 防止カラムが崩れるのを防ぐ */
+            min-width: 0;
+        }
+
+        .stock-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.75rem;
+            margin-top: 2px;
+            /* 固定レイアウトで崩れを防ぐ */
+            table-layout: fixed;
+        }
+
+        .stock-table th {
+            background: #eee;
+            padding: 2px 4px;
+            text-align: left;
+            font-size: 0.7rem;
+            /* はみ出し防止 */
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .stock-table td {
+            padding: 3px 4px;
+            vertical-align: top;
+            border-bottom: 1px dashed #ddd;
+            overflow: hidden;
+            /* はみ出し防止 */
+        }
+
+        .stock-table td>div {
+            /* 内部要素のはみ出し防止 */
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .stock-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .visual-bar-container {
+            display: flex;
+            flex-wrap: wrap;
+            font-size: 0.65rem;
+            line-height: 1;
+            letter-spacing: -1px;
+            margin-bottom: 1px;
+        }
+
+        /* --- YEARLY GRID & LAYOUT (Revised) --- */
+        .yearly-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+            /* Gapを少し詰めてカレンダー自体の描画領域を節約 */
+            /* Stretch to fill available vertical space */
+            flex: 1;
+            /* Ensure content stretches to fill height */
+            align-content: stretch;
+            min-height: 0;
+        }
+
+        .mini-month {
+            border: var(--border-width) solid var(--ink-color);
+            padding: 4px;
+            /* Flex layout for vertical stretching */
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+        }
+
+        .mini-month-title {
+            background: var(--ink-color);
+            color: #fff;
+            text-align: center;
+            font-size: 0.85rem;
+            padding: 2px 0;
+            font-weight: bold;
+            margin-bottom: 2px;
+        }
+
+        .mini-weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            text-align: center;
+            font-size: 0.7rem;
+            margin-bottom: 2px;
+        }
+
+        .mini-weekdays div {
+            border-bottom: 2px solid #000;
+            font-weight: 900;
+        }
+
+        .mini-days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            text-align: center;
+            font-size: 0.8rem;
+            /* Fill remaining height in mini-month */
+            flex: 1;
+            align-content: stretch;
+        }
+
+        .mini-day {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+        }
+
+        .mini-day.has-date {
+            font-weight: bold;
+        }
+
+        /* WEEKEND COLORS (Yearly) */
+        .mini-day.sat {
+            color: var(--accent-1);
+        }
+
+        .mini-day.sun {
+            color: var(--accent-2);
+        }
+
+        /* Revised Footer Section for Yearly */
+        .footer-section-yearly {
+            border: var(--border-width) solid var(--ink-color);
+            padding: 0.8rem;
+            flex: 0 0 auto;
+            background: #f9f9f9;
+            box-shadow: 4px 4px 0px var(--ink-color);
+        }
+
+        .yearly-stock-grid {
+            display: grid;
+            /* 6列から5列に減らして1つ1つを広くする */
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.5rem;
+        }
+
+        .yearly-stock-item {
+            border: 2px solid var(--ink-color);
+            background: #fff;
+            padding: 4px;
+            font-size: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            /* 上寄せにする */
+            align-items: center;
+            text-align: center;
+            box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .yearly-stock-item .item-name {
+            font-weight: 900;
+            font-size: 0.75rem;
+            margin-bottom: 2px;
+            border-bottom: 1px solid #ccc;
+            width: 100%;
+            padding-bottom: 1px;
+
+            /* 省略表示を廃止し、折り返しを許可 */
+            white-space: normal;
+            overflow: visible;
+            text-overflow: clip;
+            line-height: 1.1;
+            min-height: 1.2em;
+            /* 最低1行分の高さは確保 */
+        }
+
+        .yearly-stock-item .item-qty {
+            font-family: monospace;
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: var(--accent-1);
+            margin-top: auto;
+            /* 数量を常に下部に配置 */
+        }
+
+        /* --- CONTROLS: PC Default (Retro Style) --- */
+        .controls-pc {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            width: 160px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .controls-mobile {
+            display: none;
+            /* Hidden on PC */
+        }
+
+        /* PC Button Styles */
+        .pc-btn {
+            padding: 10px;
+            cursor: pointer;
+            background: var(--accent-1);
+            font-weight: bold;
+            border: var(--border-width) solid var(--ink-color);
+            box-shadow: 4px 4px 0 var(--ink-color);
+            font-family: inherit;
+            color: #000;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .pc-btn:hover {
+            background: var(--accent-2);
+            color: white;
+        }
+
+        .pc-btn.active-mode {
+            background: var(--ink-color);
+            color: var(--accent-1);
+        }
+
+        .pc-month-nav {
+            display: flex;
+            gap: 5px;
+        }
+
+        .pc-month-nav button {
+            flex: 1;
+        }
+
+        .ctrl-label-pc {
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+            background: #fff;
+            padding: 2px;
+            display: inline-block;
+        }
+
+        /* Swipe Indicators (Hidden by default, shown via JS/CSS on mobile) */
+        .swipe-hint {
+            display: none;
+        }
+
+        /* --- MOBILE OVERRIDE --- */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+                padding-bottom: 100px;
+                /* Space for bottom bar */
+                /* Change layout to column to place back button naturally */
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: center;
+            }
+
+            /* Back Button Mobile Style */
+            .back-link {
+                /* Place it in normal flow above calendar */
+                position: relative;
+                top: auto;
+                left: auto;
+                align-self: flex-start;
+                /* Align to left */
+                margin-bottom: 10px;
+
+                background: rgba(255, 255, 255, 0.9);
+                border: 1px solid #ccc;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                padding: 6px 12px;
+                font-size: 0.85rem;
+                color: var(--ink-color);
+                width: auto;
+            }
+
+            .back-link i {
+                font-size: 1rem;
+            }
+
+            /* Hide PC Controls */
+            .controls-pc {
+                display: none;
+            }
+
+            /* Show Mobile Controls */
+            .controls-mobile {
+                display: flex;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                background: #ffffff;
+                border-top: 1px solid #ccc;
+                box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+                z-index: 200;
+                justify-content: space-around;
+                align-items: center;
+                padding-bottom: env(safe-area-inset-bottom);
+                /* iPhone X+ safe area */
+                height: 60px;
+            }
+
+            .mobile-tab-btn {
+                background: none;
+                border: none;
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                padding: 5px 0;
+                cursor: pointer;
+                color: #666;
+            }
+
+            .mobile-tab-btn:active {
+                background-color: #f5f5f5;
+            }
+
+            .mobile-tab-btn i {
+                font-size: 1.4rem;
+                margin-bottom: 2px;
+            }
+
+            .mobile-tab-btn span {
+                font-size: 0.65rem;
+                font-weight: bold;
+            }
+
+            .mobile-tab-btn.active-tab {
+                color: var(--accent-1);
+            }
+
+            .mobile-tab-btn.active-tab i {
+                color: var(--accent-1);
+            }
+
+            /* Swipe Hints */
+            .swipe-hint {
+                display: flex;
+                position: fixed;
+                top: 50%;
+                transform: translateY(-50%);
+                z-index: 50;
+                color: rgba(0, 0, 0, 0.15);
+                font-size: 3rem;
+                pointer-events: none;
+                /* Click through */
+                animation: pulse 2s infinite;
+            }
+
+            .swipe-left {
+                left: 5px;
+            }
+
+            .swipe-right {
+                right: 5px;
+            }
+
+            @keyframes pulse {
+                0% {
+                    opacity: 0.1;
+                }
+
+                50% {
+                    opacity: 0.5;
+                }
+
+                100% {
+                    opacity: 0.1;
+                }
+            }
+        }
+
+        /* --- PRINT SETTINGS --- */
+        #print-container {
+            display: none;
+        }
+
+        @media print {
+            * {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            body {
+                background: #fff;
+                padding: 0;
+                display: block;
+                overflow: visible;
+            }
+
+            .controls-pc,
+            .controls-mobile,
+            .back-link,
+            /* Hide back button on print */
+            .no-print,
+            .swipe-hint,
+            #display-wrapper {
+                display: none !important;
+            }
+
+            #print-container {
+                display: block !important;
+            }
+
+            @page {
+                size: A4 portrait;
+                margin: 0;
+            }
+
+            .canvas-page {
+                margin: 0;
+                border: none;
+                box-shadow: none;
+                page-break-after: always;
+                height: 297mm;
+                width: 210mm;
+                transform: none !important;
+            }
+
+            .canvas-page:last-child {
+                page-break-after: auto;
+            }
+
+            .neo-box {
+                box-shadow: none;
+                border: 2px solid #000;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Back to Edit Link -->
+    <a href="./index.html" class="back-link no-print">
+        <i class="ri-arrow-left-line"></i>
+        <span>設定に戻る</span>
+    </a>
+
+    <div class="controls-pc no-print">
+        <button onclick="handlePrint()" class="pc-btn">印刷</button>
+        <div style="height: 10px;"></div>
+        <div class="ctrl-label-pc">表示モード:</div>
+        <button id="btn-pc-monthly" onclick="switchMode('monthly')" class="pc-btn active-mode">月間</button>
+        <button id="btn-pc-yearly" onclick="switchMode('yearly')" class="pc-btn">年間</button>
+
+        <div id="pc-monthly-nav" style="margin-top: 10px;">
+            <div class="pc-month-nav">
+                <button class="pc-btn" onclick="changeMonth(-1)">&lt;</button>
+                <button class="pc-btn" onclick="changeMonth(1)">&gt;</button>
+            </div>
+            <button onclick="goToToday()" class="pc-btn"
+                style="margin-top:5px; background: #fff; color: #000;">今日</button>
+        </div>
+    </div>
+
+    <div class="controls-mobile no-print">
+        <button class="mobile-tab-btn" onclick="changeMonth(-1)">
+            <i class="ri-arrow-left-s-line"></i>
+            <span>前月</span>
+        </button>
+
+        <button class="mobile-tab-btn" onclick="goToToday()">
+            <i class="ri-calendar-check-line"></i>
+            <span>今日</span>
+        </button>
+
+        <button class="mobile-tab-btn" onclick="toggleModeMobile()">
+            <i id="mobile-mode-icon" class="ri-layout-grid-fill"></i>
+            <span id="mobile-mode-text">年表示へ</span>
+        </button>
+
+        <button class="mobile-tab-btn" onclick="changeMonth(1)">
+            <i class="ri-arrow-right-s-line"></i>
+            <span>次月</span>
+        </button>
+
+        <button class="mobile-tab-btn" onclick="handlePrint()" style="color:var(--accent-1);">
+            <i class="ri-printer-line"></i>
+            <span>印刷</span>
+        </button>
+    </div>
+
+    <div class="swipe-hint swipe-left no-print"><i class="ri-arrow-left-s-line"></i></div>
+    <div class="swipe-hint swipe-right no-print"><i class="ri-arrow-right-s-line"></i></div>
+
+    <div id="display-wrapper">
+        <div id="screen-canvas" class="canvas-page neo-box">
+        </div>
+    </div>
+
+    <div id="print-container"></div>
+
+    <script>
+        let currentDate = new Date();
+        let viewMode = 'monthly';
+
+        // STOCK ITEMS
+        let STOCK_ITEMS = [
+            { name: "水", count: 3, unit: "L" },
+            { name: "レトルトご飯", count: 2.1, unit: "食" },
+            { name: "レトルト食品", count: 2, unit: "食" },
+            { name: "缶詰", count: 1.3, unit: "缶" },
+            { name: "乾麺類", count: 1.6, unit: "個" },
+            { name: "野菜ジュース", count: 1, unit: "本" },
+            { name: "栄養バー", count: 2, unit: "個" },
+            { name: "健康飲料粉末", count: 1, unit: "個" },
+            { name: "無洗米", count: 2, unit: "kg" },
+            { name: "お菓子", count: 1, unit: "個" },
+            { name: "果物缶詰", count: 0.8, unit: "個" },
+            { name: "乾物", count: 0.4, unit: "個" },
+            { name: "ドライフルーツ", count: 0.4, unit: "袋" },
+        ];
+
+        let highlightPayload = {
+            startDate: new Date().toISOString().split('T')[0].replace(/-/g, '/'),
+            days: 3,
+            adults: 2,
+            children: 0,
+            weekNumber: 2,
+            weekDay: 2
+        };
+
+        function loadExternalData() {
+            const bridgeDataRaw = localStorage.getItem('dorksense_bridge_data');
+            if (bridgeDataRaw) {
+                try {
+                    const bridgeData = JSON.parse(bridgeDataRaw);
+                    if (bridgeData.household) {
+                        highlightPayload.adults = bridgeData.household.adults;
+                        highlightPayload.children = bridgeData.household.children;
+                        highlightPayload.days = bridgeData.household.days;
+                    }
+                    if (bridgeData.items && Array.isArray(bridgeData.items)) {
+                        STOCK_ITEMS = bridgeData.items;
+                    }
+                } catch (e) {
+                    console.error("Failed to parse bridge data", e);
+                }
+            }
+        }
+
+        function setupHighlightRange() {
+            const params = new URLSearchParams(window.location.search);
+            const pStart = params.get('start');
+            const pDays = params.get('days');
+            const pAdults = params.get('adults');
+            const pChildren = params.get('children');
+            const pWeekNum = params.get('weekNumber');
+            const pWeekDay = params.get('weekDay');
+
+            if (pStart) highlightPayload.startDate = pStart.replace(/-/g, '/');
+            if (pDays) highlightPayload.days = parseInt(pDays, 10);
+            if (pAdults) highlightPayload.adults = parseInt(pAdults, 10);
+            if (pChildren) highlightPayload.children = parseInt(pChildren, 10);
+            if (pWeekNum) highlightPayload.weekNumber = parseInt(pWeekNum, 10);
+            if (pWeekDay) highlightPayload.weekDay = parseInt(pWeekDay, 10);
+
+            const normalized = highlightPayload.startDate.replace(/\//g, '-');
+            const [y, m, d] = normalized.split('-').map(Number);
+            currentDate = new Date(y, m - 1, 1);
+        }
+
+        function isConsumptionPeriod(year, month, day) {
+            const startDay = getNthWeekDay(year, month, highlightPayload.weekNumber, highlightPayload.weekDay);
+            if (!startDay) return false;
+            const startDate = new Date(year, month, startDay);
+            const endDate = new Date(startDate);
+            endDate.setDate(startDate.getDate() + highlightPayload.days);
+            const current = new Date(year, month, day);
+            current.setHours(0, 0, 0, 0); startDate.setHours(0, 0, 0, 0); endDate.setHours(0, 0, 0, 0);
+            return current >= startDate && current < endDate;
+        }
+
+        function isConsumptionStartDate(year, month, day) {
+            const startDay = getNthWeekDay(year, month, highlightPayload.weekNumber, highlightPayload.weekDay);
+            return startDay === day;
+        }
+
+        function getNthWeekDay(year, month, weekNumber, weekDay) {
+            const firstDayOfMonth = new Date(year, month, 1);
+            const dayOfWeek = firstDayOfMonth.getDay();
+            let day = 1 + (weekDay - dayOfWeek + 7) % 7;
+            day += (weekNumber - 1) * 7;
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            if (day > daysInMonth) return null;
+            return day;
+        }
+
+        const MONTHS = ["１月", "２月", "３月", "４月", "５月", "６月", "７月", "８月", "９月", "１０月", "１１月", "１２月"];
+
+        function init() {
+            loadExternalData();
+            setupHighlightRange();
+            renderScreen();
+            adjustMobileScale();
+            window.addEventListener('resize', adjustMobileScale);
+            initSwipe();
+        }
+
+        /* --- MOBILE SCALING --- */
+        function adjustMobileScale() {
+            const canvas = document.getElementById('screen-canvas');
+            const wrapper = document.getElementById('display-wrapper');
+            const margin = 20;
+
+            const baseWidth = canvas.offsetWidth;
+            const screenWidth = window.innerWidth;
+
+            if (screenWidth < (baseWidth + 40)) {
+                const scale = (screenWidth - margin) / baseWidth;
+                canvas.style.transform = `scale(${scale})`;
+                wrapper.style.height = (canvas.offsetHeight * scale) + 'px';
+            } else {
+                canvas.style.transform = 'none';
+                wrapper.style.height = 'auto';
+            }
+        }
+
+        /* --- SWIPE LOGIC --- */
+        function initSwipe() {
+            const wrapper = document.getElementById('display-wrapper');
+            let startX = 0;
+            let startY = 0;
+
+            wrapper.addEventListener('touchstart', (e) => {
+                startX = e.changedTouches[0].screenX;
+                startY = e.changedTouches[0].screenY;
+            }, { passive: true });
+
+            wrapper.addEventListener('touchend', (e) => {
+                const endX = e.changedTouches[0].screenX;
+                const endY = e.changedTouches[0].screenY;
+                handleSwipe(startX, endX, startY, endY);
+            }, { passive: true });
+        }
+
+        function handleSwipe(startX, endX, startY, endY) {
+            const diffX = endX - startX;
+            const diffY = endY - startY;
+
+            // Thresholds
+            if (Math.abs(diffX) > 50 && Math.abs(diffY) < 100) {
+                if (diffX > 0) {
+                    // Right swipe -> Prev month
+                    changeMonth(-1);
+                } else {
+                    // Left swipe -> Next month
+                    changeMonth(1);
+                }
+            }
+        }
+
+        // --- RENDER LOGIC ---
+        function generateMonthlyPageHTML(year, month) {
+            const firstDay = new Date(year, month, 1).getDay();
+            let startSlot = firstDay - 1;
+            if (startSlot === -1) startSlot = 6;
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const monthName = MONTHS[month];
+
+            const totalSlots = startSlot + daysInMonth;
+            const weeksCount = Math.ceil(totalSlots / 7);
+
+            let bottomAreaClass = 'bottom-area wide-mode';
+
+            let daysHTML = '';
+            for (let i = 0; i < startSlot; i++) daysHTML += `<div class="day empty"></div>`;
+
+            const today = new Date();
+            for (let d = 1; d <= daysInMonth; d++) {
+                let classes = 'day';
+                // Calculate day of week for coloring
+                const currentDayDate = new Date(year, month, d);
+                const dayOfWeek = currentDayDate.getDay();
+                if (dayOfWeek === 6) classes += ' saturday';
+                if (dayOfWeek === 0) classes += ' sunday';
+
+                if (year === today.getFullYear() && month === today.getMonth() && d === today.getDate()) classes += ' today';
+                if (isConsumptionPeriod(year, month, d)) {
+                    classes += ' range-highlight';
+                    if (isConsumptionStartDate(year, month, d)) classes += ' consumption-start';
+                }
+                daysHTML += `<div class="${classes}"><span class="date-num">${d < 10 ? '0' + d : d}</span></div>`;
+            }
+
+            const remaining = (weeksCount * 7) - totalSlots;
+            for (let i = 0; i < remaining; i++) daysHTML += `<div class="day empty" style="opacity:0.3"></div>`;
+
+            let infoContentHtml = '';
+            const weightedPeople = highlightPayload.adults + (highlightPayload.children * 0.6);
+            const days = highlightPayload.days;
+            const weeksJP = ["日", "月", "火", "水", "木", "金", "土"];
+
+            infoContentHtml += `
+                <div style="font-size:0.9rem; font-weight:bold; margin-bottom:5px;">
+                    設定: 大人${highlightPayload.adults}人 子供${highlightPayload.children}人 × ${days}日分
+                    <span style="font-weight:normal; font-size:0.8rem; margin-left:10px;">消費: 第${highlightPayload.weekNumber}${weeksJP[highlightPayload.weekDay]}曜</span>
+                </div>
+            `;
+
+            const createTable = (items) => {
+                let html = `<table class="stock-table"><thead><tr><th style="width:40%;">ITEM</th><th style="width:60%;">STATUS</th></tr></thead><tbody>`;
+                items.forEach(item => {
+                    const totalQty = item.isTotal
+                        ? item.count
+                        : Math.ceil(item.count * weightedPeople * days);
+                    const accCurrent = Math.floor(((month + 1) * totalQty) / 12);
+                    const accPrev = Math.floor((month * totalQty) / 12);
+                    let monthlyQty = accCurrent - accPrev;
+
+                    let visualBar = '';
+                    const b = (c, col, op = 1) => `<span class="visual-bar" style="color:${col};opacity:${op};">${c}</span>`;
+                    for (let k = 0; k < accPrev; k++) visualBar += b('◆', 'var(--ink-color)', 0.5);
+                    for (let k = 0; k < monthlyQty; k++) visualBar += b('◆', 'var(--accent-2)');
+                    for (let k = 0; k < (totalQty - accCurrent); k++) visualBar += b('◇', '#ccc');
+
+                    html += `<tr><td><div>${item.name}</div><div style="font-size:0.8em;color:#666;">(総 ${totalQty}${item.unit})</div></td>
+                             <td><div class="visual-bar-container">${visualBar}</div><div style="font-size:0.8em;font-weight:bold;">今月:${monthlyQty}${item.unit}</div></td></tr>`;
+                });
+                html += `</tbody></table>`;
+                return html;
+            };
+
+            const chunkSize = Math.ceil(STOCK_ITEMS.length / 3);
+            const col1 = STOCK_ITEMS.slice(0, chunkSize);
+            const col2 = STOCK_ITEMS.slice(chunkSize, chunkSize * 2);
+            const col3 = STOCK_ITEMS.slice(chunkSize * 2);
+
+            infoContentHtml += `<div class="info-split-container">
+                <div class="info-split-col">${createTable(col1)}</div>
+                <div class="info-split-col">${createTable(col2)}</div>
+                <div class="info-split-col">${createTable(col3)}</div>
+            </div>`;
+
+            return `
+                <header>
+                    <div class="meta-info">${year} // ${monthName}</div>
+                </header>
+                <div class="deco-bar">
+                    <div style="background:var(--ink-color);width:70%;"></div>
+                    <div style="background:var(--accent-1);width:15%;"></div>
+                    <div style="background:var(--accent-2);width:15%;"></div>
+                </div>
+                <div class="calendar-container">
+                    <div class="weekdays">
+                        <div class="weekday">MON</div><div class="weekday">TUE</div><div class="weekday">WED</div>
+                        <div class="weekday">THU</div><div class="weekday">FRI</div>
+                        <div class="weekday" style="color:var(--accent-1)">SAT</div><div class="weekday" style="color:var(--accent-2)">SUN</div>
+                    </div>
+                    <div class="days">
+                        ${daysHTML}
+                    </div>
+                </div>
+                <div class="${bottomAreaClass}">
+                    <div class="info-box">
+                        <div class="box-header"><span>INFO</span><span style="font-size:0.7rem;">[DATA]</span></div>
+                        <div class="info-content-wrapper">${infoContentHtml}</div>
+                    </div>
+                </div>
+                <div style="position:absolute;bottom:10px;right:10px;font-size:0.6rem;opacity:0.7;writing-mode:vertical-rl;">DS_CAL_M_${year}_${month + 1}</div>
+            `;
+        }
+
+        function generateYearlyPageHTML(year) {
+            let gridHTML = '';
+            for (let m = 0; m < 12; m++) {
+                const firstDay = new Date(year, m, 1).getDay();
+                let startSlot = firstDay - 1;
+                if (startSlot === -1) startSlot = 6;
+                const daysInMonth = new Date(year, m + 1, 0).getDate();
+                let miniDays = '';
+                for (let s = 0; s < startSlot; s++) miniDays += `<div class="mini-day"></div>`;
+
+                for (let d = 1; d <= daysInMonth; d++) {
+                    const currentDayDate = new Date(year, m, d);
+                    const dayOfWeek = currentDayDate.getDay();
+                    let dayClass = 'mini-day has-date';
+                    if (dayOfWeek === 6) dayClass += ' sat';
+                    if (dayOfWeek === 0) dayClass += ' sun';
+
+                    miniDays += `<div class="${dayClass}">${d}</div>`;
+                }
+
+                gridHTML += `<div class="mini-month"><div class="mini-month-title">${MONTHS[m]}</div>
+                    <div class="mini-weekdays"><div>M</div><div>T</div><div>W</div><div>T</div><div>F</div><div style="color:var(--accent-1)">S</div><div style="color:var(--accent-2)">S</div></div>
+                    <div class="mini-days">${miniDays}</div></div>`;
+            }
+
+            let stockListHTML = '';
+            const weightedPeople = highlightPayload.adults + (highlightPayload.children * 0.6);
+            const days = highlightPayload.days;
+            STOCK_ITEMS.forEach(item => {
+                const totalQty = item.isTotal
+                    ? item.count
+                    : Math.ceil(item.count * weightedPeople * days);
+                stockListHTML += `
+                <div class="yearly-stock-item">
+                    <div class="item-name">${item.name}</div>
+                    <div class="item-qty">${totalQty}<span style="font-size:0.7em;">${item.unit}</span></div>
+                </div>`;
+            });
+
+            return `
+                <header><div class="meta-info">${year} // YEARLY</div></header>
+                <div class="deco-bar"><div style="background:var(--ink-color);width:100%;"></div></div>
+                <div class="yearly-grid">${gridHTML}</div>
+                <div class="footer-section-yearly">
+                    <div style="font-weight:bold;border-bottom:2px solid var(--ink-color);margin-bottom:8px; display:flex; justify-content:space-between;">
+                        <span>STOCK LIST (YEARLY GOAL)</span>
+                        <span style="font-size:0.8em; font-weight:normal;">[備蓄目標総量]</span>
+                    </div>
+                    <div class="yearly-stock-grid">${stockListHTML}</div>
+                </div>
+            `;
+        }
+
+        function renderScreen() {
+            const screenCanvas = document.getElementById('screen-canvas');
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+
+            if (viewMode === 'monthly') {
+                screenCanvas.innerHTML = generateMonthlyPageHTML(year, month);
+                document.getElementById('pc-monthly-nav').style.display = 'block';
+                // Mobile Text Update
+                document.getElementById('mobile-mode-text').innerText = '年表示へ';
+                document.getElementById('mobile-mode-icon').className = 'ri-layout-grid-fill';
+            } else {
+                screenCanvas.innerHTML = generateYearlyPageHTML(year);
+                document.getElementById('pc-monthly-nav').style.display = 'none';
+                // Mobile Text Update
+                document.getElementById('mobile-mode-text').innerText = '月表示へ';
+                document.getElementById('mobile-mode-icon').className = 'ri-calendar-check-line';
+            }
+            setTimeout(adjustMobileScale, 0);
+        }
+
+        function switchMode(mode) {
+            viewMode = mode;
+            // Update PC Buttons
+            document.getElementById('btn-pc-monthly').className = mode === 'monthly' ? 'pc-btn active-mode' : 'pc-btn';
+            document.getElementById('btn-pc-yearly').className = mode === 'yearly' ? 'pc-btn active-mode' : 'pc-btn';
+            renderScreen();
+        }
+
+        function toggleModeMobile() {
+            switchMode(viewMode === 'monthly' ? 'yearly' : 'monthly');
+        }
+
+        function changeMonth(step) {
+            currentDate.setMonth(currentDate.getMonth() + step);
+            renderScreen();
+        }
+
+        function goToToday() {
+            currentDate = new Date();
+            renderScreen();
+        }
+
+        function handlePrint() {
+            const printContainer = document.getElementById('print-container');
+            printContainer.innerHTML = '';
+            const year = currentDate.getFullYear();
+            if (viewMode === 'yearly') {
+                printContainer.innerHTML += `<div class="canvas-page neo-box">${generateYearlyPageHTML(year)}</div>`;
+            } else {
+                const startMonth = currentDate.getMonth();
+                for (let m = startMonth; m < 12; m++) {
+                    printContainer.innerHTML += `<div class="canvas-page neo-box" style="margin:0; border:none; box-shadow:none;">${generateMonthlyPageHTML(year, m)}</div>`;
+                }
+            }
+            setTimeout(() => window.print(), 100);
+        }
+
+        init();
+    </script>
+</body>
+
+</html>
