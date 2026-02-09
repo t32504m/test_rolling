@@ -77,20 +77,28 @@
             font-size: 1.1rem;
         }
 
-        /* --- LAYOUT STRUCTURE --- */
+        /* --- LAYOUT STRUCTURE (SCROLLABLE) --- */
         #display-wrapper {
             width: 100%;
-            max-width: 210mm;
+            /* 画面幅いっぱいを使う */
             display: flex;
             justify-content: center;
+            /* PCでは中央寄せ */
             transform-origin: top center;
             position: relative;
-            /* For swipe arrows */
+            /* 横スクロールを有効化 */
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            padding-bottom: 20px;
+            /* スクロールバーのための余白 */
         }
 
-        /* A4 Page Container */
+        /* A4 Page Container (FIXED SIZE, Scaled via JS) */
         .canvas-page {
+            /* 縮小せずに固定幅を維持し、JSでscaleする */
+            flex: 0 0 210mm;
             width: 210mm;
+            min-width: 210mm;
             height: 297mm;
             background: var(--paper-color);
             padding: 2rem;
@@ -101,8 +109,9 @@
             gap: 1rem;
             overflow: hidden;
             margin-bottom: 2rem;
-            /* Hardware acceleration for smooth scaling/rendering */
+            /* Hardware acceleration */
             transform: translateZ(0);
+            transform-origin: top center; /* Default for PC */
         }
 
         /* Header Area */
@@ -533,11 +542,6 @@
             display: inline-block;
         }
 
-        /* Swipe Indicators (Hidden by default, shown via JS/CSS on mobile) */
-        .swipe-hint {
-            display: none;
-        }
-
         /* --- MOBILE OVERRIDE --- */
         @media (max-width: 768px) {
             body {
@@ -548,6 +552,19 @@
                 flex-direction: column;
                 justify-content: flex-start;
                 align-items: center;
+            }
+
+            /* Scroll Wrapper Mobile Adjustment */
+            #display-wrapper {
+                justify-content: flex-start;
+                /* 左寄せにしてスクロールの起点を合わせる */
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+            
+            /* Canvas Transform Origin for Mobile */
+            .canvas-page {
+                transform-origin: top left;
             }
 
             /* Back Button Mobile Style */
@@ -630,42 +647,6 @@
             .mobile-tab-btn.active-tab i {
                 color: var(--accent-1);
             }
-
-            /* Swipe Hints */
-            .swipe-hint {
-                display: flex;
-                position: fixed;
-                top: 50%;
-                transform: translateY(-50%);
-                z-index: 50;
-                color: rgba(0, 0, 0, 0.15);
-                font-size: 3rem;
-                pointer-events: none;
-                /* Click through */
-                animation: pulse 2s infinite;
-            }
-
-            .swipe-left {
-                left: 5px;
-            }
-
-            .swipe-right {
-                right: 5px;
-            }
-
-            @keyframes pulse {
-                0% {
-                    opacity: 0.1;
-                }
-
-                50% {
-                    opacity: 0.5;
-                }
-
-                100% {
-                    opacity: 0.1;
-                }
-            }
         }
 
         /* --- PRINT SETTINGS --- */
@@ -691,7 +672,6 @@
             .back-link,
             /* Hide back button on print */
             .no-print,
-            .swipe-hint,
             #display-wrapper {
                 display: none !important;
             }
@@ -778,9 +758,6 @@
             <span>印刷</span>
         </button>
     </div>
-
-    <div class="swipe-hint swipe-left no-print"><i class="ri-arrow-left-s-line"></i></div>
-    <div class="swipe-hint swipe-right no-print"><i class="ri-arrow-right-s-line"></i></div>
 
     <div id="display-wrapper">
         <div id="screen-canvas" class="canvas-page neo-box">
@@ -891,62 +868,58 @@
             loadExternalData();
             setupHighlightRange();
             renderScreen();
-            adjustMobileScale();
-            window.addEventListener('resize', adjustMobileScale);
-            initSwipe();
+            adjustMobileScale(); // Initial adjustment
+            window.addEventListener('resize', adjustMobileScale); // Adjust on resize
         }
-
-        /* --- MOBILE SCALING --- */
+        
+        // --- MOBILE SCALING LOGIC (FIXED HEIGHT, SCROLL WIDTH) ---
         function adjustMobileScale() {
             const canvas = document.getElementById('screen-canvas');
             const wrapper = document.getElementById('display-wrapper');
-            const margin = 20;
-
-            const baseWidth = canvas.offsetWidth;
-            const screenWidth = window.innerWidth;
-
-            if (screenWidth < (baseWidth + 40)) {
-                const scale = (screenWidth - margin) / baseWidth;
-                canvas.style.transform = `scale(${scale})`;
-                wrapper.style.height = (canvas.offsetHeight * scale) + 'px';
-            } else {
-                canvas.style.transform = 'none';
-                wrapper.style.height = 'auto';
+            
+            // PC: Reset styles
+            if (window.innerWidth > 768) {
+                canvas.style.transform = '';
+                canvas.style.marginBottom = '';
+                canvas.style.marginRight = '';
+                wrapper.style.height = '';
+                return;
             }
-        }
 
-        /* --- SWIPE LOGIC --- */
-        function initSwipe() {
-            const wrapper = document.getElementById('display-wrapper');
-            let startX = 0;
-            let startY = 0;
-
-            wrapper.addEventListener('touchstart', (e) => {
-                startX = e.changedTouches[0].screenX;
-                startY = e.changedTouches[0].screenY;
-            }, { passive: true });
-
-            wrapper.addEventListener('touchend', (e) => {
-                const endX = e.changedTouches[0].screenX;
-                const endY = e.changedTouches[0].screenY;
-                handleSwipe(startX, endX, startY, endY);
-            }, { passive: true });
-        }
-
-        function handleSwipe(startX, endX, startY, endY) {
-            const diffX = endX - startX;
-            const diffY = endY - startY;
-
-            // Thresholds
-            if (Math.abs(diffX) > 50 && Math.abs(diffY) < 100) {
-                if (diffX > 0) {
-                    // Right swipe -> Prev month
-                    changeMonth(-1);
-                } else {
-                    // Left swipe -> Next month
-                    changeMonth(1);
-                }
-            }
+            // Mobile: Calculate Scale based on Height to avoid vertical scroll
+            // UI Offset: Mobile Controls (~60px) + Back Button/Header (~80px) + Padding
+            const uiOffset = 150; 
+            const availableHeight = window.innerHeight - uiOffset;
+            const originalHeight = canvas.offsetHeight; // Should be ~1122px (297mm)
+            const originalWidth = canvas.offsetWidth;   // Should be ~793px (210mm)
+            
+            // Calculate scale ratio to fit height
+            let scale = availableHeight / originalHeight;
+            
+            // LIMITS: Don't make it too small (unreadable).
+            // 0.5 is reasonable minimum (A4 becomes A6 size roughly)
+            if (scale < 0.5) scale = 0.5;
+            if (scale > 1) scale = 1;
+            
+            // Apply Transform
+            canvas.style.transform = `scale(${scale})`;
+            
+            // FIX LAYOUT GAP caused by scaling
+            // Transform doesn't affect flow, so we must manually reduce spacing
+            // Negative margin pulls the bottom/right space back
+            const gapH = originalHeight * (1 - scale);
+            const gapW = originalWidth * (1 - scale);
+            
+            canvas.style.marginBottom = `-${gapH}px`;
+            canvas.style.marginRight = `-${gapW}px`;
+            
+            // Adjust Wrapper to contain the SCALED size
+            // We set height explicitly to ensure container fits the visual size
+            wrapper.style.height = (originalHeight * scale) + 'px';
+            
+            // If scaled width is less than screen width, center it (via flex in CSS)
+            // If scaled width is more than screen width, left align (via CSS left-align default for scroll)
+            // No extra JS needed for centering as parent has justify-content: start/center logic via margin
         }
 
         // --- RENDER LOGIC ---
@@ -1131,7 +1104,7 @@
                 document.getElementById('mobile-mode-text').innerText = '月表示へ';
                 document.getElementById('mobile-mode-icon').className = 'ri-calendar-check-line';
             }
-            setTimeout(adjustMobileScale, 0);
+            adjustMobileScale(); // Re-calculate on render
         }
 
         function switchMode(mode) {
