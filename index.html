@@ -633,7 +633,7 @@
                 btnList.classList.remove(...activeClasses);
                 btnList.classList.add(...inactiveClasses);
 
-                document.getElementById('items-container').className = 'grid grid-cols-[repeat(auto-fill,minmax(160px,1fr))] gap-4 items-start';
+                document.getElementById('items-container').className = 'grid grid-cols-2 sm:grid-cols-[repeat(auto-fill,minmax(160px,1fr))] gap-4 items-start';
             }
 
             renderItems(true); // Animate on view switch
