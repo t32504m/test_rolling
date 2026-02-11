@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RollingStock Planner - 日常備蓄をスマートに</title>
+    <!-- Tailwind CSS (CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        slate: {
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            200: '#e2e8f0',
+                            300: '#cbd5e1',
+                            400: '#94a3b8',
+                            500: '#64748b',
+                            600: '#475569',
+                            700: '#334155',
+                            800: '#1e293b',
+                            900: '#0f172a',
+                        },
+                        teal: {
+                            50: '#f0fdfa',
+                            700: '#0f766e',
+                            800: '#115e59',
+                        }
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'float-delayed': 'float 6s ease-in-out 3s infinite',
+                        'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
+                        'slide-in': 'slideIn 0.3s ease-out forwards',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        },
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        slideIn: {
+                            '0%': { opacity: '0', transform: 'translateY(-10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+        }
+        /* Gradient Text */
+        .text-gradient {
+            background: linear-gradient(135deg, #0f766e 0%, #0f172a 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col overflow-x-hidden relative justify-center">
+
+    <!-- Header Removed -->
+
+    <!-- Main Content (Hero Section) -->
+    <!-- relative added for absolute positioning context of the background visual on mobile -->
+    <main class="flex-1 flex flex-col md:flex-row items-center justify-center container mx-auto px-6 pt-8 pb-12 gap-8 lg:gap-24 relative">
+        
+        <!-- Visual Composition (CSS Art) -->
+        <!-- 
+            Responsive Layout Change:
+            - Mobile: `absolute inset-0` to cover the background, `opacity-30` (increased visibility), `z-0`.
+            - Desktop (`md:`): `relative`, `flex-1`, `opacity-100`, `order-2` (right side).
+        -->
+        <div class="absolute inset-0 md:relative md:inset-auto z-0 md:z-auto flex items-center justify-center overflow-hidden md:overflow-visible opacity-30 md:opacity-100 pointer-events-none md:pointer-events-auto md:flex-1 md:order-2 md:max-w-md h-full md:h-[400px]">
+            <!-- Wrapper for scaling/positioning on mobile without affecting desktop flow -->
+            <!-- Mobile: -translate-y-20 to move it up significantly -->
+            <div class="relative w-full max-w-md h-[400px] flex items-center justify-center scale-110 md:scale-100 -translate-y-20 md:translate-y-0">
+                
+                <!-- Decorative Blobs -->
+                <div class="absolute top-0 right-0 w-64 h-64 md:w-72 md:h-72 bg-teal-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-float"></div>
+                <div class="absolute bottom-0 left-4 md:left-10 w-64 h-64 md:w-72 md:h-72 bg-purple-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-float-delayed"></div>
+                
+                <!-- Mock UI Card 1 (Main) -->
+                <div class="relative bg-white p-6 rounded-2xl shadow-xl border border-slate-100 w-80 animate-float z-20">
+                    <div class="flex justify-between items-center mb-4 border-b border-slate-100 pb-2">
+                        <span class="text-xs font-bold text-slate-400 uppercase">Recommendation</span>
+                        <span class="text-xs font-bold text-teal-700">大人2人 / 7日分</span>
+                    </div>
+                    <!-- List Items Mock -->
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center text-blue-500">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 14.66V20a2 2 0 01-2 2H4a2 2 0 01-2-2V6a2 2 0 012-2h2.5L8 9l2-5 3 5 1.5-3.5L16 9h2a2 2 0 012 2v3.66"></path></svg>
+                            </div>
+                            <div class="flex-1">
+                                <div class="h-2 w-24 bg-slate-200 rounded mb-1"></div>
+                                <div class="h-2 w-16 bg-slate-100 rounded"></div>
+                            </div>
+                            <div class="text-sm font-bold text-slate-700">12本</div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-lg bg-orange-50 flex items-center justify-center text-orange-500">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                            </div>
+                            <div class="flex-1">
+                                <div class="h-2 w-20 bg-slate-200 rounded mb-1"></div>
+                                <div class="h-2 w-12 bg-slate-100 rounded"></div>
+                            </div>
+                            <div class="text-sm font-bold text-slate-700">8食</div>
+                        </div>
+                    </div>
+                    <!-- Graph Mock -->
+                    <div class="mt-6 pt-4 border-t border-slate-100">
+                        <div class="flex items-end gap-2 h-16 justify-between px-2">
+                            <div class="w-8 bg-teal-100 rounded-t h-[60%] relative group cursor-pointer hover:bg-teal-200 transition-colors"></div>
+                            <div class="w-8 bg-teal-300 rounded-t h-[80%] relative group cursor-pointer hover:bg-teal-400 transition-colors"></div>
+                            <div class="w-8 bg-teal-700 rounded-t h-[40%] relative group cursor-pointer hover:bg-teal-800 transition-colors">
+                                <div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                                    不足あり
+                                </div>
+                            </div>
+                            <div class="w-8 bg-teal-100 rounded-t h-[70%]"></div>
+                            <div class="w-8 bg-teal-100 rounded-t h-[50%]"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Floating Badge Card (Small) -->
+                <div class="absolute -bottom-4 -left-4 bg-white p-3 rounded-xl shadow-lg border border-slate-100 flex items-center gap-3 animate-float-delayed z-30">
+                    <div class="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-600">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    </div>
+                    <div>
+                        <div class="text-[10px] text-slate-400 font-bold uppercase">Status</div>
+                        <div class="text-xs font-bold text-slate-700">準備完了</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Left: Text Content -->
+        <!-- z-10 ensures text stays on top of the background visual on mobile -->
+        <div class="relative flex-1 max-w-xl text-center md:text-left animate-fade-in-up z-10 md:order-1 order-1">
+            <div class="inline-block px-3 py-1 mb-6 text-xs font-bold tracking-wider text-teal-700 uppercase bg-teal-100/80 backdrop-blur-sm rounded-full border border-teal-200 shadow-sm">
+                AI Planning × Analog Management
+            </div>
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight mb-6 text-slate-900 drop-shadow-sm md:drop-shadow-none">
+                備蓄をもっとスマートに、<br class="hidden md:inline">
+                <span class="text-gradient block md:inline mt-2 md:mt-0">日常の一部へ。</span>
+            </h1>
+            
+            <p class="text-slate-600 md:text-slate-500 text-lg mb-8 leading-relaxed font-medium md:font-normal">
+                「何を買えばいいか分からない」「アプリ管理は面倒で続かない」<br class="hidden lg:inline">
+                そんな悩みから解放されましょう。<br>
+                <br class="md:hidden">
+                AIがあなたに最適なプランを提案し、日々の管理はあえて<strong class="text-slate-800 md:text-slate-700 border-b-2 border-teal-200">「紙のカレンダー」</strong>で。<br class="hidden lg:inline">
+                デジタルな提案とアナログな習慣のいいとこ取りが、<br class="hidden lg:inline">無理なく続く備蓄の秘訣です。
+            </p>
+            
+            <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+                <a href="planner.html" class="inline-flex items-center justify-center w-full sm:w-auto min-w-[280px] px-8 py-5 text-lg font-bold text-white transition-all bg-teal-700 rounded-xl hover:bg-teal-800 hover:shadow-xl hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-700 shadow-lg shadow-teal-700/20 z-20">
+                    自分だけの備蓄プランを作成する
+                    <svg class="w-6 h-6 ml-3 -mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
+                </a>
+            </div>
+
+            <!-- Feature Icons -->
+            <div class="mt-12 pt-8 border-t border-slate-200/60 grid grid-cols-3 gap-2 sm:gap-4 text-center md:text-left backdrop-blur-[2px] md:backdrop-blur-none rounded-xl md:rounded-none">
+                <div class="flex flex-col items-center md:items-start group">
+                    <div class="w-12 h-12 bg-blue-50 text-blue-500 rounded-2xl flex items-center justify-center mb-3 group-hover:bg-blue-100 group-hover:scale-110 transition-all duration-300 shadow-sm md:shadow-none">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+                    </div>
+                    <p class="text-xs sm:text-sm font-bold text-slate-700">AIが最適提案</p>
+                    <p class="text-[10px] text-slate-400 mt-1 hidden sm:block">家族構成に合わせて算出</p>
+                </div>
+                <div class="flex flex-col items-center md:items-start group">
+                    <div class="w-12 h-12 bg-orange-50 text-orange-500 rounded-2xl flex items-center justify-center mb-3 group-hover:bg-orange-100 group-hover:scale-110 transition-all duration-300 shadow-sm md:shadow-none">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2.4-9h6.2l1.6 4H5.8l1.6-4z"></path></svg>
+                    </div>
+                    <p class="text-xs sm:text-sm font-bold text-slate-700">印刷して管理</p>
+                    <p class="text-[10px] text-slate-400 mt-1 hidden sm:block">冷蔵庫に貼るだけ</p>
+                </div>
+                <div class="flex flex-col items-center md:items-start group">
+                    <div class="w-12 h-12 bg-green-50 text-green-500 rounded-2xl flex items-center justify-center mb-3 group-hover:bg-green-100 group-hover:scale-110 transition-all duration-300 shadow-sm md:shadow-none">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    </div>
+                    <p class="text-xs sm:text-sm font-bold text-slate-700">消費サイクル</p>
+                    <p class="text-[10px] text-slate-400 mt-1 hidden sm:block">無理なく回す習慣</p>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Simple Footer -->
+    <footer class="text-center py-6 text-slate-400 text-xs border-t border-slate-200 bg-slate-50 mt-auto relative z-10">
+        <p>&copy; 2024 RollingStock Planner Project. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>
