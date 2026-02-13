@@ -147,18 +147,44 @@
                         class="py-1.5 px-2 border border-slate-300 rounded text-sm min-w-[60px] focus:outline-none focus:border-teal-700"
                         value="7" min="1" onchange="updateConditions()">
                 </div>
+                <!-- 消費周期グループ -->
+                <div class="flex items-center gap-1">
+                    <label class="text-xs font-bold text-slate-500 whitespace-nowrap mr-1">消費周期</label>
+                    <span class="text-xs text-slate-400">第</span>
+                    <select id="input-weekNumber"
+                        class="py-1.5 px-2 border border-slate-300 rounded text-sm focus:outline-none focus:border-teal-700 bg-white"
+                        onchange="updateConditions()">
+                        <option value="1">1</option>
+                        <option value="2" selected>2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                    </select>
+                    <span class="text-xs text-slate-400">週</span>
+                    <select id="input-weekDay"
+                        class="py-1.5 px-2 border border-slate-300 rounded text-sm focus:outline-none focus:border-teal-700 bg-white"
+                        onchange="updateConditions()">
+                        <option value="1">月曜</option>
+                        <option value="2" selected>火曜</option>
+                        <option value="3">水曜</option>
+                        <option value="4">木曜</option>
+                        <option value="5">金曜</option>
+                        <option value="6">土曜</option>
+                        <option value="0">日曜</option>
+                    </select>
+                </div>
             </div>
 
             <!-- Group 2: Constraints -->
             <div class="flex-1 flex items-center gap-4 min-w-[200px]">
                 <div class="flex-1 flex items-center gap-1">
-                    <label class="text-xs font-bold text-slate-500 whitespace-nowrap mr-1">制約</label>
-                    <select id="input-constraints"
+                    <label class="text-xs font-bold text-slate-500 whitespace-nowrap mr-1">テンプレート</label>
+                    <select id="input-template"
                         class="py-1.5 px-2 border border-slate-300 rounded text-sm w-full focus:outline-none focus:border-teal-700 bg-white"
-                        onchange="updateConditions()">
-                        <option value="none">なし</option>
-                        <option value="nocook" selected>調理不可 (水・火なし)</option>
-                        <option value="allergy">アレルギー配慮</option>
+                        onchange="applyTemplate()">
+                        <option value="none">カスタム</option>
+                        <option value="debug-min">デバッグ: 最小 (3品)</option>
+                        <option value="debug-normal" selected>デバッグ: 標準 (10品)</option>
+                        <option value="debug-max">デバッグ: 最大 (20品)</option>
                     </select>
                 </div>
             </div>
@@ -197,6 +223,10 @@
                         <div class="text-center">
                             <div class="text-xl font-bold text-slate-700" id="total-weight-display">--kg</div>
                             <div class="text-[0.65rem] text-slate-500 uppercase">推定重量</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-xl font-bold text-slate-700" id="total-items-display">--</div>
+                            <div class="text-[0.65rem] text-slate-500 uppercase">品目数</div>
                         </div>
                     </div>
                     <div class="flex-[2] min-w-[250px] flex flex-col gap-2 justify-center">
@@ -434,9 +464,21 @@
          * 'PantryPlan' 型として管理することを想定しています。
          * 3. 'recommended' 値は、householdの変更をトリガーに動的に再計算されるべき値です（DB保存不要な場合も）。
          */
+
+        // =========================================
+        // TEMPLATES — 外部JSONファイルで管理
+        // =========================================
+        const TEMPLATE_FILES = {
+            'debug-min': './templates/debug-min.json',
+            'debug-normal': './templates/debug-normal.json',
+            'debug-max': './templates/debug-max.json'
+        };
+        // 読み込み済みテンプレートのキャッシュ
+        const TEMPLATE_CACHE = {};
+
         const initialState = {
-            household: { adults: 2, children: 1, days: 7 },
-            constraints: { noCook: true, allergy: "none" },
+            household: { adults: 2, children: 1, days: 7, weekNumber: 2, weekDay: 2 },
+            currentTemplate: 'debug-normal',
             // Extended Items Data for Nutrition Demo
             /* * AI_NOTE: アイテムデータについて
              * ここにある 'cal', 'water', 'desc' はデモ用の仮データです。
@@ -465,7 +507,15 @@
         document.getElementById('input-adults').value = state.household.adults;
         document.getElementById('input-children').value = state.household.children;
         document.getElementById('input-days').value = state.household.days;
-        if (state.constraints.noCook) document.getElementById('input-constraints').value = "nocook";
+        // テンプレートセレクトの復元
+        if (state.currentTemplate) {
+            document.getElementById('input-template').value = state.currentTemplate;
+        }
+        // 消費周期の復元（既存stateに値がない場合はデフォルト値を設定）
+        if (state.household.weekNumber === undefined) state.household.weekNumber = 2;
+        if (state.household.weekDay === undefined) state.household.weekDay = 2;
+        document.getElementById('input-weekNumber').value = state.household.weekNumber;
+        document.getElementById('input-weekDay').value = state.household.weekDay;
 
         // =========================================
         // LOGIC
@@ -475,19 +525,49 @@
             state.household.adults = parseInt(document.getElementById('input-adults').value);
             state.household.children = parseInt(document.getElementById('input-children').value);
             state.household.days = parseInt(document.getElementById('input-days').value);
+            state.household.weekNumber = parseInt(document.getElementById('input-weekNumber').value);
+            state.household.weekDay = parseInt(document.getElementById('input-weekDay').value);
 
-            const constraintVal = document.getElementById('input-constraints').value;
-            state.constraints.noCook = constraintVal === "nocook";
-            state.constraints.allergy = constraintVal === "allergy" ? "yes" : "none";
-
-            /* * AI_NOTE: ロジックの依存関係
-             * 条件変更時、recalculateRecommended() を呼んでいますが、
-             * Reactでは useEffect(() => { recalculate() }, [household]) のように
-             * 依存配列を用いてリアクティブに推奨値を更新してください。
-             */
             recalculateRecommended();
             saveState();
             renderAll(true); // Animate on major updates
+        }
+
+        async function applyTemplate() {
+            const templateId = document.getElementById('input-template').value;
+            state.currentTemplate = templateId;
+
+            if (templateId === 'none') {
+                saveState();
+                return;
+            }
+
+            const filePath = TEMPLATE_FILES[templateId];
+            if (!filePath) return;
+
+            try {
+                // キャッシュがなければfetchして保存
+                if (!TEMPLATE_CACHE[templateId]) {
+                    const res = await fetch(filePath);
+                    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                    TEMPLATE_CACHE[templateId] = await res.json();
+                }
+
+                const templateItems = TEMPLATE_CACHE[templateId];
+
+                // カスタムアイテム（ユーザーが手動追加したもの）のみ保持
+                const customItems = state.items.filter(item => item.isCustom === true);
+
+                // テンプレートアイテム + カスタムアイテム
+                state.items = [...templateItems.map(item => ({ ...item })), ...customItems];
+
+                recalculateRecommended();
+                saveState();
+                renderAll(true);
+            } catch (e) {
+                alert(`テンプレート読み込みエラー: ${e.message}`);
+                console.error('Template load error:', e);
+            }
         }
 
         function recalculateRecommended() {
@@ -781,6 +861,7 @@
         function renderStats() {
             // Basic Stats
             document.getElementById('total-days-display').textContent = state.household.days + "日";
+            document.getElementById('total-items-display').textContent = state.items.length + "品";
 
             /* * AI_NOTE: 重量計算ロジック (MOCK)
              * 現在は水=2kg, その他=0.3kg という固定値で概算しています。

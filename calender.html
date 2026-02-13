@@ -111,7 +111,8 @@
             margin-bottom: 2rem;
             /* Hardware acceleration */
             transform: translateZ(0);
-            transform-origin: top center; /* Default for PC */
+            transform-origin: top center;
+            /* Default for PC */
         }
 
         /* Header Area */
@@ -292,64 +293,46 @@
         }
 
         .info-split-container {
-            display: flex;
-            gap: 0.8rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(var(--info-card-min, 130px), 1fr));
+            gap: 3px;
             width: 100%;
-            height: 100%;
+            align-content: start;
         }
 
-        .info-split-col {
-            flex: 1;
-            /* 防止カラムが崩れるのを防ぐ */
-            min-width: 0;
-        }
-
-        .stock-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.75rem;
-            margin-top: 2px;
-            /* 固定レイアウトで崩れを防ぐ */
-            table-layout: fixed;
-        }
-
-        .stock-table th {
-            background: #eee;
+        .info-card {
+            border: 1px solid #ddd;
             padding: 2px 4px;
-            text-align: left;
-            font-size: 0.7rem;
-            /* はみ出し防止 */
-            white-space: nowrap;
+            background: #fafafa;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
             overflow: hidden;
-            text-overflow: ellipsis;
+            font-size: var(--info-font-size, 0.8rem);
         }
 
-        .stock-table td {
-            padding: 3px 4px;
-            vertical-align: top;
-            border-bottom: 1px dashed #ddd;
-            overflow: hidden;
-            /* はみ出し防止 */
+        .info-card-name {
+            font-weight: bold;
+            line-height: 1.15;
         }
 
-        .stock-table td>div {
-            /* 内部要素のはみ出し防止 */
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+        .info-card-qty {
+            font-size: 0.85em;
+            color: #666;
         }
 
-        .stock-table tr:last-child td {
-            border-bottom: none;
-        }
-
-        .visual-bar-container {
+        .info-card-bar {
             display: flex;
             flex-wrap: wrap;
-            font-size: 0.65rem;
+            font-size: 0.85em;
             line-height: 1;
             letter-spacing: -1px;
-            margin-bottom: 1px;
+            margin-top: 1px;
+        }
+
+        .info-card-monthly {
+            font-size: 0.9em;
+            font-weight: bold;
         }
 
         /* --- YEARLY GRID & LAYOUT (Revised) --- */
@@ -561,7 +544,7 @@
                 padding-left: 10px;
                 padding-right: 10px;
             }
-            
+
             /* Canvas Transform Origin for Mobile */
             .canvas-page {
                 transform-origin: top left;
@@ -649,6 +632,93 @@
             }
         }
 
+        /* --- EDIT MODE STYLES --- */
+        .edit-instruction-banner {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 300;
+            background: var(--accent-1);
+            color: #fff;
+            text-align: center;
+            padding: 10px 16px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            animation: slideDownBanner 0.3s ease;
+        }
+
+        .edit-instruction-banner.visible {
+            display: block;
+        }
+
+        @keyframes slideDownBanner {
+            from {
+                transform: translateY(-100%);
+            }
+
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        .day-editable {
+            cursor: pointer;
+            transition: background-color 0.1s;
+        }
+
+        .day-editable:hover {
+            background-color: rgba(251, 101, 66, 0.1) !important;
+        }
+
+        .day-drag-start {
+            outline: 3px solid var(--accent-2) !important;
+            outline-offset: -3px;
+            z-index: 5;
+        }
+
+        .day-drag-end {
+            outline: 2px dashed var(--accent-2) !important;
+            outline-offset: -2px;
+            z-index: 4;
+            background-color: rgba(251, 101, 66, 0.08) !important;
+        }
+
+        .day-drag-preview {
+            background-color: rgba(251, 101, 66, 0.1) !important;
+        }
+
+        .day-drag-preview::before {
+            content: '' !important;
+            position: absolute !important;
+            left: 0 !important;
+            right: 0 !important;
+            top: 16px !important;
+            height: 20px !important;
+            background: rgba(251, 101, 66, 0.25) !important;
+            transform: translateY(-50%) !important;
+            pointer-events: none !important;
+            z-index: 0 !important;
+        }
+
+        .edit-mode-active .day:not(.empty) {
+            cursor: pointer;
+        }
+
+        /* Mobile edit bar button highlight */
+        .mobile-tab-btn.edit-active {
+            color: var(--accent-2) !important;
+            background-color: #fff5f0;
+        }
+
+        /* PC edit toggle */
+        .pc-btn.edit-active {
+            background: var(--accent-2) !important;
+            color: #fff !important;
+        }
+
         /* --- PRINT SETTINGS --- */
         #print-container {
             display: none;
@@ -670,10 +740,28 @@
             .controls-pc,
             .controls-mobile,
             .back-link,
+            .edit-instruction-banner,
             /* Hide back button on print */
             .no-print,
             #display-wrapper {
                 display: none !important;
+            }
+
+            /* 印刷時は今日のハイライトを消す */
+            .day.today {
+                background: var(--paper-color) !important;
+            }
+
+            .day.today .date-num {
+                color: var(--ink-color) !important;
+            }
+
+            .day.today.saturday .date-num {
+                color: var(--accent-1) !important;
+            }
+
+            .day.today.sunday .date-num {
+                color: var(--accent-2) !important;
             }
 
             #print-container {
@@ -703,6 +791,19 @@
                 box-shadow: none;
                 border: 2px solid #000;
             }
+
+            /* 印刷時はINFO欄のオーバーフローを許可し、カードが切り取られないように */
+            .bottom-area,
+            .info-box,
+            .info-content-wrapper {
+                overflow: visible !important;
+            }
+
+            /* 印刷時は安全なフォントサイズでauto-fillに任せる */
+            .info-split-container {
+                --info-font-size: 0.65rem;
+                grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)) !important;
+            }
         }
     </style>
 </head>
@@ -730,6 +831,10 @@
             <button onclick="goToToday()" class="pc-btn"
                 style="margin-top:5px; background: #fff; color: #000;">今日</button>
         </div>
+        <div style="margin-top:15px;">
+            <div class="ctrl-label-pc">消費期間:</div>
+            <button id="btn-pc-edit" onclick="toggleEditMode()" class="pc-btn">✏️ 編集</button>
+        </div>
     </div>
 
     <div class="controls-mobile no-print">
@@ -753,10 +858,22 @@
             <span>次月</span>
         </button>
 
+        <button id="btn-mobile-edit" class="mobile-tab-btn" onclick="toggleEditMode()">
+            <i class="ri-edit-2-line"></i>
+            <span>編集</span>
+        </button>
+
         <button class="mobile-tab-btn" onclick="handlePrint()" style="color:var(--accent-1);">
             <i class="ri-printer-line"></i>
             <span>印刷</span>
         </button>
+    </div>
+
+    <!-- Edit Instruction Banner -->
+    <div id="edit-banner" class="edit-instruction-banner">
+        消費開始日をクリック（タップ）し、ドラッグ（スライド）して消費期間を選択してください
+        <button onclick="cancelEditMode()"
+            style="margin-left:12px; background:#fff; color:var(--accent-1); border:none; padding:4px 12px; border-radius:4px; font-weight:bold; cursor:pointer;">キャンセル</button>
     </div>
 
     <div id="display-wrapper">
@@ -805,6 +922,12 @@
                         highlightPayload.adults = bridgeData.household.adults;
                         highlightPayload.children = bridgeData.household.children;
                         highlightPayload.days = bridgeData.household.days;
+                        if (bridgeData.household.weekNumber !== undefined) {
+                            highlightPayload.weekNumber = bridgeData.household.weekNumber;
+                        }
+                        if (bridgeData.household.weekDay !== undefined) {
+                            highlightPayload.weekDay = bridgeData.household.weekDay;
+                        }
                     }
                     if (bridgeData.items && Array.isArray(bridgeData.items)) {
                         STOCK_ITEMS = bridgeData.items;
@@ -871,12 +994,12 @@
             adjustMobileScale(); // Initial adjustment
             window.addEventListener('resize', adjustMobileScale); // Adjust on resize
         }
-        
+
         // --- MOBILE SCALING LOGIC (FIXED HEIGHT, SCROLL WIDTH) ---
         function adjustMobileScale() {
             const canvas = document.getElementById('screen-canvas');
             const wrapper = document.getElementById('display-wrapper');
-            
+
             // PC: Reset styles
             if (window.innerWidth > 768) {
                 canvas.style.transform = '';
@@ -888,35 +1011,35 @@
 
             // Mobile: Calculate Scale based on Height to avoid vertical scroll
             // UI Offset: Mobile Controls (~60px) + Back Button/Header (~80px) + Padding
-            const uiOffset = 150; 
+            const uiOffset = 150;
             const availableHeight = window.innerHeight - uiOffset;
             const originalHeight = canvas.offsetHeight; // Should be ~1122px (297mm)
             const originalWidth = canvas.offsetWidth;   // Should be ~793px (210mm)
-            
+
             // Calculate scale ratio to fit height
             let scale = availableHeight / originalHeight;
-            
+
             // LIMITS: Don't make it too small (unreadable).
             // 0.5 is reasonable minimum (A4 becomes A6 size roughly)
             if (scale < 0.5) scale = 0.5;
             if (scale > 1) scale = 1;
-            
+
             // Apply Transform
             canvas.style.transform = `scale(${scale})`;
-            
+
             // FIX LAYOUT GAP caused by scaling
             // Transform doesn't affect flow, so we must manually reduce spacing
             // Negative margin pulls the bottom/right space back
             const gapH = originalHeight * (1 - scale);
             const gapW = originalWidth * (1 - scale);
-            
+
             canvas.style.marginBottom = `-${gapH}px`;
             canvas.style.marginRight = `-${gapW}px`;
-            
+
             // Adjust Wrapper to contain the SCALED size
             // We set height explicitly to ensure container fits the visual size
             wrapper.style.height = (originalHeight * scale) + 'px';
-            
+
             // If scaled width is less than screen width, center it (via flex in CSS)
             // If scaled width is more than screen width, left align (via CSS left-align default for scroll)
             // No extra JS needed for centering as parent has justify-content: start/center logic via margin
@@ -952,7 +1075,7 @@
                     classes += ' range-highlight';
                     if (isConsumptionStartDate(year, month, d)) classes += ' consumption-start';
                 }
-                daysHTML += `<div class="${classes}"><span class="date-num">${d < 10 ? '0' + d : d}</span></div>`;
+                daysHTML += `<div class="${classes}" data-day="${d}" data-year="${year}" data-month="${month}"><span class="date-num">${d < 10 ? '0' + d : d}</span></div>`;
             }
 
             const remaining = (weeksCount * 7) - totalSlots;
@@ -963,46 +1086,43 @@
             const days = highlightPayload.days;
             const weeksJP = ["日", "月", "火", "水", "木", "金", "土"];
 
+            const itemCount = STOCK_ITEMS.length;
+
             infoContentHtml += `
-                <div style="font-size:0.9rem; font-weight:bold; margin-bottom:5px;">
+                <div class="info-header-line" style="font-size:0.85rem; font-weight:bold; margin-bottom:3px;">
                     設定: 大人${highlightPayload.adults}人 子供${highlightPayload.children}人 × ${days}日分
-                    <span style="font-weight:normal; font-size:0.8rem; margin-left:10px;">消費: 第${highlightPayload.weekNumber}${weeksJP[highlightPayload.weekDay]}曜</span>
+                    <span style="font-weight:normal; font-size:0.8rem; margin-left:8px;">消費: 第${highlightPayload.weekNumber}${weeksJP[highlightPayload.weekDay]}曜</span>
+                    <span style="font-weight:normal; font-size:0.75rem; margin-left:8px; color:#666;">品目数: ${itemCount}</span>
                 </div>
             `;
 
-            const createTable = (items) => {
-                let html = `<table class="stock-table"><thead><tr><th style="width:40%;">ITEM</th><th style="width:60%;">STATUS</th></tr></thead><tbody>`;
-                items.forEach(item => {
-                    const totalQty = item.isTotal
-                        ? item.count
-                        : Math.ceil(item.count * weightedPeople * days);
-                    const accCurrent = Math.floor(((month + 1) * totalQty) / 12);
-                    const accPrev = Math.floor((month * totalQty) / 12);
-                    let monthlyQty = accCurrent - accPrev;
+            const b = (c, col, op = 1) => `<span style="color:${col};opacity:${op};">${c}</span>`;
 
-                    let visualBar = '';
-                    const b = (c, col, op = 1) => `<span class="visual-bar" style="color:${col};opacity:${op};">${c}</span>`;
-                    for (let k = 0; k < accPrev; k++) visualBar += b('◆', 'var(--ink-color)', 0.5);
-                    for (let k = 0; k < monthlyQty; k++) visualBar += b('◆', 'var(--accent-2)');
-                    for (let k = 0; k < (totalQty - accCurrent); k++) visualBar += b('◇', '#ccc');
+            let cardsHtml = '';
+            STOCK_ITEMS.forEach(item => {
+                const totalQty = item.isTotal
+                    ? item.count
+                    : Math.ceil(item.count * weightedPeople * days);
+                const accCurrent = Math.floor(((month + 1) * totalQty) / 12);
+                const accPrev = Math.floor((month * totalQty) / 12);
+                let monthlyQty = accCurrent - accPrev;
 
-                    html += `<tr><td><div>${item.name}</div><div style="font-size:0.8em;color:#666;">(総 ${totalQty}${item.unit})</div></td>
-                             <td><div class="visual-bar-container">${visualBar}</div><div style="font-size:0.8em;font-weight:bold;">今月:${monthlyQty}${item.unit}</div></td></tr>`;
-                });
-                html += `</tbody></table>`;
-                return html;
-            };
+                let visualBar = '';
+                for (let k = 0; k < accPrev; k++) visualBar += b('◆', 'var(--ink-color)', 0.5);
+                for (let k = 0; k < monthlyQty; k++) visualBar += b('◆', 'var(--accent-2)');
+                for (let k = 0; k < (totalQty - accCurrent); k++) visualBar += b('◇', '#ccc');
 
-            const chunkSize = Math.ceil(STOCK_ITEMS.length / 3);
-            const col1 = STOCK_ITEMS.slice(0, chunkSize);
-            const col2 = STOCK_ITEMS.slice(chunkSize, chunkSize * 2);
-            const col3 = STOCK_ITEMS.slice(chunkSize * 2);
+                cardsHtml += `
+                    <div class="info-card">
+                        <div class="info-card-name">${item.name}</div>
+                        <div class="info-card-qty">総 ${totalQty}${item.unit}</div>
+                        <div class="info-card-bar">${visualBar}</div>
+                        <div class="info-card-monthly">今月:${monthlyQty}${item.unit}</div>
+                    </div>
+                `;
+            });
 
-            infoContentHtml += `<div class="info-split-container">
-                <div class="info-split-col">${createTable(col1)}</div>
-                <div class="info-split-col">${createTable(col2)}</div>
-                <div class="info-split-col">${createTable(col3)}</div>
-            </div>`;
+            infoContentHtml += `<div class="info-split-container">${cardsHtml}</div>`;
 
             return `
                 <header>
@@ -1015,9 +1135,9 @@
                 </div>
                 <div class="calendar-container">
                     <div class="weekdays">
-                        <div class="weekday">MON</div><div class="weekday">TUE</div><div class="weekday">WED</div>
-                        <div class="weekday">THU</div><div class="weekday">FRI</div>
-                        <div class="weekday" style="color:var(--accent-1)">SAT</div><div class="weekday" style="color:var(--accent-2)">SUN</div>
+                        <div class="weekday">月曜</div><div class="weekday">火曜</div><div class="weekday">水曜</div>
+                        <div class="weekday">木曜</div><div class="weekday">金曜</div>
+                        <div class="weekday" style="color:var(--accent-1)">土曜</div><div class="weekday" style="color:var(--accent-2)">日曜</div>
                     </div>
                     <div class="days">
                         ${daysHTML}
@@ -1054,7 +1174,7 @@
                 }
 
                 gridHTML += `<div class="mini-month"><div class="mini-month-title">${MONTHS[m]}</div>
-                    <div class="mini-weekdays"><div>M</div><div>T</div><div>W</div><div>T</div><div>F</div><div style="color:var(--accent-1)">S</div><div style="color:var(--accent-2)">S</div></div>
+                    <div class="mini-weekdays"><div>月</div><div>火</div><div>水</div><div>木</div><div>金</div><div style="color:var(--accent-1)">土</div><div style="color:var(--accent-2)">日</div></div>
                     <div class="mini-days">${miniDays}</div></div>`;
             }
 
@@ -1079,7 +1199,7 @@
                 <div class="footer-section-yearly">
                     <div style="font-weight:bold;border-bottom:2px solid var(--ink-color);margin-bottom:8px; display:flex; justify-content:space-between;">
                         <span>STOCK LIST (YEARLY GOAL)</span>
-                        <span style="font-size:0.8em; font-weight:normal;">[備蓄目標総量]</span>
+                        <span style="font-size:0.8em; font-weight:normal;">[備蓄目標総量 / ${STOCK_ITEMS.length}品目]</span>
                     </div>
                     <div class="yearly-stock-grid">${stockListHTML}</div>
                 </div>
@@ -1093,13 +1213,21 @@
 
             if (viewMode === 'monthly') {
                 screenCanvas.innerHTML = generateMonthlyPageHTML(year, month);
+                // レンダリング後にINFO欄のフォントを自動調整
+                requestAnimationFrame(() => autoFitInfoCards());
                 document.getElementById('pc-monthly-nav').style.display = 'block';
+                // Show edit buttons in monthly view
+                if (document.getElementById('btn-pc-edit')) document.getElementById('btn-pc-edit').parentElement.style.display = '';
+                if (document.getElementById('btn-mobile-edit')) document.getElementById('btn-mobile-edit').style.display = '';
                 // Mobile Text Update
                 document.getElementById('mobile-mode-text').innerText = '年表示へ';
                 document.getElementById('mobile-mode-icon').className = 'ri-layout-grid-fill';
             } else {
                 screenCanvas.innerHTML = generateYearlyPageHTML(year);
                 document.getElementById('pc-monthly-nav').style.display = 'none';
+                // Hide edit buttons in yearly view
+                if (document.getElementById('btn-pc-edit')) document.getElementById('btn-pc-edit').parentElement.style.display = 'none';
+                if (document.getElementById('btn-mobile-edit')) document.getElementById('btn-mobile-edit').style.display = 'none';
                 // Mobile Text Update
                 document.getElementById('mobile-mode-text').innerText = '月表示へ';
                 document.getElementById('mobile-mode-icon').className = 'ri-calendar-check-line';
@@ -1107,7 +1235,60 @@
             adjustMobileScale(); // Re-calculate on render
         }
 
+        function autoFitInfoCards() {
+            const wrapper = document.querySelector('#screen-canvas .info-content-wrapper');
+            const grid = wrapper ? wrapper.querySelector('.info-split-container') : null;
+            if (wrapper && grid) autoFitInfoCardsFor(wrapper, grid);
+        }
+
+        function autoFitInfoCardsFor(wrapper, grid) {
+            const cards = grid.querySelectorAll('.info-card');
+            const itemCount = cards.length;
+            if (itemCount === 0) return;
+
+            // ヘッダー行の高さを引いた使用可能な高さ
+            const headerLine = wrapper.querySelector('.info-header-line');
+            const headerH = headerLine ? headerLine.offsetHeight + 3 : 0;
+            const availableH = wrapper.clientHeight - headerH;
+            const availableW = wrapper.clientWidth;
+
+            if (availableH <= 0) return;
+
+            // カラム数を3~6で決める
+            const MIN_COLS = 3, MAX_COLS = 6;
+            const MIN_FONT = 0.5, MAX_FONT = 0.9;
+
+            let bestCols = MIN_COLS;
+            let bestFontSize = MIN_FONT;
+
+            for (let cols = MIN_COLS; cols <= MAX_COLS; cols++) {
+                const rows = Math.ceil(itemCount / cols);
+                const cardW = availableW / cols - 3;
+                const maxCardH = availableH / rows - 3;
+
+                if (maxCardH <= 0 || cardW < 80) continue;
+
+                // カード高 → フォントサイズ逆算
+                // カード構造: 品名(~2行) + 数量(1行) + バー(~2行) + 月量(1行) ≈ 5.5行
+                const fontSize = maxCardH / (5.5 * 1.3);
+                const fontRem = fontSize / 16;
+                const clampedFont = Math.max(MIN_FONT, Math.min(MAX_FONT, fontRem));
+
+                if (clampedFont > bestFontSize) {
+                    bestFontSize = clampedFont;
+                    bestCols = cols;
+                }
+            }
+
+            grid.style.setProperty('--info-font-size', bestFontSize.toFixed(3) + 'rem');
+            grid.style.gridTemplateColumns = `repeat(${bestCols}, 1fr)`;
+        }
+
         function switchMode(mode) {
+            // 年間表示に切り替える際は編集モードをキャンセル
+            if (mode === 'yearly' && editMode) {
+                exitEditMode();
+            }
             viewMode = mode;
             // Update PC Buttons
             document.getElementById('btn-pc-monthly').className = mode === 'monthly' ? 'pc-btn active-mode' : 'pc-btn';
@@ -1133,15 +1314,266 @@
             const printContainer = document.getElementById('print-container');
             printContainer.innerHTML = '';
             const year = currentDate.getFullYear();
-            if (viewMode === 'yearly') {
-                printContainer.innerHTML += `<div class="canvas-page neo-box">${generateYearlyPageHTML(year)}</div>`;
+
+            // 常に今日の月～12月 + 年間の両方を印刷
+            const todayMonth = new Date().getMonth();
+            for (let m = todayMonth; m < 12; m++) {
+                printContainer.innerHTML += `<div class="canvas-page neo-box" style="margin:0; border:none; box-shadow:none;">${generateMonthlyPageHTML(year, m)}</div>`;
+            }
+            // 年間ページを最後に追加
+            printContainer.innerHTML += `<div class="canvas-page neo-box" style="margin:0; border:none; box-shadow:none;">${generateYearlyPageHTML(year)}</div>`;
+
+            // 印刷はCSS auto-fillに任せる（display:noneではJS計測不可のため）
+            setTimeout(() => window.print(), 100);
+        }
+
+        // =========================================
+        // CONSUMPTION PERIOD EDITING
+        // =========================================
+        let editMode = false;
+        let dragStartDay = null;
+        let dragCurrentDay = null;
+        let isDragging = false;
+
+        function toggleEditMode() {
+            if (editMode) {
+                exitEditMode();
             } else {
-                const startMonth = currentDate.getMonth();
-                for (let m = startMonth; m < 12; m++) {
-                    printContainer.innerHTML += `<div class="canvas-page neo-box" style="margin:0; border:none; box-shadow:none;">${generateMonthlyPageHTML(year, m)}</div>`;
+                enterEditMode();
+            }
+        }
+
+        function enterEditMode() {
+            if (viewMode !== 'monthly') {
+                switchMode('monthly');
+            }
+            editMode = true;
+            dragStartDay = null;
+            dragCurrentDay = null;
+            isDragging = false;
+
+            // Show instruction banner
+            document.getElementById('edit-banner').classList.add('visible');
+
+            // Highlight edit buttons
+            const pcBtn = document.getElementById('btn-pc-edit');
+            const mobileBtn = document.getElementById('btn-mobile-edit');
+            if (pcBtn) pcBtn.classList.add('edit-active');
+            if (mobileBtn) mobileBtn.classList.add('edit-active');
+
+            // Add edit-mode class to canvas
+            document.getElementById('screen-canvas').classList.add('edit-mode-active');
+
+            // Disable mobile scroll during edit
+            const wrapper = document.getElementById('display-wrapper');
+            wrapper.style.overflowX = 'hidden';
+
+            attachDayListeners();
+        }
+
+        function exitEditMode() {
+            editMode = false;
+            dragStartDay = null;
+            dragCurrentDay = null;
+            isDragging = false;
+
+            // Hide instruction banner
+            document.getElementById('edit-banner').classList.remove('visible');
+
+            // Remove edit button highlights
+            const pcBtn = document.getElementById('btn-pc-edit');
+            const mobileBtn = document.getElementById('btn-mobile-edit');
+            if (pcBtn) pcBtn.classList.remove('edit-active');
+            if (mobileBtn) mobileBtn.classList.remove('edit-active');
+
+            // Remove edit-mode class
+            document.getElementById('screen-canvas').classList.remove('edit-mode-active');
+
+            // Restore mobile scroll
+            const wrapper = document.getElementById('display-wrapper');
+            wrapper.style.overflowX = '';
+
+            clearDragPreview();
+        }
+
+        function cancelEditMode() {
+            exitEditMode();
+        }
+
+        function attachDayListeners() {
+            const dayCells = document.querySelectorAll('#screen-canvas .day:not(.empty)');
+
+            dayCells.forEach(cell => {
+                cell.classList.add('day-editable');
+
+                // --- PC: Mouse Events ---
+                cell.addEventListener('mousedown', onDayMouseDown);
+                cell.addEventListener('mouseover', onDayMouseOver);
+            });
+
+            // mouseup on document to capture release anywhere
+            document.addEventListener('mouseup', onDayMouseUp);
+
+            // --- Mobile: Touch Events ---
+            const canvas = document.getElementById('screen-canvas');
+            canvas.addEventListener('touchstart', onTouchStart, { passive: false });
+            canvas.addEventListener('touchmove', onTouchMove, { passive: false });
+            canvas.addEventListener('touchend', onTouchEnd, { passive: false });
+        }
+
+        function getDayFromCell(cell) {
+            if (!cell || !cell.dataset.day) return null;
+            return parseInt(cell.dataset.day);
+        }
+
+        // --- PC Mouse Handlers ---
+        function onDayMouseDown(e) {
+            if (!editMode) return;
+            e.preventDefault();
+            const day = getDayFromCell(this);
+            if (day === null) return;
+            isDragging = true;
+            dragStartDay = day;
+            dragCurrentDay = day;
+            updateDragPreview();
+        }
+
+        function onDayMouseOver(e) {
+            if (!editMode || !isDragging) return;
+            const day = getDayFromCell(this);
+            if (day === null) return;
+            dragCurrentDay = day;
+            updateDragPreview();
+        }
+
+        function onDayMouseUp(e) {
+            if (!editMode || !isDragging) return;
+            isDragging = false;
+            if (dragStartDay !== null && dragCurrentDay !== null) {
+                applyDragSelection();
+            }
+        }
+
+        // --- Mobile Touch Handlers ---
+        function getDayCellFromPoint(x, y) {
+            const el = document.elementFromPoint(x, y);
+            if (!el) return null;
+            // Walk up to find .day element
+            let cell = el.closest('.day:not(.empty)');
+            return cell;
+        }
+
+        function onTouchStart(e) {
+            if (!editMode) return;
+            const touch = e.touches[0];
+            const cell = getDayCellFromPoint(touch.clientX, touch.clientY);
+            if (!cell) return;
+            e.preventDefault();
+            const day = getDayFromCell(cell);
+            if (day === null) return;
+            isDragging = true;
+            dragStartDay = day;
+            dragCurrentDay = day;
+            updateDragPreview();
+        }
+
+        function onTouchMove(e) {
+            if (!editMode || !isDragging) return;
+            e.preventDefault();
+            const touch = e.touches[0];
+            const cell = getDayCellFromPoint(touch.clientX, touch.clientY);
+            if (!cell) return;
+            const day = getDayFromCell(cell);
+            if (day === null) return;
+            dragCurrentDay = day;
+            updateDragPreview();
+        }
+
+        function onTouchEnd(e) {
+            if (!editMode || !isDragging) return;
+            e.preventDefault();
+            isDragging = false;
+            if (dragStartDay !== null && dragCurrentDay !== null) {
+                applyDragSelection();
+            }
+        }
+
+        // --- Drag Preview ---
+        function updateDragPreview() {
+            clearDragPreview();
+            if (dragStartDay === null || dragCurrentDay === null) return;
+
+            const minDay = Math.min(dragStartDay, dragCurrentDay);
+            const maxDay = Math.max(dragStartDay, dragCurrentDay);
+
+            const dayCells = document.querySelectorAll('#screen-canvas .day:not(.empty)');
+            dayCells.forEach(cell => {
+                const d = getDayFromCell(cell);
+                if (d === null) return;
+                if (d >= minDay && d <= maxDay) {
+                    cell.classList.add('day-drag-preview');
+                }
+                if (d === dragStartDay) {
+                    cell.classList.add('day-drag-start');
+                }
+                if (d === dragCurrentDay && dragCurrentDay !== dragStartDay) {
+                    cell.classList.add('day-drag-end');
+                }
+            });
+        }
+
+        function clearDragPreview() {
+            document.querySelectorAll('.day-drag-preview').forEach(el => el.classList.remove('day-drag-preview'));
+            document.querySelectorAll('.day-drag-start').forEach(el => el.classList.remove('day-drag-start'));
+            document.querySelectorAll('.day-drag-end').forEach(el => el.classList.remove('day-drag-end'));
+            document.querySelectorAll('.day-editable').forEach(el => el.classList.remove('day-editable'));
+        }
+
+        // --- Apply Selection ---
+        function applyDragSelection() {
+            const minDay = Math.min(dragStartDay, dragCurrentDay);
+            const maxDay = Math.max(dragStartDay, dragCurrentDay);
+            const selectedDays = maxDay - minDay + 1;
+
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            const startDate = new Date(year, month, minDay);
+            const startDayOfWeek = startDate.getDay(); // 0=Sun, 1=Mon...
+
+            // Calculate which week number this falls in
+            const firstOfMonth = new Date(year, month, 1);
+            const firstDayOfWeek = firstOfMonth.getDay();
+            // week number = which occurrence of this weekday in the month
+            let weekNum = 1;
+            let checkDay = 1 + (startDayOfWeek - firstDayOfWeek + 7) % 7;
+            while (checkDay + 7 <= minDay) {
+                checkDay += 7;
+                weekNum++;
+            }
+
+            // Update highlightPayload
+            highlightPayload.weekNumber = weekNum;
+            highlightPayload.weekDay = startDayOfWeek;
+            highlightPayload.days = selectedDays;
+
+            // Also update bridge data so it persists
+            const bridgeDataRaw = localStorage.getItem('dorksense_bridge_data');
+            if (bridgeDataRaw) {
+                try {
+                    const bridgeData = JSON.parse(bridgeDataRaw);
+                    if (!bridgeData.household) bridgeData.household = {};
+                    bridgeData.household.weekNumber = weekNum;
+                    bridgeData.household.weekDay = startDayOfWeek;
+                    bridgeData.household.days = selectedDays;
+                    localStorage.setItem('dorksense_bridge_data', JSON.stringify(bridgeData));
+                } catch (e) {
+                    console.error('Failed to update bridge data', e);
                 }
             }
-            setTimeout(() => window.print(), 100);
+
+            // Exit edit mode and re-render
+            exitEditMode();
+            renderScreen();
         }
 
         init();

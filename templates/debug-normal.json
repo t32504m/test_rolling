@@ -1,0 +1,112 @@
+[
+    {
+        "id": "T1",
+        "name": "保存水 (2L)",
+        "category": "water",
+        "count": 12,
+        "recommended": 12,
+        "unit": "本",
+        "cal": 0,
+        "water": 2000,
+        "desc": "5年保存可能。"
+    },
+    {
+        "id": "T2",
+        "name": "アルファ米 (五目)",
+        "category": "main",
+        "count": 10,
+        "recommended": 10,
+        "unit": "食",
+        "cal": 360,
+        "water": 0,
+        "desc": "お湯または水で戻せる。"
+    },
+    {
+        "id": "T3",
+        "name": "レトルトカレー",
+        "category": "main",
+        "count": 5,
+        "recommended": 6,
+        "unit": "袋",
+        "cal": 200,
+        "water": 0,
+        "desc": "温めずにおいしいタイプ推奨。"
+    },
+    {
+        "id": "T4",
+        "name": "缶詰パン",
+        "category": "main",
+        "count": 6,
+        "recommended": 6,
+        "unit": "缶",
+        "cal": 350,
+        "water": 0,
+        "desc": "開けてすぐ食べられる。"
+    },
+    {
+        "id": "T5",
+        "name": "魚の缶詰",
+        "category": "main",
+        "count": 8,
+        "recommended": 8,
+        "unit": "缶",
+        "cal": 180,
+        "water": 0,
+        "desc": "DHA/EPAが豊富。"
+    },
+    {
+        "id": "T6",
+        "name": "野菜ジュース",
+        "category": "other",
+        "count": 7,
+        "recommended": 7,
+        "unit": "本",
+        "cal": 80,
+        "water": 200,
+        "desc": "ビタミン補給。"
+    },
+    {
+        "id": "T7",
+        "name": "ビスケット/お菓子",
+        "category": "other",
+        "count": 3,
+        "recommended": 5,
+        "unit": "箱",
+        "cal": 400,
+        "water": 0,
+        "desc": "エネルギー補給。"
+    },
+    {
+        "id": "T8",
+        "name": "簡易トイレ",
+        "category": "other",
+        "count": 30,
+        "recommended": 35,
+        "unit": "回",
+        "cal": 0,
+        "water": 0,
+        "desc": "凝固剤と汚物袋。"
+    },
+    {
+        "id": "T9",
+        "name": "ボディシート",
+        "category": "other",
+        "count": 2,
+        "recommended": 2,
+        "unit": "パック",
+        "cal": 0,
+        "water": 0,
+        "desc": "大判タイプ推奨。"
+    },
+    {
+        "id": "T10",
+        "name": "カセットボンベ",
+        "category": "other",
+        "count": 0,
+        "recommended": 6,
+        "unit": "本",
+        "cal": 0,
+        "water": 0,
+        "desc": "カセットコンロ用。"
+    }
+]
