@@ -605,44 +605,95 @@
         }
 
         function recalculateRecommended() {
-            /* * AI_NOTE: 推奨数算出ロジック (IMPORTANT: LOGIC CONSTRAINTS)
-             * 現在のデモ用計算 (0.5 * days * people 等) は不正確です。本番実装時は以下の制約に従ってください。
-             * * 【制約A: 栄養素ベースの所要量計算】
-             * - 単純な「人数×日数」ではなく、「世帯全体の必要総カロリー・総水分量」を算出し、それを満たすようにアイテム数を決定する。
-             * - 例: 大人2人(2000kcal/日×2) + 子供1人(1400kcal/日×1) = 5400kcal/日 × 3日 = 16,200kcal必要。
-             * これを各アイテムのカロリーで割って個数を出す。
+            /**
+             * 栄養目標ベースの推奨数算出ロジック
              *
-             * 【制約B: 配分可能性（整除性）とパッケージング】
-             * - 「家族で分けられる数」問題: 5個を3人で分けるのは管理が面倒。
-             * - 対策:
-             * 1. 不可分なもの（缶詰、レトルトなど）は「Math.ceil(必要数 / 人数) * 人数」のように、人数単位で切り上げて全員に行き渡るようにする。
-             * 2. 可分なもの（大瓶の水、お米など）は総量で計算してよい。
-             *
-             * 【制約C: ローリングストックの回転しやすさ】
-             * - 大量に買いすぎると消費が追いつかないため、消費サイクル（例：週1回食べるなら備蓄もそのペースで回せる量）を考慮する。
+             * 【制約A: 栄養素ベース】
+             *   目標カロリー・水分量を算出し、品目の比率に基づき配分。
+             * 【制約B: 人数整除性】
+             *   Math.ceil(rawCount / totalPeople) * totalPeople で人数の倍数に丸め。
+             * 【制約C: 最低保証】
+             *   カロリー品は最低1個を保証。
              */
-            const people = state.household.adults + state.household.children * 0.7;
+            const adults = state.household.adults;
+            const children = state.household.children;
             const days = state.household.days;
+            const totalPeople = adults + children;
 
+            // --- 目標値 ---
+            const totalTargetCal = (adults * 2000 + children * 1400) * days;   // kcal
+            const totalTargetWater = (adults * 3000 + children * 2000) * days; // ml
+
+            // --- 人数で割り切れるよう切り上げ丸め ---
+            function roundUpToPeople(rawCount) {
+                if (totalPeople <= 0) return Math.max(1, Math.ceil(rawCount));
+                return Math.ceil(rawCount / totalPeople) * totalPeople;
+            }
+
+            // ============================
+            // Step 1: カロリー品の比率配分
+            // ============================
+            const calItems = state.items.filter(i => (i.cal || 0) > 0);
+            // テンプレート元の count を比率のベースに使う（0の場合は1で補完）
+            const calWeights = calItems.map(i => Math.max(i.count, 1));
+            const calWeightSum = calWeights.reduce((a, b) => a + b, 0) || 1;
+
+            // 各品目に推奨カロリーを比率で配分 → 必要個数を算出
+            const calRecommended = new Map(); // id -> recommended
+            calItems.forEach((item, idx) => {
+                const ratio = calWeights[idx] / calWeightSum;
+                const allocatedCal = totalTargetCal * ratio;
+                const rawCount = allocatedCal / item.cal;
+                const rounded = roundUpToPeople(rawCount);
+                calRecommended.set(item.id, Math.max(rounded, totalPeople)); // 最低でも人数分
+            });
+
+            // ============================
+            // Step 2: 水分品の比率配分
+            // ============================
+            const waterItems = state.items.filter(i => (i.water || 0) > 0);
+            const waterWeights = waterItems.map(i => Math.max(i.count, 1));
+            const waterWeightSum = waterWeights.reduce((a, b) => a + b, 0) || 1;
+
+            const waterRecommended = new Map(); // id -> recommended
+            waterItems.forEach((item, idx) => {
+                const ratio = waterWeights[idx] / waterWeightSum;
+                const allocatedWater = totalTargetWater * ratio;
+                const rawCount = allocatedWater / item.water;
+                const rounded = roundUpToPeople(rawCount);
+                waterRecommended.set(item.id, Math.max(rounded, totalPeople));
+            });
+
+            // ============================
+            // Step 3: 各アイテムに recommended を設定
+            // ============================
             state.items.forEach(item => {
-                let base = 1;
-                // Mock Logic: 実際のアプリでは上記「制約A, B, C」に基づき書き直すこと
-                if (item.category === 'water') {
-                    base = 0.5 * days * people;
-                } else if (item.category === 'main' || item.category === 'staple') {
-                    // 主食・主菜
-                    base = 0.3 * days * people;
-                } else if (item.category === 'side') {
-                    // 副菜
-                    base = 0.2 * days * people;
-                } else {
-                    // その他、スナック
-                    base = 0.1 * days * people;
-                }
+                const hasCal = (item.cal || 0) > 0;
+                const hasWater = (item.water || 0) > 0;
 
-                // カスタムアイテムで固定数が指定されている場合は推奨計算をスキップする場合もありますが、
-                // ここでは一律計算し、ユーザー入力値(count)と比較させます。
-                item.recommended = Math.ceil(base);
+                if (hasCal || hasWater) {
+                    // カロリーと水分の両方を持つ品目は、大きい方を採用
+                    const fromCal = calRecommended.get(item.id) || 0;
+                    const fromWater = waterRecommended.get(item.id) || 0;
+                    item.recommended = Math.max(fromCal, fromWater);
+                } else {
+                    // 非カロリー・非水分品（簡易トイレ、ボディシート等）
+                    // カテゴリ別の簡易係数で算出
+                    let perPersonPerDay;
+                    if (item.category === 'other') {
+                        // 簡易トイレ系: 1人あたり約5回/日
+                        if (item.unit === '回') {
+                            perPersonPerDay = 5;
+                        } else {
+                            // その他日用品: 少量
+                            perPersonPerDay = 0.15;
+                        }
+                    } else {
+                        perPersonPerDay = 0.1;
+                    }
+                    const rawCount = totalPeople * days * perPersonPerDay;
+                    item.recommended = roundUpToPeople(Math.max(rawCount, 1));
+                }
             });
         }
 
@@ -674,11 +725,13 @@
         }
 
         function autoAdjust() {
-            /* * AI_NOTE: 自動調整ロジック
-             * 現在は「推奨数に足りない場合のみ推奨数まで増やす」という単純なロジックです。
-             * 将来的には、「優先度の高いものから補充する」などの高度なロジックが検討されます。
-             * 主菜や主食が優先となるかと思います。（主食は日数*3で、その他のカロリーやタンパク質で主菜の計算、ビタミンなどで副菜の計算になるのかな。今のところはカロリー計算のみだが。）
+            /**
+             * 自動調整: 推奨数に基づいてcountを調整する。
+             * - count < recommended → recommended まで引き上げ
+             * - count >= recommended → ユーザーが意図的に増やしたと推定し、据え置き
              */
+            recalculateRecommended(); // 最新の条件で再計算
+
             let changed = false;
             state.items.forEach(item => {
                 if (item.count < item.recommended) {
@@ -686,8 +739,11 @@
                     changed = true;
                 }
             });
+
+            saveState();
+            renderAll(true);
+
             if (changed) {
-                renderAll(false); // No animation
                 alert("不足分を推奨数まで補充しました。");
             } else {
                 alert("すでに推奨数を満たしています。");
@@ -967,7 +1023,7 @@
 
                 // --- LIST ITEM HTML ---
                 const listHtml = `
-                <div class="flex flex-col border-b border-slate-100 cursor-pointer ${animClass} group" onclick="toggleDetails(${item.id})">
+                <div class="flex flex-col border-b border-slate-100 cursor-pointer ${animClass} group" onclick='toggleDetails(${JSON.stringify(item.id)})'>
                     <div class="flex items-center p-3 hover:bg-slate-50 transition-colors">
                         <div class="flex-1 pointer-events-none">
                             <span class="block font-bold text-slate-800 text-[0.95rem]">
@@ -979,14 +1035,14 @@
                             </div>
                         </div>
                         <div class="flex items-center gap-2 cursor-default" onclick="event.stopPropagation()">
-                            <button class="w-7 h-7 flex items-center justify-center border border-slate-300 rounded text-slate-600 bg-white hover:bg-slate-100 transition-colors" onclick="updateQty(${item.id}, -1)">
+                            <button class="w-7 h-7 flex items-center justify-center border border-slate-300 rounded text-slate-600 bg-white hover:bg-slate-100 transition-colors" onclick='updateQty(${JSON.stringify(item.id)}, -1)'>
                                 <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M19 13H5v-2h14v2z"/></svg>
                             </button>
                             <input type="text" class="w-12 text-center border border-slate-300 rounded text-sm font-bold p-1 bg-white" value="${item.count}" readonly>
-                            <button class="w-7 h-7 flex items-center justify-center border border-slate-300 rounded text-slate-600 bg-white hover:bg-slate-100 transition-colors" onclick="updateQty(${item.id}, 1)">
+                            <button class="w-7 h-7 flex items-center justify-center border border-slate-300 rounded text-slate-600 bg-white hover:bg-slate-100 transition-colors" onclick='updateQty(${JSON.stringify(item.id)}, 1)'>
                                 <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
                             </button>
-                            <button class="w-7 h-7 flex items-center justify-center text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors ml-1" onclick="deleteItem(${item.id})" title="削除">
+                            <button class="w-7 h-7 flex items-center justify-center text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors ml-1" onclick='deleteItem(${JSON.stringify(item.id)})' title="削除">
                                 <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
                             </button>
                         </div>
@@ -1002,7 +1058,7 @@
 
                 // --- CARD ITEM HTML ---
                 const cardHtml = `
-                <div class="bg-white border border-slate-200 rounded-lg p-4 flex flex-col items-center text-center relative cursor-pointer hover:-translate-y-0.5 hover:shadow-md transition-all ${animClass}" onclick="toggleDetails(${item.id})">
+                <div class="bg-white border border-slate-200 rounded-lg p-4 flex flex-col items-center text-center relative cursor-pointer hover:-translate-y-0.5 hover:shadow-md transition-all ${animClass}" onclick='toggleDetails(${JSON.stringify(item.id)})'>
                     <span class="mt-2 font-bold text-slate-800 text-sm pointer-events-none">
                         ${item.name}
                     </span>
@@ -1011,15 +1067,15 @@
                         現在: ${item.count}${item.unit}
                     </div>
                     <div class="flex items-center gap-2 mt-auto w-full justify-center cursor-default" onclick="event.stopPropagation()">
-                        <button class="w-7 h-7 flex items-center justify-center border border-slate-300 rounded text-slate-600 bg-white hover:bg-slate-100 transition-colors" onclick="updateQty(${item.id}, -1)">
+                        <button class="w-7 h-7 flex items-center justify-center border border-slate-300 rounded text-slate-600 bg-white hover:bg-slate-100 transition-colors" onclick='updateQty(${JSON.stringify(item.id)}, -1)'>
                             <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M19 13H5v-2h14v2z"/></svg>
                         </button>
                         <input type="text" class="w-10 text-center border border-slate-300 rounded text-sm font-bold p-1 bg-white" value="${item.count}" readonly>
-                        <button class="w-7 h-7 flex items-center justify-center border border-slate-300 rounded text-slate-600 bg-white hover:bg-slate-100 transition-colors" onclick="updateQty(${item.id}, 1)">
+                        <button class="w-7 h-7 flex items-center justify-center border border-slate-300 rounded text-slate-600 bg-white hover:bg-slate-100 transition-colors" onclick='updateQty(${JSON.stringify(item.id)}, 1)'>
                             <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
                         </button>
                     </div>
-                    <button class="mt-2 text-xs text-slate-400 hover:text-red-500 hover:bg-red-50 rounded px-2 py-0.5 transition-colors" onclick="event.stopPropagation(); deleteItem(${item.id})">
+                    <button class="mt-2 text-xs text-slate-400 hover:text-red-500 hover:bg-red-50 rounded px-2 py-0.5 transition-colors" onclick='event.stopPropagation(); deleteItem(${JSON.stringify(item.id)})'>
                         削除
                     </button>
                     <!-- Detail Section for Card View -->

@@ -799,11 +799,7 @@
                 overflow: visible !important;
             }
 
-            /* 印刷時は安全なフォントサイズでauto-fillに任せる */
-            .info-split-container {
-                --info-font-size: 0.65rem;
-                grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)) !important;
-            }
+            /* 印刷時もJSで設定した値をそのまま使う（上書きしない） */
         }
     </style>
 </head>
@@ -1241,6 +1237,14 @@
             if (wrapper && grid) autoFitInfoCardsFor(wrapper, grid);
         }
 
+        /**
+         * INFO欄カードの最適サイズ計算（px基準・2フェーズ選択）
+         * 
+         * Phase 1: 各カラム数(3~6)に対し、カード内に収まる最大フォントサイズ(rawFontPx)を算出
+         * Phase 2: rawFontPxが最大のカラム数を選択
+         *   - 複数が同じクランプ値になった場合、少ないカラム（広いカード）を優先
+         *   - スペースが厳しい時は多いカラム（少ない行数）が自然に勝つ
+         */
         function autoFitInfoCardsFor(wrapper, grid) {
             const cards = grid.querySelectorAll('.info-card');
             const itemCount = cards.length;
@@ -1252,35 +1256,96 @@
             const availableH = wrapper.clientHeight - headerH;
             const availableW = wrapper.clientWidth;
 
-            if (availableH <= 0) return;
+            if (availableH <= 0 || availableW <= 0) return;
 
-            // カラム数を3~6で決める
             const MIN_COLS = 3, MAX_COLS = 6;
-            const MIN_FONT = 0.5, MAX_FONT = 0.9;
+            const MIN_FONT_PX = 8, MAX_FONT_PX = 14;
+            const gap = 3;
 
-            let bestCols = MIN_COLS;
-            let bestFontSize = MIN_FONT;
+            // 各品目のバー記号の総数と品名の最大長を取得
+            const weightedPeople = highlightPayload.adults + (highlightPayload.children * 0.6);
+            const days = highlightPayload.days;
+            let maxBarSymbols = 0;
+            let maxNameLen = 0;
+            STOCK_ITEMS.forEach(item => {
+                const totalQty = item.isTotal
+                    ? item.count
+                    : Math.ceil(item.count * weightedPeople * days);
+                if (totalQty > maxBarSymbols) maxBarSymbols = totalQty;
+                if (item.name.length > maxNameLen) maxNameLen = item.name.length;
+            });
 
+            // Phase 1: 各カラム数のrawFontPxを計算
+            const candidates = [];
             for (let cols = MIN_COLS; cols <= MAX_COLS; cols++) {
                 const rows = Math.ceil(itemCount / cols);
-                const cardW = availableW / cols - 3;
-                const maxCardH = availableH / rows - 3;
+                const cardW = (availableW - gap * (cols - 1)) / cols;
+                const maxCardH = (availableH - gap * (rows - 1)) / rows;
 
-                if (maxCardH <= 0 || cardW < 80) continue;
+                if (maxCardH <= 0 || cardW < 60) continue;
 
-                // カード高 → フォントサイズ逆算
-                // カード構造: 品名(~2行) + 数量(1行) + バー(~2行) + 月量(1行) ≈ 5.5行
-                const fontSize = maxCardH / (5.5 * 1.3);
-                const fontRem = fontSize / 16;
-                const clampedFont = Math.max(MIN_FONT, Math.min(MAX_FONT, fontRem));
+                // カード内行数を推定
+                const testFontPx = Math.min(MAX_FONT_PX, Math.max(MIN_FONT_PX, maxCardH / 4));
+                const charWidthPx = testFontPx * 0.85;
+                const usableCardW = cardW - 8; // padding分
 
-                if (clampedFont > bestFontSize) {
-                    bestFontSize = clampedFont;
-                    bestCols = cols;
+                // バー記号の折返し行数（最大2行に制限 — バーは装飾的要素）
+                const barsPerLine = Math.max(1, Math.floor(usableCardW / (charWidthPx * 0.6)));
+                const barLines = Math.min(2, Math.ceil(maxBarSymbols / barsPerLine));
+                const nameLines = (maxNameLen > 5 && usableCardW < testFontPx * maxNameLen * 0.7) ? 2 : 1;
+
+                // 総行数: 品名 + 数量 + バー + 月量 + 余裕
+                const totalLines = nameLines + 1 + Math.max(1, barLines) + 1 + 0.3;
+                const lineHeight = 1.3;
+
+                // 行数からフォントサイズを逆算 (px) — クランプしない生の値
+                const rawFontPx = maxCardH / (totalLines * lineHeight);
+
+                candidates.push({ cols, rows, rawFontPx, cardW, maxCardH, totalLines });
+            }
+
+            if (candidates.length === 0) return;
+
+            // Phase 2: 最適なカラム数を選択
+            // rawFontPxをクランプした値で比較し、同値なら少ないカラム（広いカード）を優先
+            let bestCols = candidates[0].cols;
+            let bestRawFont = candidates[0].rawFontPx;
+
+            for (const c of candidates) {
+                const clampedCurrent = Math.max(MIN_FONT_PX, Math.min(MAX_FONT_PX, c.rawFontPx));
+                const clampedBest = Math.max(MIN_FONT_PX, Math.min(MAX_FONT_PX, bestRawFont));
+
+                if (clampedCurrent > clampedBest) {
+                    // クランプ後のフォントが大きい → 明確に優れている
+                    bestCols = c.cols;
+                    bestRawFont = c.rawFontPx;
+                } else if (clampedCurrent === clampedBest) {
+                    // クランプ後が同じ場合：
+                    // 両方ともMAXにクランプ → 少ないカラム（広いカード）を優先
+                    // 両方ともMINにクランプ → rawFontPxが大きい方（はみ出しが少ない）を優先
+                    if (clampedCurrent >= MAX_FONT_PX) {
+                        // 十分な高さがある → 少ないカラムで大きく表示
+                        if (c.cols < bestCols) {
+                            bestCols = c.cols;
+                            bestRawFont = c.rawFontPx;
+                        }
+                    } else {
+                        // スペースが厳しい → rawFontPxが大きい方（＝多いカラム＝少ない行数）
+                        if (c.rawFontPx > bestRawFont) {
+                            bestCols = c.cols;
+                            bestRawFont = c.rawFontPx;
+                        }
+                    }
                 }
             }
 
-            grid.style.setProperty('--info-font-size', bestFontSize.toFixed(3) + 'rem');
+            const bestFontPx = Math.max(MIN_FONT_PX, Math.min(MAX_FONT_PX, bestRawFont));
+
+            // px → rem 変換 (実際のルートfont-sizeを取得)
+            const rootFontSize = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+            const bestFontRem = bestFontPx / rootFontSize;
+
+            grid.style.setProperty('--info-font-size', bestFontRem.toFixed(3) + 'rem');
             grid.style.gridTemplateColumns = `repeat(${bestCols}, 1fr)`;
         }
 
@@ -1323,8 +1388,32 @@
             // 年間ページを最後に追加
             printContainer.innerHTML += `<div class="canvas-page neo-box" style="margin:0; border:none; box-shadow:none;">${generateYearlyPageHTML(year)}</div>`;
 
-            // 印刷はCSS auto-fillに任せる（display:noneではJS計測不可のため）
-            setTimeout(() => window.print(), 100);
+            // 印刷コンテナを一時的に表示してJS計測を可能にする
+            printContainer.style.display = 'block';
+            printContainer.style.position = 'absolute';
+            printContainer.style.left = '-9999px';
+            printContainer.style.top = '0';
+
+            // 各月ページのINFO欄にautoFitInfoCardsForを適用
+            requestAnimationFrame(() => {
+                printContainer.querySelectorAll('.canvas-page').forEach(page => {
+                    const w = page.querySelector('.info-content-wrapper');
+                    const g = w ? w.querySelector('.info-split-container') : null;
+                    if (w && g) autoFitInfoCardsFor(w, g);
+                });
+
+                // 計測完了後、非表示に戻してから印刷
+                printContainer.style.position = '';
+                printContainer.style.left = '';
+                printContainer.style.top = '';
+                // display:blockのままにする（印刷CSSが制御する）
+
+                setTimeout(() => {
+                    window.print();
+                    // 印刷後にコンテナを非表示に戻す
+                    printContainer.style.display = 'none';
+                }, 100);
+            });
         }
 
         // =========================================
