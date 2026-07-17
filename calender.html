@@ -91,6 +91,9 @@
             -webkit-overflow-scrolling: touch;
             padding-bottom: 20px;
             /* スクロールバーのための余白 */
+            /* PC: 右上固定の operation panel(160px+余白) と重ならないよう領域を確保 */
+            padding-right: 190px;
+            box-sizing: border-box;
         }
 
         /* A4 Page Container (FIXED SIZE, Scaled via JS) */
@@ -113,6 +116,13 @@
             transform: translateZ(0);
             transform-origin: top center;
             /* Default for PC */
+        }
+
+        .canvas-page.mode-monthly {
+            flex-basis: 297mm;
+            width: 297mm;
+            min-width: 297mm;
+            height: 210mm;
         }
 
         /* Header Area */
@@ -141,38 +151,165 @@
             flex-direction: column;
         }
 
-        /* Info/Memo Area */
-        .bottom-area {
+        /* --- MONTHLY LAYOUT: left(calendar+memo) / right(stock), full-height row --- */
+        .monthly-body {
             flex: 1 1 auto;
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1.5rem;
+            display: flex;
+            min-height: 0;
+            gap: 1.2rem;
+        }
+
+        .monthly-left {
+            flex: 0 0 62%;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            padding-right: 1.2rem;
+            border-right: var(--border-width) solid var(--ink-color);
+            box-sizing: border-box;
+        }
+
+        .legend-line {
+            flex: 0 0 auto;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            font-size: 0.7rem;
+            color: #666;
+            margin-top: 0.4rem;
+            flex-wrap: wrap;
+        }
+
+        .legend-swatch {
+            width: 16px;
+            height: 9px;
+            display: inline-block;
+            background: rgba(251, 101, 66, 0.32);
+            transform: rotate(-2deg);
+        }
+
+        .memo-box {
+            flex: 1 1 auto;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            margin-top: 0.8rem;
+            padding-top: 0.8rem;
+            border-top: var(--border-width) solid var(--ink-color);
+        }
+
+        .memo-ruled {
+            flex: 1 1 auto;
+            min-height: 0;
+            border: 1.5px solid #dcd9d0;
+            background-image: repeating-linear-gradient(transparent, transparent 25px, #e7e5dd 25px, #e7e5dd 26px);
+        }
+
+        .stock-panel {
+            flex: 0 0 38%;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            box-sizing: border-box;
+        }
+
+        .stock-list {
+            flex: 1 1 auto;
+            display: flex;
+            flex-direction: column;
             min-height: 0;
             overflow: hidden;
+            margin-top: 4px;
         }
 
-        .bottom-area .memo-box {
-            display: none;
-        }
-
-        /* Info Boxes */
-        .info-box {
-            border: var(--border-width) solid var(--ink-color);
-            background: var(--paper-color);
-            padding: 0.8rem;
+        .stock-row {
+            flex: 1 1 0;
+            min-height: 0;
+            overflow: hidden;
+            border-bottom: 1.5px dashed #d4d2cb;
+            padding: 2px 1px;
             display: flex;
             flex-direction: column;
-            height: 100%;
-            box-shadow: 4px 4px 0px var(--ink-color);
-            box-sizing: border-box;
+            justify-content: center;
+            gap: 2px;
+        }
+
+        .stock-row .row-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 6px;
+        }
+
+        .stock-row .row-name-wrap {
+            display: flex;
+            align-items: baseline;
+            gap: 4px;
+            min-width: 0;
+        }
+
+        .stock-row .row-name {
+            font-size: 0.78rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .stock-row .row-dot {
+            color: var(--accent-2);
+            font-size: 0.6rem;
+            flex: 0 0 auto;
+        }
+
+        .stock-row .row-qty {
+            font-size: 0.62rem;
+            color: #999;
+            white-space: nowrap;
+            font-family: monospace;
+            flex: 0 0 auto;
+        }
+
+        .stock-row .row-bar {
+            font-size: 0.72rem;
+            line-height: 1;
+            letter-spacing: -1px;
+            white-space: nowrap;
             overflow: hidden;
         }
 
-        .info-content-wrapper {
-            flex: 1;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
+        /* Inline mode (many items): name | bar | qty on one line */
+        .stock-list.inline-mode .stock-row {
+            flex-direction: row;
+            align-items: center;
+            gap: 6px;
+            border-bottom: 1px dashed #d8d6cf;
+            padding: 0 1px;
+        }
+
+        .stock-list.inline-mode .row-name-wrap {
+            flex: 0 0 42%;
+        }
+
+        .stock-list.inline-mode .row-bar {
+            flex: 1 1 auto;
+            font-size: 0.65rem;
+            letter-spacing: -1.2px;
+        }
+
+        .stock-list.inline-mode .row-qty {
+            flex: 0 0 auto;
+        }
+
+        .bar-prev {
+            color: #9a9a9a;
+        }
+
+        .bar-cur {
+            color: var(--accent-2);
+        }
+
+        .bar-rem {
+            color: #cfcfcf;
         }
 
         /* --- TYPOGRAPHY & DECOR --- */
@@ -214,7 +351,7 @@
         }
 
         .day {
-            min-height: 80px;
+            min-height: 0;
             border-right: var(--border-width) solid var(--ink-color);
             border-bottom: var(--border-width) solid var(--ink-color);
             background: var(--paper-color);
@@ -281,7 +418,7 @@
             background: rgba(255, 255, 255, 0.8);
         }
 
-        /* --- INFO TABLE STYLES (Monthly) --- */
+        /* --- STOCK/MEMO HEADER (Monthly) --- */
         .box-header {
             font-weight: 900;
             border-bottom: 2px solid var(--ink-color);
@@ -290,49 +427,6 @@
             justify-content: space-between;
             align-items: center;
             flex: 0 0 auto;
-        }
-
-        .info-split-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(var(--info-card-min, 130px), 1fr));
-            gap: 3px;
-            width: 100%;
-            align-content: start;
-        }
-
-        .info-card {
-            border: 1px solid #ddd;
-            padding: 2px 4px;
-            background: #fafafa;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            overflow: hidden;
-            font-size: var(--info-font-size, 0.8rem);
-        }
-
-        .info-card-name {
-            font-weight: bold;
-            line-height: 1.15;
-        }
-
-        .info-card-qty {
-            font-size: 0.85em;
-            color: #666;
-        }
-
-        .info-card-bar {
-            display: flex;
-            flex-wrap: wrap;
-            font-size: 0.85em;
-            line-height: 1;
-            letter-spacing: -1px;
-            margin-top: 1px;
-        }
-
-        .info-card-monthly {
-            font-size: 0.9em;
-            font-weight: bold;
         }
 
         /* --- YEARLY GRID & LAYOUT (Revised) --- */
@@ -773,6 +867,15 @@
                 margin: 0;
             }
 
+            .canvas-page.mode-monthly {
+                page: monthly-landscape;
+            }
+
+            @page monthly-landscape {
+                size: A4 landscape;
+                margin: 0;
+            }
+
             .canvas-page {
                 margin: 0;
                 border: none;
@@ -781,6 +884,11 @@
                 height: 297mm;
                 width: 210mm;
                 transform: none !important;
+            }
+
+            .canvas-page.mode-monthly {
+                height: 210mm;
+                width: 297mm;
             }
 
             .canvas-page:last-child {
@@ -792,10 +900,10 @@
                 border: 2px solid #000;
             }
 
-            /* 印刷時はINFO欄のオーバーフローを許可し、カードが切り取られないように */
-            .bottom-area,
-            .info-box,
-            .info-content-wrapper {
+            /* 印刷時はSTOCK/MEMO欄のオーバーフローを許可 */
+            .monthly-body,
+            .stock-panel,
+            .stock-list {
                 overflow: visible !important;
             }
 
@@ -991,54 +1099,44 @@
             window.addEventListener('resize', adjustMobileScale); // Adjust on resize
         }
 
-        // --- MOBILE SCALING LOGIC (FIXED HEIGHT, SCROLL WIDTH) ---
+        // --- SCALING LOGIC (uses CSS zoom — inline `transform` gets neutralized by the preview host) ---
         function adjustMobileScale() {
             const canvas = document.getElementById('screen-canvas');
             const wrapper = document.getElementById('display-wrapper');
 
-            // PC: Reset styles
+            // Reset first so natural (mm-based) dimensions can be measured.
+            canvas.style.zoom = '';
+            canvas.style.transformOrigin = '';
+            canvas.style.transform = '';
+            canvas.style.marginBottom = '';
+            canvas.style.marginRight = '';
+            wrapper.style.justifyContent = '';
+            wrapper.style.height = '';
+
+            const originalWidth = canvas.offsetWidth;
+            const originalHeight = canvas.offsetHeight;
+
             if (window.innerWidth > 768) {
-                canvas.style.transform = '';
-                canvas.style.marginBottom = '';
-                canvas.style.marginRight = '';
-                wrapper.style.height = '';
+                // PC: fit landscape (monthly) canvas within the width left available
+                // by the fixed right-side controls panel (wrapper reserves padding-right:190px for it).
+                const reservedRight = 190 + 20;
+                const availableWidth = window.innerWidth - reservedRight;
+                if (originalWidth > availableWidth) {
+                    let scale = availableWidth / originalWidth;
+                    if (scale < 0.45) scale = 0.45;
+                    canvas.style.zoom = scale;
+                    wrapper.style.justifyContent = 'flex-start';
+                }
                 return;
             }
 
             // Mobile: Calculate Scale based on Height to avoid vertical scroll
-            // UI Offset: Mobile Controls (~60px) + Back Button/Header (~80px) + Padding
             const uiOffset = 150;
             const availableHeight = window.innerHeight - uiOffset;
-            const originalHeight = canvas.offsetHeight; // Should be ~1122px (297mm)
-            const originalWidth = canvas.offsetWidth;   // Should be ~793px (210mm)
-
-            // Calculate scale ratio to fit height
             let scale = availableHeight / originalHeight;
-
-            // LIMITS: Don't make it too small (unreadable).
-            // 0.5 is reasonable minimum (A4 becomes A6 size roughly)
             if (scale < 0.5) scale = 0.5;
             if (scale > 1) scale = 1;
-
-            // Apply Transform
-            canvas.style.transform = `scale(${scale})`;
-
-            // FIX LAYOUT GAP caused by scaling
-            // Transform doesn't affect flow, so we must manually reduce spacing
-            // Negative margin pulls the bottom/right space back
-            const gapH = originalHeight * (1 - scale);
-            const gapW = originalWidth * (1 - scale);
-
-            canvas.style.marginBottom = `-${gapH}px`;
-            canvas.style.marginRight = `-${gapW}px`;
-
-            // Adjust Wrapper to contain the SCALED size
-            // We set height explicitly to ensure container fits the visual size
-            wrapper.style.height = (originalHeight * scale) + 'px';
-
-            // If scaled width is less than screen width, center it (via flex in CSS)
-            // If scaled width is more than screen width, left align (via CSS left-align default for scroll)
-            // No extra JS needed for centering as parent has justify-content: start/center logic via margin
+            canvas.style.zoom = scale;
         }
 
         // --- RENDER LOGIC ---
@@ -1052,15 +1150,12 @@
             const totalSlots = startSlot + daysInMonth;
             const weeksCount = Math.ceil(totalSlots / 7);
 
-            let bottomAreaClass = 'bottom-area wide-mode';
-
             let daysHTML = '';
             for (let i = 0; i < startSlot; i++) daysHTML += `<div class="day empty"></div>`;
 
             const today = new Date();
             for (let d = 1; d <= daysInMonth; d++) {
                 let classes = 'day';
-                // Calculate day of week for coloring
                 const currentDayDate = new Date(year, month, d);
                 const dayOfWeek = currentDayDate.getDay();
                 if (dayOfWeek === 6) classes += ' saturday';
@@ -1077,48 +1172,58 @@
             const remaining = (weeksCount * 7) - totalSlots;
             for (let i = 0; i < remaining; i++) daysHTML += `<div class="day empty" style="opacity:0.3"></div>`;
 
-            let infoContentHtml = '';
+            const calAspect = `7 / ${(weeksCount * 0.92).toFixed(2)}`;
+            const daysGridStyle = `grid-template-rows:repeat(${weeksCount},1fr); aspect-ratio:${calAspect};`;
+
             const weightedPeople = highlightPayload.adults + (highlightPayload.children * 0.6);
             const days = highlightPayload.days;
             const weeksJP = ["日", "月", "火", "水", "木", "金", "土"];
+            const startDayNum = getNthWeekDay(year, month, highlightPayload.weekNumber, highlightPayload.weekDay);
+            const consumeRangeText = startDayNum ? `${month + 1}/${startDayNum}～${month + 1}/${startDayNum + days - 1}` : '—';
 
-            const itemCount = STOCK_ITEMS.length;
+            const BAR_CAP = 16;
+            const barSpan = (ch, n, cls) => n > 0 ? `<span class="${cls}">${ch.repeat(n)}</span>` : '';
 
-            infoContentHtml += `
-                <div class="info-header-line" style="font-size:0.85rem; font-weight:bold; margin-bottom:3px;">
-                    設定: 大人${highlightPayload.adults}人 子供${highlightPayload.children}人 × ${days}日分
-                    <span style="font-weight:normal; font-size:0.8rem; margin-left:8px;">消費: 第${highlightPayload.weekNumber}${weeksJP[highlightPayload.weekDay]}曜</span>
-                    <span style="font-weight:normal; font-size:0.75rem; margin-left:8px; color:#666;">品目数: ${itemCount}</span>
-                </div>
-            `;
-
-            const b = (c, col, op = 1) => `<span style="color:${col};opacity:${op};">${c}</span>`;
-
-            let cardsHtml = '';
-            STOCK_ITEMS.forEach(item => {
+            let shoppingCount = 0;
+            const rowsData = STOCK_ITEMS.map(item => {
                 const totalQty = item.isTotal
                     ? item.count
                     : Math.ceil(item.count * weightedPeople * days);
                 const accCurrent = Math.floor(((month + 1) * totalQty) / 12);
                 const accPrev = Math.floor((month * totalQty) / 12);
-                let monthlyQty = accCurrent - accPrev;
+                const monthlyQty = accCurrent - accPrev;
+                const rotate = monthlyQty > 0;
+                if (rotate) shoppingCount++;
 
-                let visualBar = '';
-                for (let k = 0; k < accPrev; k++) visualBar += b('◆', 'var(--ink-color)', 0.5);
-                for (let k = 0; k < monthlyQty; k++) visualBar += b('◆', 'var(--accent-2)');
-                for (let k = 0; k < (totalQty - accCurrent); k++) visualBar += b('◇', '#ccc');
+                let prev = accPrev, cur = monthlyQty, rem = totalQty - accCurrent;
+                if (totalQty > BAR_CAP) {
+                    const s = totalQty / BAR_CAP;
+                    prev = Math.round(accPrev / s);
+                    cur = Math.max(monthlyQty > 0 ? 1 : 0, Math.round(monthlyQty / s));
+                    rem = Math.max(0, BAR_CAP - prev - cur);
+                }
+                const barHtml = barSpan('◆', prev, 'bar-prev') + barSpan('◆', cur, 'bar-cur') + barSpan('◇', rem, 'bar-rem');
 
-                cardsHtml += `
-                    <div class="info-card">
-                        <div class="info-card-name">${item.name}</div>
-                        <div class="info-card-qty">総 ${totalQty}${item.unit}</div>
-                        <div class="info-card-bar">${visualBar}</div>
-                        <div class="info-card-monthly">今月:${monthlyQty}${item.unit}</div>
+                return { name: item.name, qty: totalQty, unit: item.unit, monthlyQty, rotate, barHtml };
+            });
+
+            const THRESHOLD = 13;
+            const stacked = rowsData.length <= THRESHOLD;
+
+            let rowsHtml = '';
+            rowsData.forEach(r => {
+                const nameStyle = r.rotate ? 'font-weight:800; color:var(--ink-color);' : 'font-weight:500; color:#a8a6a0;';
+                const dot = r.rotate ? '<span class="row-dot">●</span>' : '';
+                rowsHtml += `
+                    <div class="stock-row">
+                        <div class="row-top">
+                            <span class="row-name-wrap">${dot}<span class="row-name" style="${nameStyle}">${r.name}</span></span>
+                            <span class="row-qty">${r.qty}${r.unit}</span>
+                        </div>
+                        <div class="row-bar">${r.barHtml}</div>
                     </div>
                 `;
             });
-
-            infoContentHtml += `<div class="info-split-container">${cardsHtml}</div>`;
 
             return `
                 <header>
@@ -1129,20 +1234,30 @@
                     <div style="background:var(--accent-1);width:15%;"></div>
                     <div style="background:var(--accent-2);width:15%;"></div>
                 </div>
-                <div class="calendar-container">
-                    <div class="weekdays">
-                        <div class="weekday">月曜</div><div class="weekday">火曜</div><div class="weekday">水曜</div>
-                        <div class="weekday">木曜</div><div class="weekday">金曜</div>
-                        <div class="weekday" style="color:var(--accent-1)">土曜</div><div class="weekday" style="color:var(--accent-2)">日曜</div>
+                <div class="monthly-body">
+                    <div class="monthly-left">
+                        <div class="calendar-container">
+                            <div class="weekdays">
+                                <div class="weekday">月曜</div><div class="weekday">火曜</div><div class="weekday">水曜</div>
+                                <div class="weekday">木曜</div><div class="weekday">金曜</div>
+                                <div class="weekday" style="color:var(--accent-1)">土曜</div><div class="weekday" style="color:var(--accent-2)">日曜</div>
+                            </div>
+                            <div class="days" style="${daysGridStyle}">
+                                ${daysHTML}
+                            </div>
+                        </div>
+                        <div class="legend-line">
+                            <span><span class="legend-swatch"></span> 消費期間 ${consumeRangeText}</span>
+                            <span>設定: 大人${highlightPayload.adults} 子供${highlightPayload.children} ×${days}日分／第${highlightPayload.weekNumber}${weeksJP[highlightPayload.weekDay]}曜</span>
+                        </div>
+                        <div class="memo-box">
+                            <div class="box-header"><span>MEMO</span><span style="font-size:0.65rem; color:#999; font-weight:normal;">[ 自由記入 ]</span></div>
+                            <div class="memo-ruled"></div>
+                        </div>
                     </div>
-                    <div class="days">
-                        ${daysHTML}
-                    </div>
-                </div>
-                <div class="${bottomAreaClass}">
-                    <div class="info-box">
-                        <div class="box-header"><span>INFO</span><span style="font-size:0.7rem;">[DATA]</span></div>
-                        <div class="info-content-wrapper">${infoContentHtml}</div>
+                    <div class="stock-panel">
+                        <div class="box-header"><span>STOCK / 買い物</span><span style="font-size:0.65rem; color:var(--accent-2); font-weight:bold;">●今月 ${shoppingCount}品</span></div>
+                        <div class="stock-list${stacked ? '' : ' inline-mode'}">${rowsHtml}</div>
                     </div>
                 </div>
                 <div style="position:absolute;bottom:10px;right:10px;font-size:0.6rem;opacity:0.7;writing-mode:vertical-rl;">DS_CAL_M_${year}_${month + 1}</div>
@@ -1208,9 +1323,8 @@
             const month = currentDate.getMonth();
 
             if (viewMode === 'monthly') {
+                screenCanvas.classList.add('mode-monthly');
                 screenCanvas.innerHTML = generateMonthlyPageHTML(year, month);
-                // レンダリング後にINFO欄のフォントを自動調整
-                requestAnimationFrame(() => autoFitInfoCards());
                 document.getElementById('pc-monthly-nav').style.display = 'block';
                 // Show edit buttons in monthly view
                 if (document.getElementById('btn-pc-edit')) document.getElementById('btn-pc-edit').parentElement.style.display = '';
@@ -1219,6 +1333,7 @@
                 document.getElementById('mobile-mode-text').innerText = '年表示へ';
                 document.getElementById('mobile-mode-icon').className = 'ri-layout-grid-fill';
             } else {
+                screenCanvas.classList.remove('mode-monthly');
                 screenCanvas.innerHTML = generateYearlyPageHTML(year);
                 document.getElementById('pc-monthly-nav').style.display = 'none';
                 // Hide edit buttons in yearly view
@@ -1232,121 +1347,7 @@
         }
 
         function autoFitInfoCards() {
-            const wrapper = document.querySelector('#screen-canvas .info-content-wrapper');
-            const grid = wrapper ? wrapper.querySelector('.info-split-container') : null;
-            if (wrapper && grid) autoFitInfoCardsFor(wrapper, grid);
-        }
-
-        /**
-         * INFO欄カードの最適サイズ計算（px基準・2フェーズ選択）
-         * 
-         * Phase 1: 各カラム数(3~6)に対し、カード内に収まる最大フォントサイズ(rawFontPx)を算出
-         * Phase 2: rawFontPxが最大のカラム数を選択
-         *   - 複数が同じクランプ値になった場合、少ないカラム（広いカード）を優先
-         *   - スペースが厳しい時は多いカラム（少ない行数）が自然に勝つ
-         */
-        function autoFitInfoCardsFor(wrapper, grid) {
-            const cards = grid.querySelectorAll('.info-card');
-            const itemCount = cards.length;
-            if (itemCount === 0) return;
-
-            // ヘッダー行の高さを引いた使用可能な高さ
-            const headerLine = wrapper.querySelector('.info-header-line');
-            const headerH = headerLine ? headerLine.offsetHeight + 3 : 0;
-            const availableH = wrapper.clientHeight - headerH;
-            const availableW = wrapper.clientWidth;
-
-            if (availableH <= 0 || availableW <= 0) return;
-
-            const MIN_COLS = 3, MAX_COLS = 6;
-            const MIN_FONT_PX = 8, MAX_FONT_PX = 14;
-            const gap = 3;
-
-            // 各品目のバー記号の総数と品名の最大長を取得
-            const weightedPeople = highlightPayload.adults + (highlightPayload.children * 0.6);
-            const days = highlightPayload.days;
-            let maxBarSymbols = 0;
-            let maxNameLen = 0;
-            STOCK_ITEMS.forEach(item => {
-                const totalQty = item.isTotal
-                    ? item.count
-                    : Math.ceil(item.count * weightedPeople * days);
-                if (totalQty > maxBarSymbols) maxBarSymbols = totalQty;
-                if (item.name.length > maxNameLen) maxNameLen = item.name.length;
-            });
-
-            // Phase 1: 各カラム数のrawFontPxを計算
-            const candidates = [];
-            for (let cols = MIN_COLS; cols <= MAX_COLS; cols++) {
-                const rows = Math.ceil(itemCount / cols);
-                const cardW = (availableW - gap * (cols - 1)) / cols;
-                const maxCardH = (availableH - gap * (rows - 1)) / rows;
-
-                if (maxCardH <= 0 || cardW < 60) continue;
-
-                // カード内行数を推定
-                const testFontPx = Math.min(MAX_FONT_PX, Math.max(MIN_FONT_PX, maxCardH / 4));
-                const charWidthPx = testFontPx * 0.85;
-                const usableCardW = cardW - 8; // padding分
-
-                // バー記号の折返し行数（最大2行に制限 — バーは装飾的要素）
-                const barsPerLine = Math.max(1, Math.floor(usableCardW / (charWidthPx * 0.6)));
-                const barLines = Math.min(2, Math.ceil(maxBarSymbols / barsPerLine));
-                const nameLines = (maxNameLen > 5 && usableCardW < testFontPx * maxNameLen * 0.7) ? 2 : 1;
-
-                // 総行数: 品名 + 数量 + バー + 月量 + 余裕
-                const totalLines = nameLines + 1 + Math.max(1, barLines) + 1 + 0.3;
-                const lineHeight = 1.3;
-
-                // 行数からフォントサイズを逆算 (px) — クランプしない生の値
-                const rawFontPx = maxCardH / (totalLines * lineHeight);
-
-                candidates.push({ cols, rows, rawFontPx, cardW, maxCardH, totalLines });
-            }
-
-            if (candidates.length === 0) return;
-
-            // Phase 2: 最適なカラム数を選択
-            // rawFontPxをクランプした値で比較し、同値なら少ないカラム（広いカード）を優先
-            let bestCols = candidates[0].cols;
-            let bestRawFont = candidates[0].rawFontPx;
-
-            for (const c of candidates) {
-                const clampedCurrent = Math.max(MIN_FONT_PX, Math.min(MAX_FONT_PX, c.rawFontPx));
-                const clampedBest = Math.max(MIN_FONT_PX, Math.min(MAX_FONT_PX, bestRawFont));
-
-                if (clampedCurrent > clampedBest) {
-                    // クランプ後のフォントが大きい → 明確に優れている
-                    bestCols = c.cols;
-                    bestRawFont = c.rawFontPx;
-                } else if (clampedCurrent === clampedBest) {
-                    // クランプ後が同じ場合：
-                    // 両方ともMAXにクランプ → 少ないカラム（広いカード）を優先
-                    // 両方ともMINにクランプ → rawFontPxが大きい方（はみ出しが少ない）を優先
-                    if (clampedCurrent >= MAX_FONT_PX) {
-                        // 十分な高さがある → 少ないカラムで大きく表示
-                        if (c.cols < bestCols) {
-                            bestCols = c.cols;
-                            bestRawFont = c.rawFontPx;
-                        }
-                    } else {
-                        // スペースが厳しい → rawFontPxが大きい方（＝多いカラム＝少ない行数）
-                        if (c.rawFontPx > bestRawFont) {
-                            bestCols = c.cols;
-                            bestRawFont = c.rawFontPx;
-                        }
-                    }
-                }
-            }
-
-            const bestFontPx = Math.max(MIN_FONT_PX, Math.min(MAX_FONT_PX, bestRawFont));
-
-            // px → rem 変換 (実際のルートfont-sizeを取得)
-            const rootFontSize = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
-            const bestFontRem = bestFontPx / rootFontSize;
-
-            grid.style.setProperty('--info-font-size', bestFontRem.toFixed(3) + 'rem');
-            grid.style.gridTemplateColumns = `repeat(${bestCols}, 1fr)`;
+            // (旧方式のINFO欄自動調整は新レイアウトで不要になり削除済み)
         }
 
         function switchMode(mode) {
@@ -1383,7 +1384,7 @@
             // 常に今日の月～12月 + 年間の両方を印刷
             const todayMonth = new Date().getMonth();
             for (let m = todayMonth; m < 12; m++) {
-                printContainer.innerHTML += `<div class="canvas-page neo-box" style="margin:0; border:none; box-shadow:none;">${generateMonthlyPageHTML(year, m)}</div>`;
+                printContainer.innerHTML += `<div class="canvas-page neo-box mode-monthly" style="margin:0; border:none; box-shadow:none;">${generateMonthlyPageHTML(year, m)}</div>`;
             }
             // 年間ページを最後に追加
             printContainer.innerHTML += `<div class="canvas-page neo-box" style="margin:0; border:none; box-shadow:none;">${generateYearlyPageHTML(year)}</div>`;
@@ -1394,15 +1395,8 @@
             printContainer.style.left = '-9999px';
             printContainer.style.top = '0';
 
-            // 各月ページのINFO欄にautoFitInfoCardsForを適用
             requestAnimationFrame(() => {
-                printContainer.querySelectorAll('.canvas-page').forEach(page => {
-                    const w = page.querySelector('.info-content-wrapper');
-                    const g = w ? w.querySelector('.info-split-container') : null;
-                    if (w && g) autoFitInfoCardsFor(w, g);
-                });
-
-                // 計測完了後、非表示に戻してから印刷
+                // 計測不要になったので非表示に戻してすぐ印刷
                 printContainer.style.position = '';
                 printContainer.style.left = '';
                 printContainer.style.top = '';
