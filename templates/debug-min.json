@@ -1,0 +1,5 @@
+[
+    { "id": "T1", "name": "保存水 (2L)", "category": "water", "count": 12, "recommended": 12, "unit": "本", "cal": 0, "water": 2000, "desc": "5年保存可能。" },
+    { "id": "T2", "name": "アルファ米 (五目)", "category": "main", "count": 10, "recommended": 10, "unit": "食", "cal": 360, "water": 0, "desc": "お湯または水で戻せる。" },
+    { "id": "T3", "name": "簡易トイレ", "category": "other", "count": 30, "recommended": 35, "unit": "回", "cal": 0, "water": 0, "desc": "凝固剤と汚物袋のセット。" }
+]

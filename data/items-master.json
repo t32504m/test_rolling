@@ -1,0 +1,1439 @@
+{
+  "schema_version": "1.0-draft",
+  "note": "M-3適用済み。数値は各代表商品のメーカー公称値に基づく(S003はWeb確認済み)。pack_sizeは『一般的な最小購入単位』: 単品売りが標準の品は1。全数値の最終URL採取(エビデンス台帳化)はM-5レビューで実施予定。",
+  "items": [
+    {
+      "id": "W001",
+      "name": "保存水 500ml",
+      "category": "water",
+      "meal_role": "drink",
+      "tags": [
+        "no-cook",
+        "long-shelf"
+      ],
+      "consume_unit": "本",
+      "units_per_serving": null,
+      "daily_coeff": null,
+      "variant_group": "hozon-sui",
+      "unit_gram": 500,
+      "cal_per_unit": 0,
+      "water_per_unit": 500,
+      "pack_size": 24,
+      "pack_label": "24本入ケース",
+      "desc": "長期保存水。持ち出し・小分けに便利なサイズ。",
+      "source": {
+        "item_basis": "maff-guide-general",
+        "nutrition_basis": "一般的な長期保存水500ml",
+        "checked": "2026-07"
+      },
+      "assign_note": "drinkロールはml基準ノルマのためunits_per_serving/daily_coeff不使用",
+      "coeff_basis": null
+    },
+    {
+      "id": "W002",
+      "name": "保存水 2L",
+      "category": "water",
+      "meal_role": "drink",
+      "tags": [
+        "no-cook",
+        "long-shelf"
+      ],
+      "consume_unit": "本",
+      "units_per_serving": null,
+      "daily_coeff": null,
+      "variant_group": "hozon-sui",
+      "unit_gram": 2000,
+      "cal_per_unit": 0,
+      "water_per_unit": 2000,
+      "pack_size": 6,
+      "pack_label": "6本入ケース",
+      "desc": "長期保存水。備蓄の基本サイズ。",
+      "source": {
+        "item_basis": "maff-guide-general",
+        "nutrition_basis": "一般的な長期保存水2L",
+        "checked": "2026-07"
+      },
+      "assign_note": "",
+      "coeff_basis": null
+    },
+    {
+      "id": "W003",
+      "name": "ミネラルウォーター 2L（通常品）",
+      "category": "water",
+      "meal_role": "drink",
+      "tags": [
+        "no-cook",
+        "rolling"
+      ],
+      "consume_unit": "本",
+      "units_per_serving": null,
+      "daily_coeff": null,
+      "variant_group": null,
+      "unit_gram": 2000,
+      "cal_per_unit": 0,
+      "water_per_unit": 2000,
+      "pack_size": 6,
+      "pack_label": "6本入ケース",
+      "desc": "日常使いしながら備えるローリングストック向き。",
+      "source": {
+        "item_basis": "maff-guide-general",
+        "nutrition_basis": "一般的なミネラルウォーター2L",
+        "checked": "2026-07"
+      },
+      "assign_note": "保存水と製品性格が異なるため別品目（variantにしない）",
+      "coeff_basis": null
+    },
+    {
+      "id": "W004",
+      "name": "保存水 (1L)",
+      "category": "water",
+      "meal_role": "drink",
+      "tags": [
+        "no-cook",
+        "long-shelf"
+      ],
+      "consume_unit": "本",
+      "units_per_serving": null,
+      "daily_coeff": null,
+      "coeff_basis": null,
+      "variant_group": "hozon-sui",
+      "unit_gram": 1000,
+      "cal_per_unit": 0,
+      "water_per_unit": 1000,
+      "pack_size": 12,
+      "pack_label": "12本入ケース",
+      "desc": "長期保存水。テンプレート標準サイズ(1L固定)。",
+      "source": {
+        "item_basis": "maff-guide-general",
+        "nutrition_basis": "一般的な長期保存水1L",
+        "checked": "2026-07"
+      },
+      "assign_note": "テンプレートの水はこの1品に固定(ユーザー指定)。サイズ切替はvariant_groupで将来対応"
+    },
+    {
+      "id": "S001",
+      "name": "アルファ米（白飯）",
+      "category": "staple",
+      "meal_role": "staple",
+      "tags": [
+        "needs-water",
+        "long-shelf"
+      ],
+      "consume_unit": "食",
+      "units_per_serving": 1,
+      "daily_coeff": null,
+      "variant_group": null,
+      "unit_gram": 100,
+      "cal_per_unit": 366,
+      "water_per_unit": 0,
+      "pack_size": 1,
+      "pack_label": "1袋(スタンドパック)",
+      "desc": "お湯または水で戻せるご飯。",
+      "source": {
+        "item_basis": "maff-guide-general",
+        "nutrition_basis": "尾西食品 白飯 100g",
+        "checked": "2026-07"
+      },
+      "assign_note": "",
+      "coeff_basis": null
+    },
+    {
+      "id": "S002",
+      "name": "アルファ米（味付き）",
+      "category": "staple",
+      "meal_role": "staple",
+      "tags": [
+        "needs-water",
+        "long-shelf"
+      ],
+      "consume_unit": "食",
+      "units_per_serving": 1,
+      "daily_coeff": null,
+      "variant_group": null,
+      "unit_gram": 100,
+      "cal_per_unit": 356,
+      "water_per_unit": 0,
+      "pack_size": 1,
+      "pack_label": "1袋(スタンドパック)",
+      "desc": "五目・ドライカレー等。単体で食が進む。",
+      "source": {
+        "item_basis": "maff-guide-general",
+        "nutrition_basis": "尾西食品 五目ごはん 100g",
+        "checked": "2026-07"
+      },
+      "assign_note": "味の個別化(五目/カレー等)はM-3の代表商品選定で対応",
+      "coeff_basis": null
+    },
+    {
+      "id": "S003",
+      "name": "アルファ米（おかゆ）",
+      "category": "staple",
+      "meal_role": "staple",
+      "tags": [
+        "needs-water",
+        "soft",
+        "elderly",
+        "long-shelf"
+      ],
+      "consume_unit": "食",
+      "units_per_serving": 1,
+      "daily_coeff": null,
+      "variant_group": null,
+      "unit_gram": 42,
+      "cal_per_unit": 150,
+      "water_per_unit": 0,
+      "pack_size": 1,
+      "pack_label": "1袋(スタンドパック)",
+      "desc": "水でも戻せるおかゆ。やわらかく食べやすい。",
+      "source": {
+        "item_basis": "maff-guide-hairyo",
+        "nutrition_basis": "尾西食品 白がゆ 42g(Web確認済)",
+        "checked": "2026-07"
+      },
+      "assign_note": "高齢者テンプレの主食中核",
+      "coeff_basis": null
+    },
+    {
+      "id": "S004",
+      "name": "レトルトごはん（パックご飯）",
+      "category": "staple",
+      "meal_role": "staple",
+      "tags": [
+        "needs-heat",
+        "rolling"
+      ],
+      "consume_unit": "食",
+      "units_per_serving": 1,
+      "daily_coeff": null,
+      "variant_group": null,
+      "unit_gram": 200,
+      "cal_per_unit": 294,
+      "water_per_unit": 0,
+      "pack_size": 3,
+      "pack_label": "3食パック",
+      "desc": "要加熱。日常消費と兼ねやすい。",
+      "source": {
+        "item_basis": "maff-guide-general",
+        "nutrition_basis": "サトウのごはん 200g",
+        "checked": "2026-07"
+      },
+      "assign_note": "",
+      "coeff_basis": null
+    },
+    {
+      "id": "S005",
+      "name": "レトルトおかゆ",
+      "category": "staple",
+      "meal_role": "staple",
+      "tags": [
+        "no-cook",
+        "soft",
+        "elderly",
+        "rolling"
+      ],
+      "consume_unit": "食",
+      "units_per_serving": 1,
+      "daily_coeff": null,
+      "variant_group": null,
+      "unit_gram": 250,
+      "cal_per_unit": 90,
+      "water_per_unit": 0,
+      "pack_size": 1,
+      "pack_label": "1袋",
+      "desc": "そのまま食べられるおかゆ。体調不良時にも。",
+      "source": {
+        "item_basis": "maff-guide-hairyo",
+        "nutrition_basis": "味の素 おかゆ白がゆ 250g",
+        "checked": "2026-07"
+      },
+      "assign_note": "",
+      "coeff_basis": null
+    },
+    {
+      "id": "S006",
+      "name": "缶詰パン",
+      "category": "staple",
+      "meal_role": "staple",
+      "tags": [
+        "no-cook",
+        "long-shelf"
+      ],
+      "consume_unit": "缶",
+      "units_per_serving": 1,
+      "daily_coeff": null,
+      "variant_group": null,
+      "unit_gram": 100,
+      "cal_per_unit": 325,
+      "water_per_unit": 0,
+      "pack_size": 1,
+      "pack_label": "1缶",
+      "desc": "開けてすぐ食べられる長期保存パン。",
+      "source": {
+        "item_basis": "maff-guide-general",
+        "nutrition_basis": "パン・アキモト PANCAN 100g",
+        "checked": "2026-07"
+      },
+      "assign_note": "",
+      "coeff_basis": null
+    },
+    {
+      "id": "S007",
+      "name": "ロングライフパン",
+      "category": "staple",
+      "meal_role": "staple",
+      "tags": [
+        "no-cook",
+        "rolling"
+      ],
+      "consume_unit": "個",
+      "units_per_serving": 1,
+      "daily_coeff": null,
+      "variant_group": null,
+      "unit_gram": 75,
+      "cal_per_unit": 290,
+      "water_per_unit": 0,
+      "pack_size": 1,
+      "pack_label": "1個",
+      "desc": "賞味期限1〜2ヶ月級。ローリングストック向き。",
+      "source": {
+        "item_basis": "tokyo-bichiku",
+        "nutrition_basis": "コモ デニッシュ系ロングライフパン",
+        "checked": "2026-07"
+      },
+      "assign_note": "",
+      "coeff_basis": null
+    },
+    {
+      "id": "S008",
+      "name": "乾麺（うどん・そうめん・パスタ）",
+      "category": "staple",
+      "meal_role": "staple",
+      "tags": [
+        "needs-cook",
+        "rolling"
+      ],
+      "consume_unit": "束",
+      "units_per_serving": 1,
+      "daily_coeff": null,
+      "variant_group": null,
+      "unit_gram": 100,
+      "cal_per_unit": 350,
+      "water_per_unit": 0,
+      "pack_size": 5,
+      "pack_label": "1袋(500g=5束)",
+      "desc": "要調理・要水。1束=1食分目安。",
+      "source": {
+        "item_basis": "maff-guide-general",
+        "nutrition_basis": "一般的なそうめん/うどん乾麺 100gあたり",
+        "checked": "2026-07"
+      },
+      "assign_note": "1束(約100g)=1食として単位設計",
+      "coeff_basis": null
+    },
+    {
+      "id": "S009",
+      "name": "カップ麺",
+      "category": "staple",
+      "meal_role": "staple",
+      "tags": [
+        "needs-hot-water",
+        "rolling"
+      ],
+      "consume_unit": "個",
+      "units_per_serving": 1,
+      "daily_coeff": null,
+      "variant_group": null,
+      "unit_gram": 78,
+      "cal_per_unit": 351,
+      "water_per_unit": 0,
+      "pack_size": 1,
+      "pack_label": "1個",
+      "desc": "お湯だけで食べられる。",
+      "source": {
+        "item_basis": "maff-guide-general",
+        "nutrition_basis": "日清カップヌードル 78g",
+        "checked": "2026-07"
+      },
+      "assign_note": "",
+      "coeff_basis": null
+    },
+    {
+      "id": "S010",
+      "name": "無洗米",
+      "category": "staple",
+      "meal_role": "staple",
+      "tags": [
+        "needs-cook",
+        "rolling"
+      ],
+      "consume_unit": "合",
+      "units_per_serving": 0.5,
+      "daily_coeff": null,
+      "variant_group": null,
+      "unit_gram": 150,
+      "cal_per_unit": 534,
+      "water_per_unit": 0,
+      "pack_size": 13,
+      "pack_label": "2kg袋(約13合)",
+      "desc": "研ぎ水不要。要炊飯。",
+      "source": {
+        "item_basis": "maff-guide-general",
+        "nutrition_basis": "無洗米(精白米) 1合150g換算",
+        "checked": "2026-07"
+      },
+      "assign_note": "1食=0.5合として units_per_serving=0.5。非整数servingの代表例",
+      "coeff_basis": null
+    },
+    {
+      "id": "S011",
+      "name": "シリアル・コーンフレーク",
+      "category": "staple",
+      "meal_role": "staple",
+      "tags": [
+        "no-cook",
+        "rolling"
+      ],
+      "consume_unit": "食",
+      "units_per_serving": 1,
+      "daily_coeff": null,
+      "variant_group": null,
+      "unit_gram": 40,
+      "cal_per_unit": 150,
+      "water_per_unit": 0,
+      "pack_size": 6,
+      "pack_label": "1箱(約240g=6食)",
+      "desc": "そのままでも食べられる。1食=約40g。",
+      "source": {
+        "item_basis": "maff-guide-general",
+        "nutrition_basis": "一般的なコーンフレーク 40gあたり",
+        "checked": "2026-07"
+      },
+      "assign_note": "pack_size=1箱の食数(約6)としてM-3で確定",
+      "coeff_basis": null
+    },
+    {
+      "id": "S012",
+      "name": "クラッカー・乾パン",
+      "category": "staple",
+      "meal_role": "staple",
+      "tags": [
+        "no-cook",
+        "long-shelf"
+      ],
+      "consume_unit": "袋",
+      "units_per_serving": 1,
+      "daily_coeff": null,
+      "variant_group": null,
+      "unit_gram": 100,
+      "cal_per_unit": 410,
+      "water_per_unit": 0,
+      "pack_size": 1,
+      "pack_label": "1缶",
+      "desc": "主食代替になる保存食の定番。",
+      "source": {
+        "item_basis": "maff-guide-general",
+        "nutrition_basis": "三立製菓 缶入カンパン 100g",
+        "checked": "2026-07"
+      },
+      "assign_note": "菓子ではなく主食枠として確定（乾パンの歴史的位置づけ）",
+      "coeff_basis": null
+    },
+    {
+      "id": "M001",
+      "name": "魚缶詰（サバ味噌煮/水煮）",
+      "category": "main",
+      "meal_role": "main",
+      "tags": [
+        "no-cook",
+        "protein"
+      ],
+      "consume_unit": "缶",
+      "units_per_serving": 1,
+      "daily_coeff": null,
+      "variant_group": null,
+      "unit_gram": 190,
+      "cal_per_unit": 330,
+      "water_per_unit": 0,
+      "pack_size": 1,
+      "pack_label": "1缶",
+      "desc": "DHA/EPA豊富。汁ごと使える。",
+      "source": {
+        "item_basis": "maff-guide-general",
+        "nutrition_basis": "一般的なさば味噌煮缶 190g",
+        "checked": "2026-07"
+      },
+      "assign_note": "魚缶は栄養値が大きく異なるため別品目方式で確定",
+      "coeff_basis": null
+    },
+    {
+      "id": "M002",
+      "name": "魚缶詰（ツナ）",
+      "category": "main",
+      "meal_role": "main",
+      "tags": [
+        "no-cook",
+        "protein"
+      ],
+      "consume_unit": "缶",
+      "units_per_serving": 1,
+      "daily_coeff": null,
+      "variant_group": null,
+      "unit_gram": 70,
+      "cal_per_unit": 190,
+      "water_per_unit": 0,
+      "pack_size": 3,
+      "pack_label": "3缶パック",
+      "desc": "使い回しやすい定番。油漬/水煮あり。",
+      "source": {
+        "item_basis": "maff-guide-general",
+        "nutrition_basis": "はごろも シーチキンマイルド 70g",
+        "checked": "2026-07"
+      },
+      "assign_note": "",
+      "coeff_basis": null
+    },
+    {
+      "id": "M003",
+      "name": "魚缶詰（さんま蒲焼等）",
+      "category": "main",
+      "meal_role": "main",
+      "tags": [
+        "no-cook",
+        "protein"
+      ],
+      "consume_unit": "缶",
+      "units_per_serving": 1,
+      "daily_coeff": null,
+      "variant_group": null,
+      "unit_gram": 100,
+      "cal_per_unit": 260,
+      "water_per_unit": 0,
+      "pack_size": 1,
+      "pack_label": "1缶",
+      "desc": "味付きでご飯が進む。",
+      "source": {
+        "item_basis": "maff-guide-general",
+        "nutrition_basis": "一般的なさんま蒲焼缶 100g",
+        "checked": "2026-07"
+      },
+      "assign_note": "",
+      "coeff_basis": null
+    },
+    {
+      "id": "M004",
+      "name": "肉缶詰（焼き鳥・コンビーフ等）",
+      "category": "main",
+      "meal_role": "main",
+      "tags": [
+        "no-cook",
+        "protein"
+      ],
+      "consume_unit": "缶",
+      "units_per_serving": 1,
+      "daily_coeff": null,
+      "variant_group": null,
+      "unit_gram": 75,
+      "cal_per_unit": 130,
+      "water_per_unit": 0,
+      "pack_size": 1,
+      "pack_label": "1缶",
+      "desc": "動物性たんぱくの缶詰。",
+      "source": {
+        "item_basis": "maff-guide-general",
+        "nutrition_basis": "ホテイ やきとりたれ味 75g",
+        "checked": "2026-07"
+      },
+      "assign_note": "",
+      "coeff_basis": null
+    },
+    {
+      "id": "M005",
+      "name": "豆缶詰・蒸し豆",
+      "category": "main",
+      "meal_role": "main",
+      "tags": [
+        "no-cook",
+        "protein"
+      ],
+      "consume_unit": "袋",
+      "units_per_serving": 1,
+      "daily_coeff": null,
+      "variant_group": null,
+      "unit_gram": 100,
+      "cal_per_unit": 140,
+      "water_per_unit": 0,
+      "pack_size": 1,
+      "pack_label": "1袋",
+      "desc": "植物性たんぱく。そのまま食べられる。",
+      "source": {
+        "item_basis": "maff-guide-general",
+        "nutrition_basis": "一般的な蒸し大豆 100g",
+        "checked": "2026-07"
+      },
+      "assign_note": "",
+      "coeff_basis": null
+    },
+    {
+      "id": "M006",
+      "name": "レトルトカレー（常温可食型）",
+      "category": "main",
+      "meal_role": "main",
+      "tags": [
+        "no-cook",
+        "rolling"
+      ],
+      "consume_unit": "袋",
+      "units_per_serving": 1,
+      "daily_coeff": null,
+      "variant_group": null,
+      "unit_gram": 200,
+      "cal_per_unit": 170,
+      "water_per_unit": 0,
+      "pack_size": 1,
+      "pack_label": "1袋",
+      "desc": "温めずにおいしいタイプ。",
+      "source": {
+        "item_basis": "maff-guide-general",
+        "nutrition_basis": "ハウス 温めずにおいしいカレー 200g",
+        "checked": "2026-07"
+      },
+      "assign_note": "代表商品は常温可食を明示した製品とする",
+      "coeff_basis": null
+    },
+    {
+      "id": "M007",
+      "name": "レトルト丼の具（牛丼・親子丼等）",
+      "category": "main",
+      "meal_role": "main",
+      "tags": [
+        "needs-heat",
+        "rolling"
+      ],
+      "consume_unit": "袋",
+      "units_per_serving": 1,
+      "daily_coeff": null,
+      "variant_group": null,
+      "unit_gram": 180,
+      "cal_per_unit": 180,
+      "water_per_unit": 0,
+      "pack_size": 1,
+      "pack_label": "1袋",
+      "desc": "要加熱。ご飯と組み合わせ。",
+      "source": {
+        "item_basis": "maff-guide-general",
+        "nutrition_basis": "一般的なレトルト親子丼の具 180g",
+        "checked": "2026-07"
+      },
+      "assign_note": "",
+      "coeff_basis": null
+    },
+    {
+      "id": "M008",
+      "name": "レトルトハンバーグ・ミートボール",
+      "category": "main",
+      "meal_role": "main",
+      "tags": [
+        "needs-heat",
+        "rolling",
+        "kids"
+      ],
+      "consume_unit": "袋",
+      "units_per_serving": 1,
+      "daily_coeff": null,
+      "variant_group": null,
+      "unit_gram": 150,
+      "cal_per_unit": 200,
+      "water_per_unit": 0,
+      "pack_size": 1,
+      "pack_label": "1袋",
+      "desc": "子どもに人気の主菜。",
+      "source": {
+        "item_basis": "maff-guide-general",
+        "nutrition_basis": "一般的なレトルトハンバーグ 150g",
+        "checked": "2026-07"
+      },
+      "assign_note": "子育てテンプレ優先品",
+      "coeff_basis": null
+    },
+    {
+      "id": "M009",
+      "name": "レトルトパスタソース",
+      "category": "main",
+      "meal_role": "main",
+      "tags": [
+        "needs-heat",
+        "rolling"
+      ],
+      "consume_unit": "袋",
+      "units_per_serving": 1,
+      "daily_coeff": null,
+      "variant_group": null,
+      "unit_gram": 130,
+      "cal_per_unit": 120,
+      "water_per_unit": 0,
+      "pack_size": 1,
+      "pack_label": "1袋",
+      "desc": "乾麺(パスタ)と組み合わせ。",
+      "source": {
+        "item_basis": "maff-guide-general",
+        "nutrition_basis": "一般的なミートソース 130g(1人前)",
+        "checked": "2026-07"
+      },
+      "assign_note": "",
+      "coeff_basis": null
+    },
+    {
+      "id": "M010",
+      "name": "高野豆腐",
+      "category": "main",
+      "meal_role": "main",
+      "tags": [
+        "needs-cook",
+        "protein",
+        "rolling"
+      ],
+      "consume_unit": "枚",
+      "units_per_serving": 1,
+      "daily_coeff": null,
+      "variant_group": null,
+      "unit_gram": 17,
+      "cal_per_unit": 90,
+      "water_per_unit": 0,
+      "pack_size": 6,
+      "pack_label": "6枚入",
+      "desc": "常温長期保存できる植物性たんぱく。要調理。",
+      "source": {
+        "item_basis": "maff-guide-general",
+        "nutrition_basis": "一般的な高野豆腐 1枚16.5g",
+        "checked": "2026-07"
+      },
+      "assign_note": "",
+      "coeff_basis": null
+    },
+    {
+      "id": "V001",
+      "name": "野菜ジュース（長期保存）",
+      "category": "side",
+      "meal_role": "side",
+      "tags": [
+        "no-cook",
+        "vitamin"
+      ],
+      "consume_unit": "本",
+      "units_per_serving": 1,
+      "daily_coeff": null,
+      "variant_group": null,
+      "unit_gram": 190,
+      "cal_per_unit": 68,
+      "water_per_unit": 0,
+      "pack_size": 6,
+      "pack_label": "6缶パック",
+      "desc": "災害時に不足しがちなビタミン補給の柱。",
+      "source": {
+        "item_basis": "maff-guide-general",
+        "nutrition_basis": "伊藤園 1日分の野菜(長期保存缶) 190g",
+        "checked": "2026-07"
+      },
+      "assign_note": "水分寄与あり(water_per_unitはM-3で記録)",
+      "coeff_basis": null
+    },
+    {
+      "id": "V002",
+      "name": "フルーツ缶詰",
+      "category": "side",
+      "meal_role": "side",
+      "tags": [
+        "no-cook",
+        "vitamin",
+        "sweet"
+      ],
+      "consume_unit": "缶",
+      "units_per_serving": 1,
+      "daily_coeff": null,
+      "variant_group": null,
+      "unit_gram": 425,
+      "cal_per_unit": 320,
+      "water_per_unit": 0,
+      "pack_size": 1,
+      "pack_label": "1缶",
+      "desc": "果物の甘みで満足感も。",
+      "source": {
+        "item_basis": "maff-guide-general",
+        "nutrition_basis": "一般的な黄桃缶詰 425g",
+        "checked": "2026-07"
+      },
+      "assign_note": "",
+      "coeff_basis": null
+    },
+    {
+      "id": "V003",
+      "name": "ドライフルーツ",
+      "category": "side",
+      "meal_role": "side",
+      "tags": [
+        "no-cook",
+        "vitamin",
+        "rolling"
+      ],
+      "consume_unit": "袋",
+      "units_per_serving": 1,
+      "daily_coeff": null,
+      "variant_group": null,
+      "unit_gram": 100,
+      "cal_per_unit": 300,
+      "water_per_unit": 0,
+      "pack_size": 1,
+      "pack_label": "1袋",
+      "desc": "常温保存できる果物。",
+      "source": {
+        "item_basis": "maff-guide-general",
+        "nutrition_basis": "一般的なミックスドライフルーツ 100g",
+        "checked": "2026-07"
+      },
+      "assign_note": "",
+      "coeff_basis": null
+    },
+    {
+      "id": "V004",
+      "name": "乾燥野菜・乾燥わかめ",
+      "category": "side",
+      "meal_role": "side",
+      "tags": [
+        "needs-water",
+        "vitamin",
+        "rolling"
+      ],
+      "consume_unit": "袋",
+      "units_per_serving": 1,
+      "daily_coeff": null,
+      "variant_group": null,
+      "unit_gram": 40,
+      "cal_per_unit": 50,
+      "water_per_unit": 0,
+      "pack_size": 1,
+      "pack_label": "1袋",
+      "desc": "汁物に入れるだけで野菜を補える。",
+      "source": {
+        "item_basis": "maff-guide-general",
+        "nutrition_basis": "一般的な乾燥野菜ミックス 40g",
+        "checked": "2026-07"
+      },
+      "assign_note": "",
+      "coeff_basis": null
+    },
+    {
+      "id": "V005",
+      "name": "切り干し大根・ひじき等乾物",
+      "category": "side",
+      "meal_role": "side",
+      "tags": [
+        "needs-cook",
+        "vitamin",
+        "rolling"
+      ],
+      "consume_unit": "袋",
+      "units_per_serving": 1,
+      "daily_coeff": null,
+      "variant_group": null,
+      "unit_gram": 100,
+      "cal_per_unit": 300,
+      "water_per_unit": 0,
+      "pack_size": 1,
+      "pack_label": "1袋",
+      "desc": "食物繊維・ミネラル源。要調理。",
+      "source": {
+        "item_basis": "maff-guide-general",
+        "nutrition_basis": "一般的な切り干し大根 100g",
+        "checked": "2026-07"
+      },
+      "assign_note": "",
+      "coeff_basis": null
+    },
+    {
+      "id": "V006",
+      "name": "即席みそ汁・フリーズドライスープ",
+      "category": "side",
+      "meal_role": "side",
+      "tags": [
+        "needs-hot-water",
+        "rolling"
+      ],
+      "consume_unit": "食",
+      "units_per_serving": 1,
+      "daily_coeff": null,
+      "variant_group": null,
+      "unit_gram": 18,
+      "cal_per_unit": 30,
+      "water_per_unit": 0,
+      "pack_size": 10,
+      "pack_label": "10食入",
+      "desc": "温かい汁物は災害時の満足感に直結。",
+      "source": {
+        "item_basis": "maff-guide-general",
+        "nutrition_basis": "アマノフーズ等フリーズドライみそ汁 1食",
+        "checked": "2026-07"
+      },
+      "assign_note": "",
+      "coeff_basis": null
+    },
+    {
+      "id": "V007",
+      "name": "コーンスープ（粉末/缶）",
+      "category": "side",
+      "meal_role": "side",
+      "tags": [
+        "needs-hot-water"
+      ],
+      "consume_unit": "食",
+      "units_per_serving": 1,
+      "daily_coeff": null,
+      "variant_group": null,
+      "unit_gram": 17,
+      "cal_per_unit": 70,
+      "water_per_unit": 0,
+      "pack_size": 3,
+      "pack_label": "3袋入",
+      "desc": "子どもも飲みやすいスープ。",
+      "source": {
+        "item_basis": "tokyo-bichiku",
+        "nutrition_basis": "ポッカサッポロ等粉末コーンスープ 1食",
+        "checked": "2026-07"
+      },
+      "assign_note": "",
+      "coeff_basis": null
+    },
+    {
+      "id": "V008",
+      "name": "梅干し・漬物",
+      "category": "side",
+      "meal_role": "side",
+      "tags": [
+        "no-cook",
+        "rolling"
+      ],
+      "consume_unit": "個",
+      "units_per_serving": 1,
+      "daily_coeff": null,
+      "variant_group": null,
+      "unit_gram": 10,
+      "cal_per_unit": 5,
+      "water_per_unit": 0,
+      "pack_size": 10,
+      "pack_label": "10個入",
+      "desc": "食欲増進・塩分補給。",
+      "source": {
+        "item_basis": "maff-guide-general",
+        "nutrition_basis": "一般的な梅干し 1粒10g",
+        "checked": "2026-07"
+      },
+      "assign_note": "",
+      "coeff_basis": null
+    },
+    {
+      "id": "V009",
+      "name": "海苔・ふりかけ",
+      "category": "side",
+      "meal_role": "side",
+      "tags": [
+        "no-cook",
+        "rolling"
+      ],
+      "consume_unit": "袋",
+      "units_per_serving": 1,
+      "daily_coeff": null,
+      "variant_group": null,
+      "unit_gram": 3,
+      "cal_per_unit": 12,
+      "water_per_unit": 0,
+      "pack_size": 20,
+      "pack_label": "20袋入",
+      "desc": "主食の食べ飽き対策。",
+      "source": {
+        "item_basis": "maff-guide-general",
+        "nutrition_basis": "一般的なふりかけ小袋 2.5g",
+        "checked": "2026-07"
+      },
+      "assign_note": "",
+      "coeff_basis": null
+    },
+    {
+      "id": "V010",
+      "name": "野菜スープ缶（具入り）",
+      "category": "side",
+      "meal_role": "side",
+      "tags": [
+        "no-cook"
+      ],
+      "consume_unit": "缶",
+      "units_per_serving": 1,
+      "daily_coeff": null,
+      "variant_group": null,
+      "unit_gram": 200,
+      "cal_per_unit": 80,
+      "water_per_unit": 0,
+      "pack_size": 1,
+      "pack_label": "1缶",
+      "desc": "常温のまま食べられる野菜スープ。",
+      "source": {
+        "item_basis": "maff-guide-general",
+        "nutrition_basis": "一般的な具入り野菜スープ缶 200g",
+        "checked": "2026-07"
+      },
+      "assign_note": "",
+      "coeff_basis": null
+    },
+    {
+      "id": "K001",
+      "name": "ビスケット・クッキー",
+      "category": "snack",
+      "meal_role": "snack",
+      "tags": [
+        "no-cook",
+        "high-cal",
+        "sweet",
+        "rolling"
+      ],
+      "consume_unit": "袋",
+      "units_per_serving": 1,
+      "daily_coeff": null,
+      "variant_group": null,
+      "unit_gram": 40,
+      "cal_per_unit": 200,
+      "water_per_unit": 0,
+      "pack_size": 5,
+      "pack_label": "1箱(小袋5袋)",
+      "desc": "高カロリーのエネルギー補給。",
+      "source": {
+        "item_basis": "maff-guide-general",
+        "nutrition_basis": "一般的なビスケット小袋 40g",
+        "checked": "2026-07"
+      },
+      "assign_note": "consume_unit=小袋(個包装)単位で設計",
+      "coeff_basis": null
+    },
+    {
+      "id": "K002",
+      "name": "チョコレート",
+      "category": "snack",
+      "meal_role": "snack",
+      "tags": [
+        "no-cook",
+        "high-cal",
+        "sweet",
+        "rolling"
+      ],
+      "consume_unit": "枚",
+      "units_per_serving": 1,
+      "daily_coeff": null,
+      "variant_group": null,
+      "unit_gram": 50,
+      "cal_per_unit": 279,
+      "water_per_unit": 0,
+      "pack_size": 1,
+      "pack_label": "1枚",
+      "desc": "夏季は溶けやすい点に注意。",
+      "source": {
+        "item_basis": "maff-guide-general",
+        "nutrition_basis": "明治ミルクチョコレート 50g",
+        "checked": "2026-07"
+      },
+      "assign_note": "",
+      "coeff_basis": null
+    },
+    {
+      "id": "K003",
+      "name": "保存用ようかん",
+      "category": "snack",
+      "meal_role": "snack",
+      "tags": [
+        "no-cook",
+        "high-cal",
+        "sweet",
+        "long-shelf",
+        "soft",
+        "elderly"
+      ],
+      "consume_unit": "本",
+      "units_per_serving": 1,
+      "daily_coeff": null,
+      "variant_group": null,
+      "unit_gram": 60,
+      "cal_per_unit": 171,
+      "water_per_unit": 0,
+      "pack_size": 5,
+      "pack_label": "1箱(5本入)",
+      "desc": "5年保存級。やわらかく高齢者にも食べやすい。",
+      "source": {
+        "item_basis": "maff-guide-general",
+        "nutrition_basis": "井村屋 えいようかん 60g",
+        "checked": "2026-07"
+      },
+      "assign_note": "",
+      "coeff_basis": null
+    },
+    {
+      "id": "K004",
+      "name": "飴・キャンディ",
+      "category": "snack",
+      "meal_role": "snack",
+      "tags": [
+        "no-cook",
+        "sweet",
+        "rolling",
+        "baby-ng"
+      ],
+      "consume_unit": "袋",
+      "units_per_serving": 1,
+      "daily_coeff": null,
+      "variant_group": null,
+      "unit_gram": 100,
+      "cal_per_unit": 390,
+      "water_per_unit": 0,
+      "pack_size": 1,
+      "pack_label": "1袋",
+      "desc": "口さみしさ・喉の乾燥対策。",
+      "source": {
+        "item_basis": "maff-guide-general",
+        "nutrition_basis": "一般的なキャンディ 100g袋",
+        "checked": "2026-07"
+      },
+      "assign_note": "乳幼児は誤嚥リスクのためbaby-ng",
+      "coeff_basis": null
+    },
+    {
+      "id": "K005",
+      "name": "ナッツ類",
+      "category": "snack",
+      "meal_role": "snack",
+      "tags": [
+        "no-cook",
+        "high-cal",
+        "rolling",
+        "baby-ng"
+      ],
+      "consume_unit": "袋",
+      "units_per_serving": 1,
+      "daily_coeff": null,
+      "variant_group": null,
+      "unit_gram": 25,
+      "cal_per_unit": 150,
+      "water_per_unit": 0,
+      "pack_size": 1,
+      "pack_label": "1袋(小分け)",
+      "desc": "高カロリー・良質脂質。",
+      "source": {
+        "item_basis": "maff-guide-general",
+        "nutrition_basis": "一般的な素焼きミックスナッツ 25g",
+        "checked": "2026-07"
+      },
+      "assign_note": "乳幼児は誤嚥リスク(消費者庁注意喚起)のためbaby-ng",
+      "coeff_basis": null
+    },
+    {
+      "id": "K006",
+      "name": "子ども向け菓子（ボーロ・ウエハース等）",
+      "category": "snack",
+      "meal_role": "snack",
+      "tags": [
+        "no-cook",
+        "sweet",
+        "kids",
+        "baby"
+      ],
+      "consume_unit": "袋",
+      "units_per_serving": 1,
+      "daily_coeff": null,
+      "variant_group": null,
+      "unit_gram": 15,
+      "cal_per_unit": 60,
+      "water_per_unit": 0,
+      "pack_size": 4,
+      "pack_label": "4連パック",
+      "desc": "乳幼児も食べられる菓子。",
+      "source": {
+        "item_basis": "maff-guide-hairyo",
+        "nutrition_basis": "一般的なたまごボーロ 15g",
+        "checked": "2026-07"
+      },
+      "assign_note": "",
+      "coeff_basis": null
+    },
+    {
+      "id": "N001",
+      "name": "栄養補助食品（バランス栄養バー）",
+      "category": "supplement",
+      "meal_role": "snack",
+      "tags": [
+        "no-cook",
+        "high-cal",
+        "vitamin",
+        "rolling"
+      ],
+      "consume_unit": "本",
+      "units_per_serving": 1,
+      "daily_coeff": null,
+      "variant_group": null,
+      "unit_gram": 20,
+      "cal_per_unit": 100,
+      "water_per_unit": 0,
+      "pack_size": 4,
+      "pack_label": "1箱(4本)",
+      "desc": "ビタミン・ミネラル入りのエネルギー補給。",
+      "source": {
+        "item_basis": "maff-guide-general",
+        "nutrition_basis": "大塚製薬 カロリーメイト 1本20g",
+        "checked": "2026-07"
+      },
+      "assign_note": "間食枠(snackロール)として配分に参加",
+      "coeff_basis": null
+    },
+    {
+      "id": "N002",
+      "name": "ゼリー飲料（エネルギー補給型）",
+      "category": "supplement",
+      "meal_role": "snack",
+      "tags": [
+        "no-cook",
+        "soft",
+        "elderly",
+        "rolling"
+      ],
+      "consume_unit": "個",
+      "units_per_serving": 1,
+      "daily_coeff": null,
+      "variant_group": null,
+      "unit_gram": 180,
+      "cal_per_unit": 180,
+      "water_per_unit": 0,
+      "pack_size": 1,
+      "pack_label": "1個",
+      "desc": "食欲がない時でも摂りやすい。",
+      "source": {
+        "item_basis": "maff-guide-general",
+        "nutrition_basis": "森永 inゼリー エネルギー 180g",
+        "checked": "2026-07"
+      },
+      "assign_note": "水分寄与あり(M-3で記録)",
+      "coeff_basis": null
+    },
+    {
+      "id": "N003",
+      "name": "マルチビタミン等栄養機能食品",
+      "category": "supplement",
+      "meal_role": "special",
+      "tags": [
+        "no-cook",
+        "vitamin",
+        "rolling"
+      ],
+      "consume_unit": "日分",
+      "units_per_serving": null,
+      "daily_coeff": 1.0,
+      "variant_group": null,
+      "unit_gram": 1,
+      "cal_per_unit": 0,
+      "water_per_unit": 0,
+      "pack_size": 30,
+      "pack_label": "1袋(30日分)",
+      "desc": "野菜不足が続く場合のビタミン・ミネラル補完。",
+      "source": {
+        "item_basis": "maff-guide-hairyo",
+        "nutrition_basis": "一般的なマルチビタミン&ミネラル 1日分",
+        "checked": "2026-07"
+      },
+      "assign_note": "daily_coeff=1.0(1人1日1回分)仮。研究資料(災害時ビタミン栄養)が裏付け",
+      "coeff_basis": "all"
+    },
+    {
+      "id": "N004",
+      "name": "経口補水液",
+      "category": "supplement",
+      "meal_role": "special",
+      "tags": [
+        "no-cook",
+        "elderly",
+        "baby"
+      ],
+      "consume_unit": "本",
+      "units_per_serving": null,
+      "daily_coeff": 0.3,
+      "variant_group": null,
+      "unit_gram": 500,
+      "cal_per_unit": 50,
+      "water_per_unit": 0,
+      "pack_size": 1,
+      "pack_label": "1本",
+      "desc": "脱水時の水分・電解質補給。",
+      "source": {
+        "item_basis": "maff-guide-hairyo",
+        "nutrition_basis": "大塚製薬工場 OS-1 500ml",
+        "checked": "2026-07"
+      },
+      "assign_note": "daily_coeff=0.3(約2本/人/週)仮。L-1で東京備蓄ナビと突合",
+      "coeff_basis": "all"
+    },
+    {
+      "id": "P001",
+      "name": "乳児用液体ミルク",
+      "category": "special",
+      "meal_role": "special",
+      "tags": [
+        "no-cook",
+        "baby"
+      ],
+      "consume_unit": "本",
+      "units_per_serving": null,
+      "daily_coeff": 3.0,
+      "variant_group": null,
+      "unit_gram": 240,
+      "cal_per_unit": 162,
+      "water_per_unit": 0,
+      "pack_size": 1,
+      "pack_label": "1本",
+      "desc": "調乳不要でそのまま飲める。災害時の乳児栄養の第一選択。",
+      "source": {
+        "item_basis": "maff-guide-hairyo",
+        "nutrition_basis": "明治 ほほえみ らくらくミルク 240ml",
+        "checked": "2026-07"
+      },
+      "assign_note": "coeff_basis=children: 子供0人なら自動的に0本。将来「乳幼児数」入力実装時にbasisをinfantsへ置換。daily_coeff=3.0本/乳児/日 仮。該当人数は現状(A+C)で代用→将来乳幼児数入力で置換",
+      "coeff_basis": "children"
+    },
+    {
+      "id": "P002",
+      "name": "乳児用粉ミルク",
+      "category": "special",
+      "meal_role": "special",
+      "tags": [
+        "needs-hot-water",
+        "baby"
+      ],
+      "consume_unit": "缶",
+      "units_per_serving": null,
+      "daily_coeff": 0.05,
+      "variant_group": null,
+      "unit_gram": 800,
+      "cal_per_unit": 4048,
+      "water_per_unit": 0,
+      "pack_size": 1,
+      "pack_label": "1缶(約20日分)",
+      "desc": "要湯。液体ミルクと併用備蓄を推奨。",
+      "source": {
+        "item_basis": "maff-guide-hairyo",
+        "nutrition_basis": "明治 ほほえみ 800g缶",
+        "checked": "2026-07"
+      },
+      "assign_note": "daily_coeff=0.05(1缶≒20日分)仮",
+      "coeff_basis": "children"
+    },
+    {
+      "id": "P003",
+      "name": "ベビーフード",
+      "category": "special",
+      "meal_role": "special",
+      "tags": [
+        "no-cook",
+        "baby"
+      ],
+      "consume_unit": "食",
+      "units_per_serving": null,
+      "daily_coeff": 2.0,
+      "variant_group": null,
+      "unit_gram": 80,
+      "cal_per_unit": 60,
+      "water_per_unit": 0,
+      "pack_size": 1,
+      "pack_label": "1袋",
+      "desc": "月齢に合ったものを選ぶこと(desc注記方式)。",
+      "source": {
+        "item_basis": "maff-guide-hairyo",
+        "nutrition_basis": "キユーピー等ベビーフードパウチ 80g",
+        "checked": "2026-07"
+      },
+      "assign_note": "月齢区分は品目分割せずdesc注記で対応(確定)。daily_coeff=2.0食/乳児/日 仮",
+      "coeff_basis": "children"
+    },
+    {
+      "id": "P004",
+      "name": "アレルギー対応食品",
+      "category": "special",
+      "meal_role": "special",
+      "tags": [
+        "no-cook",
+        "allergy-friendly"
+      ],
+      "consume_unit": "食",
+      "units_per_serving": null,
+      "daily_coeff": 3.0,
+      "variant_group": null,
+      "unit_gram": 100,
+      "cal_per_unit": 366,
+      "water_per_unit": 0,
+      "pack_size": 1,
+      "pack_label": "1袋",
+      "desc": "特定原材料不使用のアルファ米・レトルト等。該当者は最低2週間分推奨。",
+      "source": {
+        "item_basis": "maff-guide-hairyo",
+        "nutrition_basis": "尾西食品 白飯(28品目不使用) 100g",
+        "checked": "2026-07"
+      },
+      "assign_note": "抽象品目。M-3では特定原材料28品目不使用のアルファ米を代表商品とする",
+      "coeff_basis": "all"
+    },
+    {
+      "id": "P005",
+      "name": "介護食（区分別レトルト）",
+      "category": "special",
+      "meal_role": "special",
+      "tags": [
+        "no-cook",
+        "soft",
+        "elderly"
+      ],
+      "consume_unit": "袋",
+      "units_per_serving": null,
+      "daily_coeff": 1.0,
+      "variant_group": null,
+      "unit_gram": 100,
+      "cal_per_unit": 80,
+      "water_per_unit": 0,
+      "pack_size": 1,
+      "pack_label": "1袋",
+      "desc": "UDF区分(舌でつぶせる等)は購入時に本人に合わせて選択。",
+      "source": {
+        "item_basis": "maff-guide-hairyo",
+        "nutrition_basis": "キユーピー やさしい献立(区分3) 100g",
+        "checked": "2026-07"
+      },
+      "assign_note": "coeff_basis=adults: 将来「高齢者数」入力実装時にbasisをelderlyへ置換。v1では補助的位置づけ(coeff=1.0/該当者/日 仮)。食事全置換モデルは将来課題",
+      "coeff_basis": "adults"
+    },
+    {
+      "id": "P006",
+      "name": "とろみ調整食品",
+      "category": "special",
+      "meal_role": "special",
+      "tags": [
+        "no-cook",
+        "elderly"
+      ],
+      "consume_unit": "包",
+      "units_per_serving": null,
+      "daily_coeff": 1.0,
+      "variant_group": null,
+      "unit_gram": 2.5,
+      "cal_per_unit": 5,
+      "water_per_unit": 0,
+      "pack_size": 30,
+      "pack_label": "1袋(30本入)",
+      "desc": "嚥下が心配な方の飲料・汁物用。",
+      "source": {
+        "item_basis": "maff-guide-hairyo",
+        "nutrition_basis": "一般的なとろみ調整食品 1本2.5g",
+        "checked": "2026-07"
+      },
+      "assign_note": "daily_coeff=1.0包/該当者/日 仮",
+      "coeff_basis": "adults"
+    }
+  ]
+}

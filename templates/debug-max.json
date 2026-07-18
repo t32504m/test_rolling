@@ -1,0 +1,222 @@
+[
+    {
+        "id": "T1",
+        "name": "保存水 (2L)",
+        "category": "water",
+        "count": 12,
+        "recommended": 12,
+        "unit": "本",
+        "cal": 0,
+        "water": 2000,
+        "desc": "5年保存可能。"
+    },
+    {
+        "id": "T2",
+        "name": "アルファ米 (五目)",
+        "category": "main",
+        "count": 10,
+        "recommended": 10,
+        "unit": "食",
+        "cal": 360,
+        "water": 0,
+        "desc": ""
+    },
+    {
+        "id": "T3",
+        "name": "アルファ米 (ドライカレー)",
+        "category": "main",
+        "count": 8,
+        "recommended": 8,
+        "unit": "食",
+        "cal": 370,
+        "water": 0,
+        "desc": ""
+    },
+    {
+        "id": "T4",
+        "name": "レトルトカレー",
+        "category": "main",
+        "count": 5,
+        "recommended": 6,
+        "unit": "袋",
+        "cal": 200,
+        "water": 0,
+        "desc": ""
+    },
+    {
+        "id": "T5",
+        "name": "レトルト親子丼",
+        "category": "main",
+        "count": 4,
+        "recommended": 4,
+        "unit": "袋",
+        "cal": 220,
+        "water": 0,
+        "desc": ""
+    },
+    {
+        "id": "T6",
+        "name": "缶詰パン",
+        "category": "main",
+        "count": 6,
+        "recommended": 6,
+        "unit": "缶",
+        "cal": 350,
+        "water": 0,
+        "desc": ""
+    },
+    {
+        "id": "T7",
+        "name": "魚の缶詰 (サバ味噌)",
+        "category": "main",
+        "count": 4,
+        "recommended": 4,
+        "unit": "缶",
+        "cal": 180,
+        "water": 0,
+        "desc": ""
+    },
+    {
+        "id": "T8",
+        "name": "魚の缶詰 (ツナ油漬)",
+        "category": "main",
+        "count": 4,
+        "recommended": 4,
+        "unit": "缶",
+        "cal": 200,
+        "water": 0,
+        "desc": ""
+    },
+    {
+        "id": "T9",
+        "name": "コーンスープ",
+        "category": "main",
+        "count": 6,
+        "recommended": 6,
+        "unit": "缶",
+        "cal": 100,
+        "water": 0,
+        "desc": ""
+    },
+    {
+        "id": "T10",
+        "name": "フルーツ缶詰",
+        "category": "other",
+        "count": 4,
+        "recommended": 4,
+        "unit": "缶",
+        "cal": 120,
+        "water": 0,
+        "desc": ""
+    },
+    {
+        "id": "T11",
+        "name": "野菜ジュース",
+        "category": "other",
+        "count": 7,
+        "recommended": 7,
+        "unit": "本",
+        "cal": 80,
+        "water": 200,
+        "desc": ""
+    },
+    {
+        "id": "T12",
+        "name": "ビスケット/お菓子",
+        "category": "other",
+        "count": 3,
+        "recommended": 5,
+        "unit": "箱",
+        "cal": 400,
+        "water": 0,
+        "desc": ""
+    },
+    {
+        "id": "T13",
+        "name": "チョコレートバー",
+        "category": "other",
+        "count": 6,
+        "recommended": 6,
+        "unit": "本",
+        "cal": 250,
+        "water": 0,
+        "desc": ""
+    },
+    {
+        "id": "T14",
+        "name": "簡易トイレ",
+        "category": "other",
+        "count": 30,
+        "recommended": 35,
+        "unit": "回",
+        "cal": 0,
+        "water": 0,
+        "desc": ""
+    },
+    {
+        "id": "T15",
+        "name": "ボディシート",
+        "category": "other",
+        "count": 2,
+        "recommended": 2,
+        "unit": "パック",
+        "cal": 0,
+        "water": 0,
+        "desc": ""
+    },
+    {
+        "id": "T16",
+        "name": "カセットボンベ",
+        "category": "other",
+        "count": 6,
+        "recommended": 6,
+        "unit": "本",
+        "cal": 0,
+        "water": 0,
+        "desc": ""
+    },
+    {
+        "id": "T17",
+        "name": "ラップフィルム",
+        "category": "other",
+        "count": 1,
+        "recommended": 2,
+        "unit": "本",
+        "cal": 0,
+        "water": 0,
+        "desc": ""
+    },
+    {
+        "id": "T18",
+        "name": "ウェットティッシュ",
+        "category": "other",
+        "count": 3,
+        "recommended": 3,
+        "unit": "パック",
+        "cal": 0,
+        "water": 0,
+        "desc": ""
+    },
+    {
+        "id": "T19",
+        "name": "乾電池 (単三)",
+        "category": "other",
+        "count": 8,
+        "recommended": 12,
+        "unit": "本",
+        "cal": 0,
+        "water": 0,
+        "desc": ""
+    },
+    {
+        "id": "T20",
+        "name": "消毒用アルコール",
+        "category": "other",
+        "count": 1,
+        "recommended": 2,
+        "unit": "本",
+        "cal": 0,
+        "water": 0,
+        "desc": ""
+    }
+]

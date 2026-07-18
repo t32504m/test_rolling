@@ -91,6 +91,9 @@
             -webkit-overflow-scrolling: touch;
             padding-bottom: 20px;
             /* スクロールバーのための余白 */
+            /* PC: 右上固定の operation panel(160px+余白) と重ならないよう領域を確保 */
+            padding-right: 190px;
+            box-sizing: border-box;
         }
 
         /* A4 Page Container (FIXED SIZE, Scaled via JS) */
@@ -111,7 +114,15 @@
             margin-bottom: 2rem;
             /* Hardware acceleration */
             transform: translateZ(0);
-            transform-origin: top center; /* Default for PC */
+            transform-origin: top center;
+            /* Default for PC */
+        }
+
+        .canvas-page.mode-monthly {
+            flex-basis: 297mm;
+            width: 297mm;
+            min-width: 297mm;
+            height: 210mm;
         }
 
         /* Header Area */
@@ -140,38 +151,165 @@
             flex-direction: column;
         }
 
-        /* Info/Memo Area */
-        .bottom-area {
+        /* --- MONTHLY LAYOUT: left(calendar+memo) / right(stock), full-height row --- */
+        .monthly-body {
             flex: 1 1 auto;
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1.5rem;
+            display: flex;
+            min-height: 0;
+            gap: 1.2rem;
+        }
+
+        .monthly-left {
+            flex: 0 0 62%;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            padding-right: 1.2rem;
+            border-right: var(--border-width) solid var(--ink-color);
+            box-sizing: border-box;
+        }
+
+        .legend-line {
+            flex: 0 0 auto;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            font-size: 0.7rem;
+            color: #666;
+            margin-top: 0.4rem;
+            flex-wrap: wrap;
+        }
+
+        .legend-swatch {
+            width: 16px;
+            height: 9px;
+            display: inline-block;
+            background: rgba(251, 101, 66, 0.32);
+            transform: rotate(-2deg);
+        }
+
+        .memo-box {
+            flex: 1 1 auto;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            margin-top: 0.8rem;
+            padding-top: 0.8rem;
+            border-top: var(--border-width) solid var(--ink-color);
+        }
+
+        .memo-ruled {
+            flex: 1 1 auto;
+            min-height: 0;
+            border: 1.5px solid #dcd9d0;
+            background-image: repeating-linear-gradient(transparent, transparent 25px, #e7e5dd 25px, #e7e5dd 26px);
+        }
+
+        .stock-panel {
+            flex: 0 0 38%;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            box-sizing: border-box;
+        }
+
+        .stock-list {
+            flex: 1 1 auto;
+            display: flex;
+            flex-direction: column;
             min-height: 0;
             overflow: hidden;
+            margin-top: 4px;
         }
 
-        .bottom-area .memo-box {
-            display: none;
-        }
-
-        /* Info Boxes */
-        .info-box {
-            border: var(--border-width) solid var(--ink-color);
-            background: var(--paper-color);
-            padding: 0.8rem;
+        .stock-row {
+            flex: 1 1 0;
+            min-height: 0;
+            overflow: hidden;
+            border-bottom: 1.5px dashed #d4d2cb;
+            padding: 2px 1px;
             display: flex;
             flex-direction: column;
-            height: 100%;
-            box-shadow: 4px 4px 0px var(--ink-color);
-            box-sizing: border-box;
+            justify-content: center;
+            gap: 2px;
+        }
+
+        .stock-row .row-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 6px;
+        }
+
+        .stock-row .row-name-wrap {
+            display: flex;
+            align-items: baseline;
+            gap: 4px;
+            min-width: 0;
+        }
+
+        .stock-row .row-name {
+            font-size: 0.78rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .stock-row .row-dot {
+            color: var(--accent-2);
+            font-size: 0.6rem;
+            flex: 0 0 auto;
+        }
+
+        .stock-row .row-qty {
+            font-size: 0.62rem;
+            color: #999;
+            white-space: nowrap;
+            font-family: monospace;
+            flex: 0 0 auto;
+        }
+
+        .stock-row .row-bar {
+            font-size: 0.72rem;
+            line-height: 1;
+            letter-spacing: -1px;
+            white-space: nowrap;
             overflow: hidden;
         }
 
-        .info-content-wrapper {
-            flex: 1;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
+        /* Inline mode (many items): name | bar | qty on one line */
+        .stock-list.inline-mode .stock-row {
+            flex-direction: row;
+            align-items: center;
+            gap: 6px;
+            border-bottom: 1px dashed #d8d6cf;
+            padding: 0 1px;
+        }
+
+        .stock-list.inline-mode .row-name-wrap {
+            flex: 0 0 42%;
+        }
+
+        .stock-list.inline-mode .row-bar {
+            flex: 1 1 auto;
+            font-size: 0.65rem;
+            letter-spacing: -1.2px;
+        }
+
+        .stock-list.inline-mode .row-qty {
+            flex: 0 0 auto;
+        }
+
+        .bar-prev {
+            color: #9a9a9a;
+        }
+
+        .bar-cur {
+            color: var(--accent-2);
+        }
+
+        .bar-rem {
+            color: #cfcfcf;
         }
 
         /* --- TYPOGRAPHY & DECOR --- */
@@ -213,7 +351,7 @@
         }
 
         .day {
-            min-height: 80px;
+            min-height: 0;
             border-right: var(--border-width) solid var(--ink-color);
             border-bottom: var(--border-width) solid var(--ink-color);
             background: var(--paper-color);
@@ -280,7 +418,7 @@
             background: rgba(255, 255, 255, 0.8);
         }
 
-        /* --- INFO TABLE STYLES (Monthly) --- */
+        /* --- STOCK/MEMO HEADER (Monthly) --- */
         .box-header {
             font-weight: 900;
             border-bottom: 2px solid var(--ink-color);
@@ -289,67 +427,6 @@
             justify-content: space-between;
             align-items: center;
             flex: 0 0 auto;
-        }
-
-        .info-split-container {
-            display: flex;
-            gap: 0.8rem;
-            width: 100%;
-            height: 100%;
-        }
-
-        .info-split-col {
-            flex: 1;
-            /* 防止カラムが崩れるのを防ぐ */
-            min-width: 0;
-        }
-
-        .stock-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.75rem;
-            margin-top: 2px;
-            /* 固定レイアウトで崩れを防ぐ */
-            table-layout: fixed;
-        }
-
-        .stock-table th {
-            background: #eee;
-            padding: 2px 4px;
-            text-align: left;
-            font-size: 0.7rem;
-            /* はみ出し防止 */
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .stock-table td {
-            padding: 3px 4px;
-            vertical-align: top;
-            border-bottom: 1px dashed #ddd;
-            overflow: hidden;
-            /* はみ出し防止 */
-        }
-
-        .stock-table td>div {
-            /* 内部要素のはみ出し防止 */
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .stock-table tr:last-child td {
-            border-bottom: none;
-        }
-
-        .visual-bar-container {
-            display: flex;
-            flex-wrap: wrap;
-            font-size: 0.65rem;
-            line-height: 1;
-            letter-spacing: -1px;
-            margin-bottom: 1px;
         }
 
         /* --- YEARLY GRID & LAYOUT (Revised) --- */
@@ -561,7 +638,7 @@
                 padding-left: 10px;
                 padding-right: 10px;
             }
-            
+
             /* Canvas Transform Origin for Mobile */
             .canvas-page {
                 transform-origin: top left;
@@ -649,6 +726,93 @@
             }
         }
 
+        /* --- EDIT MODE STYLES --- */
+        .edit-instruction-banner {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 300;
+            background: var(--accent-1);
+            color: #fff;
+            text-align: center;
+            padding: 10px 16px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            animation: slideDownBanner 0.3s ease;
+        }
+
+        .edit-instruction-banner.visible {
+            display: block;
+        }
+
+        @keyframes slideDownBanner {
+            from {
+                transform: translateY(-100%);
+            }
+
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        .day-editable {
+            cursor: pointer;
+            transition: background-color 0.1s;
+        }
+
+        .day-editable:hover {
+            background-color: rgba(251, 101, 66, 0.1) !important;
+        }
+
+        .day-drag-start {
+            outline: 3px solid var(--accent-2) !important;
+            outline-offset: -3px;
+            z-index: 5;
+        }
+
+        .day-drag-end {
+            outline: 2px dashed var(--accent-2) !important;
+            outline-offset: -2px;
+            z-index: 4;
+            background-color: rgba(251, 101, 66, 0.08) !important;
+        }
+
+        .day-drag-preview {
+            background-color: rgba(251, 101, 66, 0.1) !important;
+        }
+
+        .day-drag-preview::before {
+            content: '' !important;
+            position: absolute !important;
+            left: 0 !important;
+            right: 0 !important;
+            top: 16px !important;
+            height: 20px !important;
+            background: rgba(251, 101, 66, 0.25) !important;
+            transform: translateY(-50%) !important;
+            pointer-events: none !important;
+            z-index: 0 !important;
+        }
+
+        .edit-mode-active .day:not(.empty) {
+            cursor: pointer;
+        }
+
+        /* Mobile edit bar button highlight */
+        .mobile-tab-btn.edit-active {
+            color: var(--accent-2) !important;
+            background-color: #fff5f0;
+        }
+
+        /* PC edit toggle */
+        .pc-btn.edit-active {
+            background: var(--accent-2) !important;
+            color: #fff !important;
+        }
+
         /* --- PRINT SETTINGS --- */
         #print-container {
             display: none;
@@ -670,10 +834,28 @@
             .controls-pc,
             .controls-mobile,
             .back-link,
+            .edit-instruction-banner,
             /* Hide back button on print */
             .no-print,
             #display-wrapper {
                 display: none !important;
+            }
+
+            /* 印刷時は今日のハイライトを消す */
+            .day.today {
+                background: var(--paper-color) !important;
+            }
+
+            .day.today .date-num {
+                color: var(--ink-color) !important;
+            }
+
+            .day.today.saturday .date-num {
+                color: var(--accent-1) !important;
+            }
+
+            .day.today.sunday .date-num {
+                color: var(--accent-2) !important;
             }
 
             #print-container {
@@ -682,6 +864,15 @@
 
             @page {
                 size: A4 portrait;
+                margin: 0;
+            }
+
+            .canvas-page.mode-monthly {
+                page: monthly-landscape;
+            }
+
+            @page monthly-landscape {
+                size: A4 landscape;
                 margin: 0;
             }
 
@@ -695,6 +886,11 @@
                 transform: none !important;
             }
 
+            .canvas-page.mode-monthly {
+                height: 210mm;
+                width: 297mm;
+            }
+
             .canvas-page:last-child {
                 page-break-after: auto;
             }
@@ -703,6 +899,15 @@
                 box-shadow: none;
                 border: 2px solid #000;
             }
+
+            /* 印刷時はSTOCK/MEMO欄のオーバーフローを許可 */
+            .monthly-body,
+            .stock-panel,
+            .stock-list {
+                overflow: visible !important;
+            }
+
+            /* 印刷時もJSで設定した値をそのまま使う（上書きしない） */
         }
     </style>
 </head>
@@ -730,6 +935,10 @@
             <button onclick="goToToday()" class="pc-btn"
                 style="margin-top:5px; background: #fff; color: #000;">今日</button>
         </div>
+        <div style="margin-top:15px;">
+            <div class="ctrl-label-pc">消費期間:</div>
+            <button id="btn-pc-edit" onclick="toggleEditMode()" class="pc-btn">✏️ 編集</button>
+        </div>
     </div>
 
     <div class="controls-mobile no-print">
@@ -753,10 +962,22 @@
             <span>次月</span>
         </button>
 
+        <button id="btn-mobile-edit" class="mobile-tab-btn" onclick="toggleEditMode()">
+            <i class="ri-edit-2-line"></i>
+            <span>編集</span>
+        </button>
+
         <button class="mobile-tab-btn" onclick="handlePrint()" style="color:var(--accent-1);">
             <i class="ri-printer-line"></i>
             <span>印刷</span>
         </button>
+    </div>
+
+    <!-- Edit Instruction Banner -->
+    <div id="edit-banner" class="edit-instruction-banner">
+        消費開始日をクリック（タップ）し、ドラッグ（スライド）して消費期間を選択してください
+        <button onclick="cancelEditMode()"
+            style="margin-left:12px; background:#fff; color:var(--accent-1); border:none; padding:4px 12px; border-radius:4px; font-weight:bold; cursor:pointer;">キャンセル</button>
     </div>
 
     <div id="display-wrapper">
@@ -805,6 +1026,12 @@
                         highlightPayload.adults = bridgeData.household.adults;
                         highlightPayload.children = bridgeData.household.children;
                         highlightPayload.days = bridgeData.household.days;
+                        if (bridgeData.household.weekNumber !== undefined) {
+                            highlightPayload.weekNumber = bridgeData.household.weekNumber;
+                        }
+                        if (bridgeData.household.weekDay !== undefined) {
+                            highlightPayload.weekDay = bridgeData.household.weekDay;
+                        }
                     }
                     if (bridgeData.items && Array.isArray(bridgeData.items)) {
                         STOCK_ITEMS = bridgeData.items;
@@ -871,55 +1098,45 @@
             adjustMobileScale(); // Initial adjustment
             window.addEventListener('resize', adjustMobileScale); // Adjust on resize
         }
-        
-        // --- MOBILE SCALING LOGIC (FIXED HEIGHT, SCROLL WIDTH) ---
+
+        // --- SCALING LOGIC (uses CSS zoom — inline `transform` gets neutralized by the preview host) ---
         function adjustMobileScale() {
             const canvas = document.getElementById('screen-canvas');
             const wrapper = document.getElementById('display-wrapper');
-            
-            // PC: Reset styles
+
+            // Reset first so natural (mm-based) dimensions can be measured.
+            canvas.style.zoom = '';
+            canvas.style.transformOrigin = '';
+            canvas.style.transform = '';
+            canvas.style.marginBottom = '';
+            canvas.style.marginRight = '';
+            wrapper.style.justifyContent = '';
+            wrapper.style.height = '';
+
+            const originalWidth = canvas.offsetWidth;
+            const originalHeight = canvas.offsetHeight;
+
             if (window.innerWidth > 768) {
-                canvas.style.transform = '';
-                canvas.style.marginBottom = '';
-                canvas.style.marginRight = '';
-                wrapper.style.height = '';
+                // PC: fit landscape (monthly) canvas within the width left available
+                // by the fixed right-side controls panel (wrapper reserves padding-right:190px for it).
+                const reservedRight = 190 + 20;
+                const availableWidth = window.innerWidth - reservedRight;
+                if (originalWidth > availableWidth) {
+                    let scale = availableWidth / originalWidth;
+                    if (scale < 0.45) scale = 0.45;
+                    canvas.style.zoom = scale;
+                    wrapper.style.justifyContent = 'flex-start';
+                }
                 return;
             }
 
             // Mobile: Calculate Scale based on Height to avoid vertical scroll
-            // UI Offset: Mobile Controls (~60px) + Back Button/Header (~80px) + Padding
-            const uiOffset = 150; 
+            const uiOffset = 150;
             const availableHeight = window.innerHeight - uiOffset;
-            const originalHeight = canvas.offsetHeight; // Should be ~1122px (297mm)
-            const originalWidth = canvas.offsetWidth;   // Should be ~793px (210mm)
-            
-            // Calculate scale ratio to fit height
             let scale = availableHeight / originalHeight;
-            
-            // LIMITS: Don't make it too small (unreadable).
-            // 0.5 is reasonable minimum (A4 becomes A6 size roughly)
             if (scale < 0.5) scale = 0.5;
             if (scale > 1) scale = 1;
-            
-            // Apply Transform
-            canvas.style.transform = `scale(${scale})`;
-            
-            // FIX LAYOUT GAP caused by scaling
-            // Transform doesn't affect flow, so we must manually reduce spacing
-            // Negative margin pulls the bottom/right space back
-            const gapH = originalHeight * (1 - scale);
-            const gapW = originalWidth * (1 - scale);
-            
-            canvas.style.marginBottom = `-${gapH}px`;
-            canvas.style.marginRight = `-${gapW}px`;
-            
-            // Adjust Wrapper to contain the SCALED size
-            // We set height explicitly to ensure container fits the visual size
-            wrapper.style.height = (originalHeight * scale) + 'px';
-            
-            // If scaled width is less than screen width, center it (via flex in CSS)
-            // If scaled width is more than screen width, left align (via CSS left-align default for scroll)
-            // No extra JS needed for centering as parent has justify-content: start/center logic via margin
+            canvas.style.zoom = scale;
         }
 
         // --- RENDER LOGIC ---
@@ -933,15 +1150,12 @@
             const totalSlots = startSlot + daysInMonth;
             const weeksCount = Math.ceil(totalSlots / 7);
 
-            let bottomAreaClass = 'bottom-area wide-mode';
-
             let daysHTML = '';
             for (let i = 0; i < startSlot; i++) daysHTML += `<div class="day empty"></div>`;
 
             const today = new Date();
             for (let d = 1; d <= daysInMonth; d++) {
                 let classes = 'day';
-                // Calculate day of week for coloring
                 const currentDayDate = new Date(year, month, d);
                 const dayOfWeek = currentDayDate.getDay();
                 if (dayOfWeek === 6) classes += ' saturday';
@@ -952,57 +1166,64 @@
                     classes += ' range-highlight';
                     if (isConsumptionStartDate(year, month, d)) classes += ' consumption-start';
                 }
-                daysHTML += `<div class="${classes}"><span class="date-num">${d < 10 ? '0' + d : d}</span></div>`;
+                daysHTML += `<div class="${classes}" data-day="${d}" data-year="${year}" data-month="${month}"><span class="date-num">${d < 10 ? '0' + d : d}</span></div>`;
             }
 
             const remaining = (weeksCount * 7) - totalSlots;
             for (let i = 0; i < remaining; i++) daysHTML += `<div class="day empty" style="opacity:0.3"></div>`;
 
-            let infoContentHtml = '';
+            const calAspect = `7 / ${(weeksCount * 0.92).toFixed(2)}`;
+            const daysGridStyle = `grid-template-rows:repeat(${weeksCount},1fr); aspect-ratio:${calAspect};`;
+
             const weightedPeople = highlightPayload.adults + (highlightPayload.children * 0.6);
             const days = highlightPayload.days;
             const weeksJP = ["日", "月", "火", "水", "木", "金", "土"];
+            const startDayNum = getNthWeekDay(year, month, highlightPayload.weekNumber, highlightPayload.weekDay);
+            const consumeRangeText = startDayNum ? `${month + 1}/${startDayNum}～${month + 1}/${startDayNum + days - 1}` : '—';
 
-            infoContentHtml += `
-                <div style="font-size:0.9rem; font-weight:bold; margin-bottom:5px;">
-                    設定: 大人${highlightPayload.adults}人 子供${highlightPayload.children}人 × ${days}日分
-                    <span style="font-weight:normal; font-size:0.8rem; margin-left:10px;">消費: 第${highlightPayload.weekNumber}${weeksJP[highlightPayload.weekDay]}曜</span>
-                </div>
-            `;
+            const BAR_CAP = 16;
+            const barSpan = (ch, n, cls) => n > 0 ? `<span class="${cls}">${ch.repeat(n)}</span>` : '';
 
-            const createTable = (items) => {
-                let html = `<table class="stock-table"><thead><tr><th style="width:40%;">ITEM</th><th style="width:60%;">STATUS</th></tr></thead><tbody>`;
-                items.forEach(item => {
-                    const totalQty = item.isTotal
-                        ? item.count
-                        : Math.ceil(item.count * weightedPeople * days);
-                    const accCurrent = Math.floor(((month + 1) * totalQty) / 12);
-                    const accPrev = Math.floor((month * totalQty) / 12);
-                    let monthlyQty = accCurrent - accPrev;
+            let shoppingCount = 0;
+            const rowsData = STOCK_ITEMS.map(item => {
+                const totalQty = item.isTotal
+                    ? item.count
+                    : Math.ceil(item.count * weightedPeople * days);
+                const accCurrent = Math.floor(((month + 1) * totalQty) / 12);
+                const accPrev = Math.floor((month * totalQty) / 12);
+                const monthlyQty = accCurrent - accPrev;
+                const rotate = monthlyQty > 0;
+                if (rotate) shoppingCount++;
 
-                    let visualBar = '';
-                    const b = (c, col, op = 1) => `<span class="visual-bar" style="color:${col};opacity:${op};">${c}</span>`;
-                    for (let k = 0; k < accPrev; k++) visualBar += b('◆', 'var(--ink-color)', 0.5);
-                    for (let k = 0; k < monthlyQty; k++) visualBar += b('◆', 'var(--accent-2)');
-                    for (let k = 0; k < (totalQty - accCurrent); k++) visualBar += b('◇', '#ccc');
+                let prev = accPrev, cur = monthlyQty, rem = totalQty - accCurrent;
+                if (totalQty > BAR_CAP) {
+                    const s = totalQty / BAR_CAP;
+                    prev = Math.round(accPrev / s);
+                    cur = Math.max(monthlyQty > 0 ? 1 : 0, Math.round(monthlyQty / s));
+                    rem = Math.max(0, BAR_CAP - prev - cur);
+                }
+                const barHtml = barSpan('◆', prev, 'bar-prev') + barSpan('◆', cur, 'bar-cur') + barSpan('◇', rem, 'bar-rem');
 
-                    html += `<tr><td><div>${item.name}</div><div style="font-size:0.8em;color:#666;">(総 ${totalQty}${item.unit})</div></td>
-                             <td><div class="visual-bar-container">${visualBar}</div><div style="font-size:0.8em;font-weight:bold;">今月:${monthlyQty}${item.unit}</div></td></tr>`;
-                });
-                html += `</tbody></table>`;
-                return html;
-            };
+                return { name: item.name, qty: totalQty, unit: item.unit, monthlyQty, rotate, barHtml };
+            });
 
-            const chunkSize = Math.ceil(STOCK_ITEMS.length / 3);
-            const col1 = STOCK_ITEMS.slice(0, chunkSize);
-            const col2 = STOCK_ITEMS.slice(chunkSize, chunkSize * 2);
-            const col3 = STOCK_ITEMS.slice(chunkSize * 2);
+            const THRESHOLD = 13;
+            const stacked = rowsData.length <= THRESHOLD;
 
-            infoContentHtml += `<div class="info-split-container">
-                <div class="info-split-col">${createTable(col1)}</div>
-                <div class="info-split-col">${createTable(col2)}</div>
-                <div class="info-split-col">${createTable(col3)}</div>
-            </div>`;
+            let rowsHtml = '';
+            rowsData.forEach(r => {
+                const nameStyle = r.rotate ? 'font-weight:800; color:var(--ink-color);' : 'font-weight:500; color:#a8a6a0;';
+                const dot = r.rotate ? '<span class="row-dot">●</span>' : '';
+                rowsHtml += `
+                    <div class="stock-row">
+                        <div class="row-top">
+                            <span class="row-name-wrap">${dot}<span class="row-name" style="${nameStyle}">${r.name}</span></span>
+                            <span class="row-qty">${r.qty}${r.unit}</span>
+                        </div>
+                        <div class="row-bar">${r.barHtml}</div>
+                    </div>
+                `;
+            });
 
             return `
                 <header>
@@ -1013,23 +1234,33 @@
                     <div style="background:var(--accent-1);width:15%;"></div>
                     <div style="background:var(--accent-2);width:15%;"></div>
                 </div>
-                <div class="calendar-container">
-                    <div class="weekdays">
-                        <div class="weekday">MON</div><div class="weekday">TUE</div><div class="weekday">WED</div>
-                        <div class="weekday">THU</div><div class="weekday">FRI</div>
-                        <div class="weekday" style="color:var(--accent-1)">SAT</div><div class="weekday" style="color:var(--accent-2)">SUN</div>
+                <div class="monthly-body">
+                    <div class="monthly-left">
+                        <div class="calendar-container">
+                            <div class="weekdays">
+                                <div class="weekday">月曜</div><div class="weekday">火曜</div><div class="weekday">水曜</div>
+                                <div class="weekday">木曜</div><div class="weekday">金曜</div>
+                                <div class="weekday" style="color:var(--accent-1)">土曜</div><div class="weekday" style="color:var(--accent-2)">日曜</div>
+                            </div>
+                            <div class="days" style="${daysGridStyle}">
+                                ${daysHTML}
+                            </div>
+                        </div>
+                        <div class="legend-line">
+                            <span><span class="legend-swatch"></span> 消費期間 ${consumeRangeText}</span>
+                            <span>設定: 大人${highlightPayload.adults} 子供${highlightPayload.children} ×${days}日分／第${highlightPayload.weekNumber}${weeksJP[highlightPayload.weekDay]}曜</span>
+                        </div>
+                        <div class="memo-box">
+                            <div class="box-header"><span>MEMO</span><span style="font-size:0.65rem; color:#999; font-weight:normal;">[ 自由記入 ]</span></div>
+                            <div class="memo-ruled"></div>
+                        </div>
                     </div>
-                    <div class="days">
-                        ${daysHTML}
+                    <div class="stock-panel">
+                        <div class="box-header"><span>STOCK / 買い物</span><span style="font-size:0.65rem; color:var(--accent-2); font-weight:bold;">●今月 ${shoppingCount}品</span></div>
+                        <div class="stock-list${stacked ? '' : ' inline-mode'}">${rowsHtml}</div>
                     </div>
                 </div>
-                <div class="${bottomAreaClass}">
-                    <div class="info-box">
-                        <div class="box-header"><span>INFO</span><span style="font-size:0.7rem;">[DATA]</span></div>
-                        <div class="info-content-wrapper">${infoContentHtml}</div>
-                    </div>
-                </div>
-                <div style="position:absolute;bottom:10px;right:10px;font-size:0.6rem;opacity:0.7;writing-mode:vertical-rl;">DS_CAL_M_${year}_${month + 1}</div>
+                <div style="position:absolute;bottom:10px;right:10px;font-size:0.6rem;opacity:0.7;">DS_CAL_M_${year}_${month + 1}</div>
             `;
         }
 
@@ -1054,7 +1285,7 @@
                 }
 
                 gridHTML += `<div class="mini-month"><div class="mini-month-title">${MONTHS[m]}</div>
-                    <div class="mini-weekdays"><div>M</div><div>T</div><div>W</div><div>T</div><div>F</div><div style="color:var(--accent-1)">S</div><div style="color:var(--accent-2)">S</div></div>
+                    <div class="mini-weekdays"><div>月</div><div>火</div><div>水</div><div>木</div><div>金</div><div style="color:var(--accent-1)">土</div><div style="color:var(--accent-2)">日</div></div>
                     <div class="mini-days">${miniDays}</div></div>`;
             }
 
@@ -1079,7 +1310,7 @@
                 <div class="footer-section-yearly">
                     <div style="font-weight:bold;border-bottom:2px solid var(--ink-color);margin-bottom:8px; display:flex; justify-content:space-between;">
                         <span>STOCK LIST (YEARLY GOAL)</span>
-                        <span style="font-size:0.8em; font-weight:normal;">[備蓄目標総量]</span>
+                        <span style="font-size:0.8em; font-weight:normal;">[備蓄目標総量 / ${STOCK_ITEMS.length}品目]</span>
                     </div>
                     <div class="yearly-stock-grid">${stockListHTML}</div>
                 </div>
@@ -1092,14 +1323,22 @@
             const month = currentDate.getMonth();
 
             if (viewMode === 'monthly') {
+                screenCanvas.classList.add('mode-monthly');
                 screenCanvas.innerHTML = generateMonthlyPageHTML(year, month);
                 document.getElementById('pc-monthly-nav').style.display = 'block';
+                // Show edit buttons in monthly view
+                if (document.getElementById('btn-pc-edit')) document.getElementById('btn-pc-edit').parentElement.style.display = '';
+                if (document.getElementById('btn-mobile-edit')) document.getElementById('btn-mobile-edit').style.display = '';
                 // Mobile Text Update
                 document.getElementById('mobile-mode-text').innerText = '年表示へ';
                 document.getElementById('mobile-mode-icon').className = 'ri-layout-grid-fill';
             } else {
+                screenCanvas.classList.remove('mode-monthly');
                 screenCanvas.innerHTML = generateYearlyPageHTML(year);
                 document.getElementById('pc-monthly-nav').style.display = 'none';
+                // Hide edit buttons in yearly view
+                if (document.getElementById('btn-pc-edit')) document.getElementById('btn-pc-edit').parentElement.style.display = 'none';
+                if (document.getElementById('btn-mobile-edit')) document.getElementById('btn-mobile-edit').style.display = 'none';
                 // Mobile Text Update
                 document.getElementById('mobile-mode-text').innerText = '月表示へ';
                 document.getElementById('mobile-mode-icon').className = 'ri-calendar-check-line';
@@ -1107,7 +1346,15 @@
             adjustMobileScale(); // Re-calculate on render
         }
 
+        function autoFitInfoCards() {
+            // (旧方式のINFO欄自動調整は新レイアウトで不要になり削除済み)
+        }
+
         function switchMode(mode) {
+            // 年間表示に切り替える際は編集モードをキャンセル
+            if (mode === 'yearly' && editMode) {
+                exitEditMode();
+            }
             viewMode = mode;
             // Update PC Buttons
             document.getElementById('btn-pc-monthly').className = mode === 'monthly' ? 'pc-btn active-mode' : 'pc-btn';
@@ -1133,15 +1380,283 @@
             const printContainer = document.getElementById('print-container');
             printContainer.innerHTML = '';
             const year = currentDate.getFullYear();
-            if (viewMode === 'yearly') {
-                printContainer.innerHTML += `<div class="canvas-page neo-box">${generateYearlyPageHTML(year)}</div>`;
+
+            // 常に今日の月～12月 + 年間の両方を印刷
+            const todayMonth = new Date().getMonth();
+            for (let m = todayMonth; m < 12; m++) {
+                printContainer.innerHTML += `<div class="canvas-page neo-box mode-monthly" style="margin:0; border:none; box-shadow:none;">${generateMonthlyPageHTML(year, m)}</div>`;
+            }
+            // 年間ページを最後に追加
+            printContainer.innerHTML += `<div class="canvas-page neo-box" style="margin:0; border:none; box-shadow:none;">${generateYearlyPageHTML(year)}</div>`;
+
+            // 印刷コンテナを一時的に表示してJS計測を可能にする
+            printContainer.style.display = 'block';
+            printContainer.style.position = 'absolute';
+            printContainer.style.left = '-9999px';
+            printContainer.style.top = '0';
+
+            requestAnimationFrame(() => {
+                // 計測不要になったので非表示に戻してすぐ印刷
+                printContainer.style.position = '';
+                printContainer.style.left = '';
+                printContainer.style.top = '';
+                // display:blockのままにする（印刷CSSが制御する）
+
+                setTimeout(() => {
+                    window.print();
+                    // 印刷後にコンテナを非表示に戻す
+                    printContainer.style.display = 'none';
+                }, 100);
+            });
+        }
+
+        // =========================================
+        // CONSUMPTION PERIOD EDITING
+        // =========================================
+        let editMode = false;
+        let dragStartDay = null;
+        let dragCurrentDay = null;
+        let isDragging = false;
+
+        function toggleEditMode() {
+            if (editMode) {
+                exitEditMode();
             } else {
-                const startMonth = currentDate.getMonth();
-                for (let m = startMonth; m < 12; m++) {
-                    printContainer.innerHTML += `<div class="canvas-page neo-box" style="margin:0; border:none; box-shadow:none;">${generateMonthlyPageHTML(year, m)}</div>`;
+                enterEditMode();
+            }
+        }
+
+        function enterEditMode() {
+            if (viewMode !== 'monthly') {
+                switchMode('monthly');
+            }
+            editMode = true;
+            dragStartDay = null;
+            dragCurrentDay = null;
+            isDragging = false;
+
+            // Show instruction banner
+            document.getElementById('edit-banner').classList.add('visible');
+
+            // Highlight edit buttons
+            const pcBtn = document.getElementById('btn-pc-edit');
+            const mobileBtn = document.getElementById('btn-mobile-edit');
+            if (pcBtn) pcBtn.classList.add('edit-active');
+            if (mobileBtn) mobileBtn.classList.add('edit-active');
+
+            // Add edit-mode class to canvas
+            document.getElementById('screen-canvas').classList.add('edit-mode-active');
+
+            // Disable mobile scroll during edit
+            const wrapper = document.getElementById('display-wrapper');
+            wrapper.style.overflowX = 'hidden';
+
+            attachDayListeners();
+        }
+
+        function exitEditMode() {
+            editMode = false;
+            dragStartDay = null;
+            dragCurrentDay = null;
+            isDragging = false;
+
+            // Hide instruction banner
+            document.getElementById('edit-banner').classList.remove('visible');
+
+            // Remove edit button highlights
+            const pcBtn = document.getElementById('btn-pc-edit');
+            const mobileBtn = document.getElementById('btn-mobile-edit');
+            if (pcBtn) pcBtn.classList.remove('edit-active');
+            if (mobileBtn) mobileBtn.classList.remove('edit-active');
+
+            // Remove edit-mode class
+            document.getElementById('screen-canvas').classList.remove('edit-mode-active');
+
+            // Restore mobile scroll
+            const wrapper = document.getElementById('display-wrapper');
+            wrapper.style.overflowX = '';
+
+            clearDragPreview();
+        }
+
+        function cancelEditMode() {
+            exitEditMode();
+        }
+
+        function attachDayListeners() {
+            const dayCells = document.querySelectorAll('#screen-canvas .day:not(.empty)');
+
+            dayCells.forEach(cell => {
+                cell.classList.add('day-editable');
+
+                // --- PC: Mouse Events ---
+                cell.addEventListener('mousedown', onDayMouseDown);
+                cell.addEventListener('mouseover', onDayMouseOver);
+            });
+
+            // mouseup on document to capture release anywhere
+            document.addEventListener('mouseup', onDayMouseUp);
+
+            // --- Mobile: Touch Events ---
+            const canvas = document.getElementById('screen-canvas');
+            canvas.addEventListener('touchstart', onTouchStart, { passive: false });
+            canvas.addEventListener('touchmove', onTouchMove, { passive: false });
+            canvas.addEventListener('touchend', onTouchEnd, { passive: false });
+        }
+
+        function getDayFromCell(cell) {
+            if (!cell || !cell.dataset.day) return null;
+            return parseInt(cell.dataset.day);
+        }
+
+        // --- PC Mouse Handlers ---
+        function onDayMouseDown(e) {
+            if (!editMode) return;
+            e.preventDefault();
+            const day = getDayFromCell(this);
+            if (day === null) return;
+            isDragging = true;
+            dragStartDay = day;
+            dragCurrentDay = day;
+            updateDragPreview();
+        }
+
+        function onDayMouseOver(e) {
+            if (!editMode || !isDragging) return;
+            const day = getDayFromCell(this);
+            if (day === null) return;
+            dragCurrentDay = day;
+            updateDragPreview();
+        }
+
+        function onDayMouseUp(e) {
+            if (!editMode || !isDragging) return;
+            isDragging = false;
+            if (dragStartDay !== null && dragCurrentDay !== null) {
+                applyDragSelection();
+            }
+        }
+
+        // --- Mobile Touch Handlers ---
+        function getDayCellFromPoint(x, y) {
+            const el = document.elementFromPoint(x, y);
+            if (!el) return null;
+            // Walk up to find .day element
+            let cell = el.closest('.day:not(.empty)');
+            return cell;
+        }
+
+        function onTouchStart(e) {
+            if (!editMode) return;
+            const touch = e.touches[0];
+            const cell = getDayCellFromPoint(touch.clientX, touch.clientY);
+            if (!cell) return;
+            e.preventDefault();
+            const day = getDayFromCell(cell);
+            if (day === null) return;
+            isDragging = true;
+            dragStartDay = day;
+            dragCurrentDay = day;
+            updateDragPreview();
+        }
+
+        function onTouchMove(e) {
+            if (!editMode || !isDragging) return;
+            e.preventDefault();
+            const touch = e.touches[0];
+            const cell = getDayCellFromPoint(touch.clientX, touch.clientY);
+            if (!cell) return;
+            const day = getDayFromCell(cell);
+            if (day === null) return;
+            dragCurrentDay = day;
+            updateDragPreview();
+        }
+
+        function onTouchEnd(e) {
+            if (!editMode || !isDragging) return;
+            e.preventDefault();
+            isDragging = false;
+            if (dragStartDay !== null && dragCurrentDay !== null) {
+                applyDragSelection();
+            }
+        }
+
+        // --- Drag Preview ---
+        function updateDragPreview() {
+            clearDragPreview();
+            if (dragStartDay === null || dragCurrentDay === null) return;
+
+            const minDay = Math.min(dragStartDay, dragCurrentDay);
+            const maxDay = Math.max(dragStartDay, dragCurrentDay);
+
+            const dayCells = document.querySelectorAll('#screen-canvas .day:not(.empty)');
+            dayCells.forEach(cell => {
+                const d = getDayFromCell(cell);
+                if (d === null) return;
+                if (d >= minDay && d <= maxDay) {
+                    cell.classList.add('day-drag-preview');
+                }
+                if (d === dragStartDay) {
+                    cell.classList.add('day-drag-start');
+                }
+                if (d === dragCurrentDay && dragCurrentDay !== dragStartDay) {
+                    cell.classList.add('day-drag-end');
+                }
+            });
+        }
+
+        function clearDragPreview() {
+            document.querySelectorAll('.day-drag-preview').forEach(el => el.classList.remove('day-drag-preview'));
+            document.querySelectorAll('.day-drag-start').forEach(el => el.classList.remove('day-drag-start'));
+            document.querySelectorAll('.day-drag-end').forEach(el => el.classList.remove('day-drag-end'));
+            document.querySelectorAll('.day-editable').forEach(el => el.classList.remove('day-editable'));
+        }
+
+        // --- Apply Selection ---
+        function applyDragSelection() {
+            const minDay = Math.min(dragStartDay, dragCurrentDay);
+            const maxDay = Math.max(dragStartDay, dragCurrentDay);
+            const selectedDays = maxDay - minDay + 1;
+
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            const startDate = new Date(year, month, minDay);
+            const startDayOfWeek = startDate.getDay(); // 0=Sun, 1=Mon...
+
+            // Calculate which week number this falls in
+            const firstOfMonth = new Date(year, month, 1);
+            const firstDayOfWeek = firstOfMonth.getDay();
+            // week number = which occurrence of this weekday in the month
+            let weekNum = 1;
+            let checkDay = 1 + (startDayOfWeek - firstDayOfWeek + 7) % 7;
+            while (checkDay + 7 <= minDay) {
+                checkDay += 7;
+                weekNum++;
+            }
+
+            // Update highlightPayload
+            highlightPayload.weekNumber = weekNum;
+            highlightPayload.weekDay = startDayOfWeek;
+            highlightPayload.days = selectedDays;
+
+            // Also update bridge data so it persists
+            const bridgeDataRaw = localStorage.getItem('dorksense_bridge_data');
+            if (bridgeDataRaw) {
+                try {
+                    const bridgeData = JSON.parse(bridgeDataRaw);
+                    if (!bridgeData.household) bridgeData.household = {};
+                    bridgeData.household.weekNumber = weekNum;
+                    bridgeData.household.weekDay = startDayOfWeek;
+                    bridgeData.household.days = selectedDays;
+                    localStorage.setItem('dorksense_bridge_data', JSON.stringify(bridgeData));
+                } catch (e) {
+                    console.error('Failed to update bridge data', e);
                 }
             }
-            setTimeout(() => window.print(), 100);
+
+            // Exit edit mode and re-render
+            exitEditMode();
+            renderScreen();
         }
 
         init();

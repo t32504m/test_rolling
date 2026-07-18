@@ -131,38 +131,113 @@
                 class="flex flex-wrap items-center gap-4 pr-6 border-r border-slate-200 lg:border-r max-[600px]:border-r-0 max-[600px]:border-b max-[600px]:pb-4 max-[600px]:pr-0 max-[600px]:w-full max-[600px]:justify-between">
                 <div class="flex items-center gap-1">
                     <label class="text-xs font-bold text-slate-500 whitespace-nowrap mr-1">大人</label>
-                    <input type="number" id="input-adults"
-                        class="py-1.5 px-2 border border-slate-300 rounded text-sm min-w-[60px] focus:outline-none focus:border-teal-700"
-                        value="2" min="1" onchange="updateConditions()">
+                    <select id="input-adults"
+                        class="py-1.5 px-2 border border-slate-300 rounded text-sm min-w-[60px] focus:outline-none focus:border-teal-700 bg-white"
+                        onchange="updateConditions()">
+                        <option value="1">1</option>
+                        <option value="2" selected>2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                    </select>
                 </div>
                 <div class="flex items-center gap-1">
                     <label class="text-xs font-bold text-slate-500 whitespace-nowrap mr-1">子供</label>
-                    <input type="number" id="input-children"
-                        class="py-1.5 px-2 border border-slate-300 rounded text-sm min-w-[60px] focus:outline-none focus:border-teal-700"
-                        value="1" min="0" onchange="updateConditions()">
+                    <select id="input-children"
+                        class="py-1.5 px-2 border border-slate-300 rounded text-sm min-w-[60px] focus:outline-none focus:border-teal-700 bg-white"
+                        onchange="updateConditions()">
+                        <option value="0">0</option>
+                        <option value="1" selected>1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                    </select>
                 </div>
                 <div class="flex items-center gap-1">
                     <label class="text-xs font-bold text-slate-500 whitespace-nowrap mr-1">日数</label>
-                    <input type="number" id="input-days"
-                        class="py-1.5 px-2 border border-slate-300 rounded text-sm min-w-[60px] focus:outline-none focus:border-teal-700"
-                        value="7" min="1" onchange="updateConditions()">
+                    <select id="input-days"
+                        class="py-1.5 px-2 border border-slate-300 rounded text-sm min-w-[60px] focus:outline-none focus:border-teal-700 bg-white"
+                        onchange="updateConditions()">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3" selected>3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="10">10</option>
+                        <option value="14">14</option>
+                        <option value="30">30</option>
+                    </select>
+                </div>
+                <!-- 消費周期グループ -->
+                <div class="flex items-center gap-1">
+                    <label class="text-xs font-bold text-slate-500 whitespace-nowrap mr-1">消費周期</label>
+                    <span class="text-xs text-slate-400">第</span>
+                    <select id="input-weekNumber"
+                        class="py-1.5 px-2 border border-slate-300 rounded text-sm focus:outline-none focus:border-teal-700 bg-white"
+                        onchange="updateConditions()">
+                        <option value="1">1</option>
+                        <option value="2" selected>2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                    </select>
+                    <span class="text-xs text-slate-400">週</span>
+                    <select id="input-weekDay"
+                        class="py-1.5 px-2 border border-slate-300 rounded text-sm focus:outline-none focus:border-teal-700 bg-white"
+                        onchange="updateConditions()">
+                        <option value="1">月曜</option>
+                        <option value="2" selected>火曜</option>
+                        <option value="3">水曜</option>
+                        <option value="4">木曜</option>
+                        <option value="5">金曜</option>
+                        <option value="6">土曜</option>
+                        <option value="0">日曜</option>
+                    </select>
                 </div>
             </div>
 
             <!-- Group 2: Constraints -->
             <div class="flex-1 flex items-center gap-4 min-w-[200px]">
                 <div class="flex-1 flex items-center gap-1">
-                    <label class="text-xs font-bold text-slate-500 whitespace-nowrap mr-1">制約</label>
-                    <select id="input-constraints"
+                    <label class="text-xs font-bold text-slate-500 whitespace-nowrap mr-1">テンプレート</label>
+                    <select id="input-template"
                         class="py-1.5 px-2 border border-slate-300 rounded text-sm w-full focus:outline-none focus:border-teal-700 bg-white"
-                        onchange="updateConditions()">
-                        <option value="none">なし</option>
-                        <option value="nocook" selected>調理不可 (水・火なし)</option>
-                        <option value="allergy">アレルギー配慮</option>
+                        onchange="applyTemplate()">
+                        <option value="none">カスタム</option>
+                        <!-- テンプレート一覧は templates/index.json から動的生成 (I-2) -->
                     </select>
+                    <button id="template-info-btn" onclick="toggleTemplateInfo()" title="このテンプレートについて"
+                        class="shrink-0 w-6 h-6 flex items-center justify-center rounded-full border border-slate-300 text-slate-500 text-xs font-bold hover:bg-teal-50 hover:border-teal-600 hover:text-teal-700 transition-colors">?</button>
                 </div>
             </div>
         </section>
+
+        <!-- TEMPLATE INFO (I-2): 独立したカードにせず、テンプレート選択欄の補足注釈として表示する -->
+        <div id="template-info" class="hidden shrink-0 lg:col-span-2 order-1 px-2 -mt-1">
+            <div class="flex items-start gap-2">
+                <div class="flex-1 text-xs text-slate-500 leading-relaxed">
+                    <span id="template-info-name" class="font-bold text-slate-600"></span>
+                    <span class="text-slate-300 mx-1">|</span>
+                    <span id="template-info-target" class="text-slate-400"></span>
+                    <span id="template-info-desc" class="block mt-0.5"></span>
+                    <span id="template-info-basis" class="block mt-0.5 text-[10px] text-slate-400"></span>
+                </div>
+                <button onclick="toggleTemplateInfo(false)"
+                    class="text-slate-300 hover:text-slate-500 text-xs font-bold px-1 leading-relaxed">×</button>
+            </div>
+        </div>
 
         <!-- PLAN PANEL (Order 3 on Mobile) -->
         <section id="plan-panel"
@@ -197,6 +272,10 @@
                         <div class="text-center">
                             <div class="text-xl font-bold text-slate-700" id="total-weight-display">--kg</div>
                             <div class="text-[0.65rem] text-slate-500 uppercase">推定重量</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-xl font-bold text-slate-700" id="total-items-display">--</div>
+                            <div class="text-[0.65rem] text-slate-500 uppercase">品目数</div>
                         </div>
                     </div>
                     <div class="flex-[2] min-w-[250px] flex flex-col gap-2 justify-center">
@@ -336,16 +415,20 @@
 
     </div>
 
-    <!-- 
-      AI_NOTE: Add Item Modal
-      - Fixed positioning overlay
-      - Hidden by default
+    <!--
+      AI_NOTE: Add Item Modal (マスター選択型)
+      - タブ1「マスターから選ぶ」: items-master.json の品目をコンパクトカードで一覧表示。
+        検索 + カテゴリ(食品上の役割) + タグ絞り込み + 複数選択。
+      - タブ2「その他を手入力」: 従来の自由記述フォーム(マスターにない品目用)。
+      - ヘッダー/フィルター/フッターは固定し、カード一覧のみ縦スクロール。
     -->
     <div id="add-item-modal"
         class="fixed inset-0 bg-slate-900/50 z-50 hidden items-center justify-center backdrop-blur-sm p-4">
-        <div class="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden animate-fade-in">
-            <div class="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
-                <h3 class="font-bold text-slate-700">アイテムを追加</h3>
+        <div
+            class="bg-white rounded-xl shadow-xl w-full max-w-[960px] max-h-[80vh] flex flex-col overflow-hidden animate-fade-in">
+            <!-- Header -->
+            <div class="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50 shrink-0">
+                <h3 class="font-bold text-slate-700">品目を追加</h3>
                 <button onclick="closeAddItemModal()" class="text-slate-400 hover:text-slate-600 transition-colors">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
@@ -353,70 +436,105 @@
                     </svg>
                 </button>
             </div>
-            <div class="p-4 flex flex-col gap-4">
-                <!-- Name -->
-                <div>
-                    <label class="block text-xs font-bold text-slate-500 mb-1">項目名 <span
-                            class="text-red-500">*</span></label>
-                    <input type="text" id="add-name"
+
+            <!-- Tabs -->
+            <div class="px-4 pt-3 flex gap-2 shrink-0 border-b border-slate-100">
+                <button id="add-tab-master" onclick="switchAddTab('master')"
+                    class="px-3 py-2 text-sm font-bold border-b-2 border-teal-700 text-teal-700">マスターから選ぶ</button>
+                <button id="add-tab-manual" onclick="switchAddTab('manual')"
+                    class="px-3 py-2 text-sm font-bold border-b-2 border-transparent text-slate-400 hover:text-slate-600">その他を手入力</button>
+            </div>
+
+            <!-- ========== タブ1: マスターから選ぶ ========== -->
+            <div id="add-pane-master" class="flex flex-col flex-1 min-h-0">
+                <!-- 検索 + フィルター (固定) -->
+                <div class="p-4 pb-2 flex flex-col gap-2 shrink-0">
+                    <input type="text" id="master-search" oninput="renderMasterCards()"
                         class="w-full p-2 border border-slate-300 rounded text-sm focus:outline-none focus:border-teal-700"
-                        placeholder="例: カップ麺">
+                        placeholder="品目名や説明から検索">
+                    <div id="master-cat-row" class="flex flex-wrap gap-1"></div>
+                    <div id="master-tag-row" class="flex flex-wrap gap-1"></div>
                 </div>
-
-                <div class="flex gap-4">
-                    <!-- Count -->
-                    <div class="flex-1">
-                        <label class="block text-xs font-bold text-slate-500 mb-1">個数</label>
-                        <input type="number" id="add-count"
-                            class="w-full p-2 border border-slate-300 rounded text-sm focus:outline-none focus:border-teal-700"
-                            value="1" min="1">
-                    </div>
-                    <!-- Unit -->
-                    <div class="w-1/3">
-                        <label class="block text-xs font-bold text-slate-500 mb-1">単位</label>
-                        <select id="add-unit"
-                            class="w-full p-2 border border-slate-300 rounded text-sm focus:outline-none focus:border-teal-700 bg-white">
-                            <option value="個">個</option>
-                            <option value="本">本</option>
-                            <option value="箱">箱</option>
-                            <option value="缶">缶</option>
-                            <option value="食">食</option>
-                            <option value="袋">袋</option>
-                            <option value="パック">パック</option>
-                            <option value="L">L</option>
-                            <option value="kg">kg</option>
-                            <option value="セット">セット</option>
-                        </select>
-                    </div>
+                <!-- カード一覧 (ここだけスクロール) -->
+                <div id="master-card-grid"
+                    class="flex-1 overflow-y-auto px-4 pb-4 pt-1 grid grid-cols-1 md:grid-cols-2 gap-2 content-start">
                 </div>
-
-                <!-- Category -->
-                <div>
-                    <label class="block text-xs font-bold text-slate-500 mb-1">カテゴリ</label>
-                    <select id="add-category"
-                        class="w-full p-2 border border-slate-300 rounded text-sm focus:outline-none focus:border-teal-700 bg-white">
-                        <option value="staple">主食 (ご飯・パン・麺)</option>
-                        <option value="main">主菜 (おかず・肉魚)</option>
-                        <option value="side">副菜 (野菜・スープ)</option>
-                        <option value="water">水・飲料</option>
-                        <option value="snack">果物・嗜好品</option>
-                        <option value="other" selected>その他 (日用品など)</option>
-                    </select>
-                </div>
-
-                <!-- Description -->
-                <div>
-                    <label class="block text-xs font-bold text-slate-500 mb-1">説明・メモ</label>
-                    <textarea id="add-desc"
-                        class="w-full p-2 border border-slate-300 rounded text-sm focus:outline-none focus:border-teal-700 h-20 resize-none"
-                        placeholder="例: 賞味期限が短いので注意"></textarea>
+                <!-- フッター (固定) -->
+                <div class="p-3 border-t border-slate-100 bg-slate-50 flex justify-between items-center shrink-0">
+                    <span id="master-selected-count" class="text-sm text-slate-600 font-bold">選択中 0品</span>
+                    <button id="master-add-btn" onclick="addSelectedMasterItems()" disabled
+                        class="px-4 py-2 text-sm text-white bg-teal-700 font-bold hover:bg-teal-800 rounded-lg shadow transition-colors disabled:bg-slate-300 disabled:shadow-none">選択した品目を追加</button>
                 </div>
             </div>
-            <div class="p-4 border-t border-slate-100 flex justify-end gap-2 bg-slate-50">
-                <button onclick="closeAddItemModal()"
-                    class="px-4 py-2 text-sm text-slate-600 font-bold hover:bg-slate-200 rounded-lg transition-colors">キャンセル</button>
-                <button onclick="addItem()"
-                    class="px-4 py-2 text-sm text-white bg-teal-700 font-bold hover:bg-teal-800 rounded-lg shadow transition-colors">追加する</button>
+
+            <!-- ========== タブ2: その他を手入力 (従来フォーム) ========== -->
+            <div id="add-pane-manual" class="hidden flex-col flex-1 min-h-0 overflow-y-auto">
+                <div class="p-4 flex flex-col gap-4">
+                    <p class="text-xs text-slate-500">マスターにない地域食品・本人専用食品・特定の商品などは、こちらから手入力で追加してください。</p>
+                    <!-- Name -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1">項目名 <span
+                                class="text-red-500">*</span></label>
+                        <input type="text" id="add-name"
+                            class="w-full p-2 border border-slate-300 rounded text-sm focus:outline-none focus:border-teal-700"
+                            placeholder="例: カップ麺">
+                    </div>
+
+                    <div class="flex gap-4">
+                        <!-- Count -->
+                        <div class="flex-1">
+                            <label class="block text-xs font-bold text-slate-500 mb-1">個数</label>
+                            <input type="number" id="add-count"
+                                class="w-full p-2 border border-slate-300 rounded text-sm focus:outline-none focus:border-teal-700"
+                                value="1" min="1">
+                        </div>
+                        <!-- Unit -->
+                        <div class="w-1/3">
+                            <label class="block text-xs font-bold text-slate-500 mb-1">単位</label>
+                            <select id="add-unit"
+                                class="w-full p-2 border border-slate-300 rounded text-sm focus:outline-none focus:border-teal-700 bg-white">
+                                <option value="個">個</option>
+                                <option value="本">本</option>
+                                <option value="箱">箱</option>
+                                <option value="缶">缶</option>
+                                <option value="食">食</option>
+                                <option value="袋">袋</option>
+                                <option value="パック">パック</option>
+                                <option value="L">L</option>
+                                <option value="kg">kg</option>
+                                <option value="セット">セット</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Category -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1">カテゴリ</label>
+                        <select id="add-category"
+                            class="w-full p-2 border border-slate-300 rounded text-sm focus:outline-none focus:border-teal-700 bg-white">
+                            <option value="staple">主食 (ご飯・パン・麺)</option>
+                            <option value="main">主菜 (おかず・肉魚)</option>
+                            <option value="side">副菜 (野菜・スープ)</option>
+                            <option value="water">水・飲料</option>
+                            <option value="snack">果物・嗜好品</option>
+                            <option value="other" selected>その他 (日用品など)</option>
+                        </select>
+                    </div>
+
+                    <!-- Description -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1">説明・メモ</label>
+                        <textarea id="add-desc"
+                            class="w-full p-2 border border-slate-300 rounded text-sm focus:outline-none focus:border-teal-700 h-20 resize-none"
+                            placeholder="例: 賞味期限が短いので注意"></textarea>
+                    </div>
+                </div>
+                <div class="p-4 border-t border-slate-100 flex justify-end gap-2 bg-slate-50 mt-auto">
+                    <button onclick="closeAddItemModal()"
+                        class="px-4 py-2 text-sm text-slate-600 font-bold hover:bg-slate-200 rounded-lg transition-colors">キャンセル</button>
+                    <button onclick="addItem()"
+                        class="px-4 py-2 text-sm text-white bg-teal-700 font-bold hover:bg-teal-800 rounded-lg shadow transition-colors">追加する</button>
+                </div>
             </div>
         </div>
     </div>
@@ -434,101 +552,329 @@
          * 'PantryPlan' 型として管理することを想定しています。
          * 3. 'recommended' 値は、householdの変更をトリガーに動的に再計算されるべき値です（DB保存不要な場合も）。
          */
+
+        // =========================================
+        // DATA LAYER (I-1): 品目マスター + テンプレートマニフェスト
+        //   - data/items-master.json  : 全品目の唯一の情報源
+        //   - templates/index.json    : テンプレート一覧(プルダウン動的生成用)
+        //   - templates/<id>.json     : {ref, weight} 形式の薄いテンプレート
+        // =========================================
+        const DATA_FILES = {
+            master: './data/items-master.json',
+            manifest: './templates/index.json',
+            templateDir: './templates/'
+        };
+        let MASTER = null;          // id -> 品目 のMap
+        let MANIFEST = [];          // テンプレート一覧
+        const TEMPLATE_CACHE = {};  // id -> テンプレート定義
+
+        async function fetchJson(path) {
+            const res = await fetch(path);
+            if (!res.ok) throw new Error(`HTTP ${res.status}: ${path}`);
+            return res.json();
+        }
+
+        async function loadMasterAndManifest() {
+            const [masterData, manifest] = await Promise.all([
+                fetchJson(DATA_FILES.master),
+                fetchJson(DATA_FILES.manifest)
+            ]);
+            MASTER = new Map(masterData.items.map(i => [i.id, i]));
+            MANIFEST = manifest;
+
+            // プルダウンをマニフェストから動的生成 (I-2)
+            const sel = document.getElementById('input-template');
+            MANIFEST.forEach(t => {
+                const opt = document.createElement('option');
+                opt.value = t.id;
+                opt.textContent = t.name;
+                sel.appendChild(opt);
+            });
+        }
+
+        async function loadTemplate(templateId) {
+            if (!TEMPLATE_CACHE[templateId]) {
+                const entry = MANIFEST.find(t => t.id === templateId);
+                if (!entry) throw new Error(`未定義テンプレート: ${templateId}`);
+                TEMPLATE_CACHE[templateId] = await fetchJson(DATA_FILES.templateDir + entry.file);
+            }
+            return TEMPLATE_CACHE[templateId];
+        }
+
+        /**
+         * アダプタ (I-1の核):
+         * 新形式テンプレート {ref, weight} をマスターと結合し、
+         * 既存UI・ロジックが期待する品目オブジェクトに変換する。
+         * - count は「現在の在庫数」なので 0 から開始する(旧debugテンプレの
+         *   在庫プリセット挙動は廃止)。配分意図は weight が担う。
+         * - exclude_tags に該当する品目はここで除外する。
+         */
+        function resolveTemplate(templateDef) {
+            const excl = new Set(templateDef.exclude_tags || []);
+            return templateDef.items
+                .map(t => {
+                    const m = MASTER.get(t.ref);
+                    if (!m) { console.warn(`マスターに存在しないref: ${t.ref}`); return null; }
+                    if (m.tags.some(tag => excl.has(tag))) return null;
+                    return {
+                        id: m.id,
+                        name: m.name,
+                        category: m.category,
+                        count: 0,
+                        recommended: 0,
+                        unit: m.consume_unit,
+                        cal: m.cal_per_unit || 0,
+                        water: m.water_per_unit || 0,
+                        desc: m.desc || "",
+                        // ---- 新ロジック用メタ(I-3で本格使用) ----
+                        weight: t.weight,
+                        meal_role: m.meal_role,
+                        tags: m.tags,
+                        unit_gram: m.unit_gram,
+                        units_per_serving: m.units_per_serving,
+                        pack_size: m.pack_size,
+                        pack_label: m.pack_label,
+                        daily_coeff: m.daily_coeff,
+                        coeff_basis: m.coeff_basis
+                    };
+                })
+                .filter(Boolean);
+        }
+
+        // テンプレート品と既存カスタム品のマージ (テンプレート切替時に使用)
+        //   - 非カスタム品(前テンプレート由来)は破棄し、新テンプレート品へ置換する
+        //   - カスタム品は保全する。ただし新テンプレートと同じIDの品は
+        //     二重計上を避けるためテンプレート側を正として除外する
+        function mergeTemplateWithCustoms(templateItems, prevItems) {
+            const templateIds = new Set(templateItems.map(i => i.id));
+            const preservedCustoms = (prevItems || []).filter(
+                i => i.isCustom && !templateIds.has(i.id)
+            );
+            return [...templateItems, ...preservedCustoms];
+        }
+
+        // テンプレート説明の表示 (I-2)
+        function showTemplateInfo(templateDef) {
+            document.getElementById('template-info-name').textContent = templateDef.name;
+            document.getElementById('template-info-target').textContent = templateDef.target || "";
+            document.getElementById('template-info-desc').textContent = templateDef.description || "";
+            const basisEl = document.getElementById('template-info-basis');
+            basisEl.textContent = templateDef.basis ? `出典: ${templateDef.basis}` : "";
+            basisEl.classList.toggle('hidden', !templateDef.basis);
+            document.getElementById('template-info').classList.remove('hidden');
+        }
+        async function toggleTemplateInfo(forceShow) {
+            const el = document.getElementById('template-info');
+            if (forceShow === false) { el.classList.add('hidden'); return; }
+            if (!el.classList.contains('hidden')) { el.classList.add('hidden'); return; }
+            const id = document.getElementById('input-template').value;
+            if (id === 'none') return;
+            try { showTemplateInfo(await loadTemplate(id)); } catch (e) { console.error(e); }
+        }
+
         const initialState = {
-            household: { adults: 2, children: 1, days: 7 },
-            constraints: { noCook: true, allergy: "none" },
-            // Extended Items Data for Nutrition Demo
-            /* * AI_NOTE: アイテムデータについて
-             * ここにある 'cal', 'water', 'desc' はデモ用の仮データです。
-             * 実際には ItemCatalog (DB/API) からこれらのメタデータを取得してください。
-             * カテゴリ分けやタグ付けも、より詳細なロジックが必要です。
-             */
-            items: [
-                { id: 1, name: "保存水 (2L)", category: "water", count: 12, recommended: 12, unit: "本", cal: 0, water: 2000, desc: "5年保存可能。飲料・調理用。" },
-                { id: 2, name: "アルファ米 (五目)", category: "main", count: 10, recommended: 10, unit: "食", cal: 360, water: 0, desc: "お湯または水で戻せるご飯。" },
-                { id: 3, name: "レトルトカレー", category: "main", count: 5, recommended: 6, unit: "袋", cal: 200, water: 0, desc: "温めずにおいしいタイプ推奨。" },
-                { id: 4, name: "缶詰パン", category: "main", count: 6, recommended: 6, unit: "缶", cal: 350, water: 0, desc: "開けてすぐ食べられる。しっとり食感。" },
-                { id: 5, name: "魚の缶詰", category: "main", count: 8, recommended: 8, unit: "缶", cal: 180, water: 0, desc: "DHA/EPAが豊富。汁ごと使える。" },
-                { id: 6, name: "野菜ジュース", category: "other", count: 7, recommended: 7, unit: "本", cal: 80, water: 200, desc: "ビタミン補給。長期保存缶。" },
-                { id: 7, name: "ビスケット/お菓子", category: "other", count: 3, recommended: 5, unit: "箱", cal: 400, water: 0, desc: "高カロリーでエネルギー補給。" },
-                { id: 8, name: "簡易トイレ", category: "other", count: 30, recommended: 35, unit: "回", cal: 0, water: 0, desc: "凝固剤と汚物袋のセット。" },
-                { id: 9, name: "ボディシート", category: "other", count: 2, recommended: 2, unit: "パック", cal: 0, water: 0, desc: "大判タイプ推奨。" },
-                { id: 10, name: "カセットボンベ", category: "other", count: 0, recommended: 6, unit: "本", cal: 0, water: 0, desc: "カセットコンロ用。" }
-            ],
+            household: { adults: 2, children: 1, days: 3, weekNumber: 2, weekDay: 2 },
+            currentTemplate: 'standard',
+            items: [],   // マスター+テンプレートから構築するため初期は空
             lastSaved: "Unsaved"
         };
 
-        let state = JSON.parse(localStorage.getItem('stockpileStateV5')) || initialState;
+        // 保存キーをV6に更新(V5は旧ID体系のため引き継がない/公開前につき移行処理なし)
+        const STORAGE_KEY = 'stockpileStateV7'; // V6以前は旧データ構造のため不使用
+        // デモモード: ページを開くたびに前回の状態を破棄し、常に初期状態から開始する。
+        // (index.html等から遷移してきた場合も含む。本番運用時はfalseへ変更する)
+        const DEMO_RESET_ON_LOAD = true;
+        let state = null;
         let currentView = 'list'; // 'list' or 'card'
 
-        // Sync inputs with state
-        document.getElementById('input-adults').value = state.household.adults;
-        document.getElementById('input-children').value = state.household.children;
-        document.getElementById('input-days').value = state.household.days;
-        if (state.constraints.noCook) document.getElementById('input-constraints').value = "nocook";
+        async function init() {
+            try {
+                await loadMasterAndManifest();
+            } catch (e) {
+                alert(`データ読み込みエラー: ${e.message}\ndata/ と templates/ の配置を確認してください。`);
+                console.error(e);
+                return;
+            }
+
+            if (DEMO_RESET_ON_LOAD) {
+                localStorage.removeItem(STORAGE_KEY);
+            }
+            state = JSON.parse(localStorage.getItem(STORAGE_KEY)) || structuredClone(initialState);
+
+            // 入力UIをstateと同期
+            document.getElementById('input-adults').value = state.household.adults;
+            document.getElementById('input-children').value = state.household.children;
+            document.getElementById('input-days').value = state.household.days;
+            if (state.household.weekNumber === undefined) state.household.weekNumber = 2;
+            if (state.household.weekDay === undefined) state.household.weekDay = 2;
+            document.getElementById('input-weekNumber').value = state.household.weekNumber;
+            document.getElementById('input-weekDay').value = state.household.weekDay;
+            if (state.currentTemplate) {
+                document.getElementById('input-template').value = state.currentTemplate;
+            }
+
+            // 初回(またはリスト空)ならデフォルトテンプレートを適用
+            if (state.items.length === 0 && state.currentTemplate !== 'none') {
+                await applyTemplate();
+            } else {
+                recalculateRecommended();
+                renderAll(true);
+            }
+        }
 
         // =========================================
         // LOGIC
         // =========================================
 
+        // P0-3: 「自動管理中」判定。ユーザーが手動変更していないテンプレート由来品
+        //   (isCustomではなく、かつ count が現在の recommended と一致している品) だけを
+        //   条件変更後の再計算値へ追従させる。手動編集済みの数量は上書きしない。
+        function collectAutoManagedIds(items) {
+            return new Set(
+                items
+                    .filter(item => !item.isCustom && item.count === item.recommended)
+                    .map(item => item.id)
+            );
+        }
+        function applyAutoManagedCounts(items, autoManagedIds) {
+            items.forEach(item => {
+                if (autoManagedIds.has(item.id)) {
+                    item.count = item.recommended;
+                }
+            });
+        }
+
         function updateConditions() {
             state.household.adults = parseInt(document.getElementById('input-adults').value);
             state.household.children = parseInt(document.getElementById('input-children').value);
             state.household.days = parseInt(document.getElementById('input-days').value);
+            state.household.weekNumber = parseInt(document.getElementById('input-weekNumber').value);
+            state.household.weekDay = parseInt(document.getElementById('input-weekDay').value);
 
-            const constraintVal = document.getElementById('input-constraints').value;
-            state.constraints.noCook = constraintVal === "nocook";
-            state.constraints.allergy = constraintVal === "allergy" ? "yes" : "none";
-
-            /* * AI_NOTE: ロジックの依存関係
-             * 条件変更時、recalculateRecommended() を呼んでいますが、
-             * Reactでは useEffect(() => { recalculate() }, [household]) のように
-             * 依存配列を用いてリアクティブに推奨値を更新してください。
-             */
+            // P0-3: 再計算前に自動管理中の品目を確定し、再計算後にその品目だけ追従させる
+            const autoManagedIds = collectAutoManagedIds(state.items);
             recalculateRecommended();
+            applyAutoManagedCounts(state.items, autoManagedIds);
+
             saveState();
             renderAll(true); // Animate on major updates
         }
 
+        async function applyTemplate() {
+            const templateId = document.getElementById('input-template').value;
+            state.currentTemplate = templateId;
+
+            if (templateId === 'none') {
+                document.getElementById('template-info').classList.add('hidden');
+                saveState();
+                return;
+            }
+
+            try {
+                const templateDef = await loadTemplate(templateId);
+
+                // テンプレート切替 = テンプレート由来品の全リセット。
+                // ただしカスタム品(isCustom)はユーザーの意思で追加されたものなので保全する。
+                // 同じマスターIDが新テンプレートにも含まれる場合は、二重計上を避けて
+                // テンプレート側を正とし、カスタム側を落とす。
+                state.items = mergeTemplateWithCustoms(resolveTemplate(templateDef), state.items);
+
+                showTemplateInfo(templateDef);   // I-2: 選択時に説明を表示
+                recalculateRecommended();
+                // テンプレ由来品は推奨量を初期在庫としてセット(旧テンプレの初期値挙動を復元)
+                state.items.forEach(i => { if (!i.isCustom) i.count = i.recommended; });
+                saveState();
+                renderAll(true);
+            } catch (e) {
+                alert(`テンプレート読み込みエラー: ${e.message}`);
+                console.error('Template load error:', e);
+            }
+        }
+
+        // =========================================
+        // 推奨量算出ロジック (I-3: 食数モデル)
+        //   第1層: 需要 = 食数ノルマ (人数 × 日数 × 1人1日係数)
+        //   第2層: テンプレートのweight比でロール内配分 → pack_size倍数へ切り上げ
+        //   第3層: カロリーは数量決定に使わず、検算(充足バー)にのみ使用
+        // エネルギー根拠: 避難所における食事提供のための栄養参照量
+        //   (エネルギー 1,800〜2,200 kcal/人日 の範囲内から 2,000 を採用)
+        // =========================================
+        const NUTRI = {
+            ADULT_CAL: 2000,        // kcal/人日 (栄養参照量1,800〜2,200の中央値)
+            CHILD_CAL_FACTOR: 0.8,  // 子供係数 (仮: L-1で年齢区分と併せ確定)
+            WATER_ML: 3000          // ml/人日 (全員一律・生活用水兼用)
+        };
+        // 1人1日あたりの必要serving数 (仮: L-1で東京備蓄ナビと突合し確定)
+        const ROLE_COEFF = {
+            staple: 3,   // 1日3食
+            main: 3,     // 各食に主菜1品
+            side: 2,     // 副菜・汁物・果物 2品/日
+            snack: 1     // 間食 1品/日
+        };
+
+        // 購入単位(pack_size)の倍数へ切り上げ
+        function roundToPack(x, packSize) {
+            if (x <= 0) return 0;
+            const p = (packSize && packSize > 1) ? packSize : 1;
+            return Math.ceil(x / p) * p;
+        }
+
+        // 品目のロール判定 (マスター品はmeal_role、カスタム品はカテゴリから推定)
+        function roleOfItem(item) {
+            if (item.meal_role) return item.meal_role;
+            if (item.category === 'water' && (item.water || 0) > 0) return 'drink';
+            if (['staple', 'main', 'side', 'snack'].includes(item.category)) return item.category;
+            return 'other';
+        }
+
         function recalculateRecommended() {
-            /* * AI_NOTE: 推奨数算出ロジック (IMPORTANT: LOGIC CONSTRAINTS)
-             * 現在のデモ用計算 (0.5 * days * people 等) は不正確です。本番実装時は以下の制約に従ってください。
-             * * 【制約A: 栄養素ベースの所要量計算】
-             * - 単純な「人数×日数」ではなく、「世帯全体の必要総カロリー・総水分量」を算出し、それを満たすようにアイテム数を決定する。
-             * - 例: 大人2人(2000kcal/日×2) + 子供1人(1400kcal/日×1) = 5400kcal/日 × 3日 = 16,200kcal必要。
-             * これを各アイテムのカロリーで割って個数を出す。
-             *
-             * 【制約B: 配分可能性（整除性）とパッケージング】
-             * - 「家族で分けられる数」問題: 5個を3人で分けるのは管理が面倒。
-             * - 対策:
-             * 1. 不可分なもの（缶詰、レトルトなど）は「Math.ceil(必要数 / 人数) * 人数」のように、人数単位で切り上げて全員に行き渡るようにする。
-             * 2. 可分なもの（大瓶の水、お米など）は総量で計算してよい。
-             *
-             * 【制約C: ローリングストックの回転しやすさ】
-             * - 大量に買いすぎると消費が追いつかないため、消費サイクル（例：週1回食べるなら備蓄もそのペースで回せる量）を考慮する。
-             */
-            const people = state.household.adults + state.household.children * 0.7;
+            const adults = state.household.adults;
+            const children = state.household.children;
             const days = state.household.days;
+            const totalPeople = adults + children;
 
+            // ---- 特別食 (人日係数型): coeff × 該当人数 × 日数 ----
             state.items.forEach(item => {
-                let base = 1;
-                // Mock Logic: 実際のアプリでは上記「制約A, B, C」に基づき書き直すこと
-                if (item.category === 'water') {
-                    base = 0.5 * days * people;
-                } else if (item.category === 'main' || item.category === 'staple') {
-                    // 主食・主菜
-                    base = 0.3 * days * people;
-                } else if (item.category === 'side') {
-                    // 副菜
-                    base = 0.2 * days * people;
-                } else {
-                    // その他、スナック
-                    base = 0.1 * days * people;
+                if (item.daily_coeff != null) {
+                    const basisCount =
+                        item.coeff_basis === 'children' ? children :
+                            item.coeff_basis === 'adults' ? adults : totalPeople;
+                    item.recommended = roundToPack(item.daily_coeff * basisCount * days, item.pack_size);
                 }
+            });
 
-                // カスタムアイテムで固定数が指定されている場合は推奨計算をスキップする場合もありますが、
-                // ここでは一律計算し、ユーザー入力値(count)と比較させます。
-                item.recommended = Math.ceil(base);
+            // ---- 水 (ml基準型): 全員一律3L/日をdrink品で充足 ----
+            const drinkItems = state.items.filter(i => i.daily_coeff == null && roleOfItem(i) === 'drink');
+            const needMl = totalPeople * NUTRI.WATER_ML * days;
+            const dW = drinkItems.map(i => Math.max(i.weight || i.count, 1));
+            const dSum = dW.reduce((a, b) => a + b, 0) || 1;
+            drinkItems.forEach((item, idx) => {
+                const shareMl = needMl * dW[idx] / dSum;
+                // P0-2: 水は「必要備蓄量」の提示を優先し、購入単位(pack_size)へ丸めない。
+                //   例) 3人×3日×3L=27L → 27本 (旧: 12本ケース丸めで36本になっていた)
+                //   W004.pack_size=12 はマスターに購入情報として残す(将来の購入例表示で使用)
+                item.recommended = roundToPack(shareMl / (item.water || 1), 1);
+            });
+
+            // ---- 食数配分型: ロールごとのノルマをweight比で配分 ----
+            Object.entries(ROLE_COEFF).forEach(([role, coeff]) => {
+                const pool = state.items.filter(i => i.daily_coeff == null && roleOfItem(i) === role);
+                if (pool.length === 0) return;
+                const normServings = totalPeople * days * coeff;
+                const w = pool.map(i => Math.max(i.weight || i.count, 1));
+                const wSum = w.reduce((a, b) => a + b, 0) || 1;
+                pool.forEach((item, idx) => {
+                    const servings = normServings * w[idx] / wSum;
+                    const units = servings * (item.units_per_serving || 1);
+                    item.recommended = roundToPack(units, item.pack_size);
+                });
+            });
+
+            // ---- その他 (カスタム日用品等): 従来の簡易係数を維持 ----
+            state.items.forEach(item => {
+                if (item.daily_coeff != null || roleOfItem(item) !== 'other') return;
+                const perPersonPerDay = (item.unit === '回') ? 5 : 0.15;
+                item.recommended = Math.max(Math.ceil(totalPeople * days * perPersonPerDay), 1);
             });
         }
 
@@ -552,7 +898,7 @@
         }
 
         function saveState() {
-            localStorage.setItem('stockpileStateV5', JSON.stringify(state));
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
             document.getElementById('save-status').innerHTML =
                 state.lastSaved === "Confirmed"
                     ? `<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg> <span>確定済み</span>`
@@ -560,11 +906,13 @@
         }
 
         function autoAdjust() {
-            /* * AI_NOTE: 自動調整ロジック
-             * 現在は「推奨数に足りない場合のみ推奨数まで増やす」という単純なロジックです。
-             * 将来的には、「優先度の高いものから補充する」などの高度なロジックが検討されます。
-             * 主菜や主食が優先となるかと思います。（主食は日数*3で、その他のカロリーやタンパク質で主菜の計算、ビタミンなどで副菜の計算になるのかな。今のところはカロリー計算のみだが。）
+            /**
+             * 自動調整: 推奨数に基づいてcountを調整する。
+             * - count < recommended → recommended まで引き上げ
+             * - count >= recommended → ユーザーが意図的に増やしたと推定し、据え置き
              */
+            recalculateRecommended(); // 最新の条件で再計算
+
             let changed = false;
             state.items.forEach(item => {
                 if (item.count < item.recommended) {
@@ -572,8 +920,11 @@
                     changed = true;
                 }
             });
+
+            saveState();
+            renderAll(true);
+
             if (changed) {
-                renderAll(false); // No animation
                 alert("不足分を推奨数まで補充しました。");
             } else {
                 alert("すでに推奨数を満たしています。");
@@ -633,7 +984,7 @@
                 btnList.classList.remove(...activeClasses);
                 btnList.classList.add(...inactiveClasses);
 
-                document.getElementById('items-container').className = 'grid grid-cols-2 sm:grid-cols-[repeat(auto-fill,minmax(160px,1fr))] gap-4 items-start';
+                document.getElementById('items-container').className = 'grid grid-cols-2 sm:grid-cols-[repeat(auto-fill,minmax(160px,1fr))] gap-4 items-stretch';
             }
 
             renderItems(true); // Animate on view switch
@@ -653,13 +1004,231 @@
         }
 
         // =========================================
-        // ADD ITEM MODAL
+        // ADD ITEM MODAL (マスター選択型)
+        //   - カテゴリ = 食品上の役割 (meal_role / category 基準)
+        //   - 「乳幼児向け」「高齢者向け」等の対象者はタグフィルターで扱う
+        //   - 複数選択 → 一括追加。追加済みマスターIDは重複追加しない
         // =========================================
+        const MODAL_CATEGORIES = [
+            { id: 'all', label: 'すべて' },
+            { id: 'water', label: '水' },
+            { id: 'staple', label: '主食' },
+            { id: 'main', label: '主菜' },
+            { id: 'side', label: '副菜・汁物' },
+            { id: 'snack', label: '間食・嗜好品' },
+            { id: 'special', label: '特別食' },
+            { id: 'supplement', label: '栄養補助' }
+        ];
+        // タグフィルター定義。matchTagsは品目のtags配列を受けて判定する。
+        // existsTagsのいずれもマスターに存在しない場合、そのチップは表示しない。
+        const MODAL_TAG_FILTERS = [
+            { id: 'no-cook', label: '調理不要', existsTags: ['no-cook'], match: t => t.includes('no-cook') },
+            { id: 'needs-cook', label: '要調理', existsTags: ['needs-heat', 'needs-hot-water', 'needs-water', 'needs-cook'], match: t => t.some(x => x.startsWith('needs-')) },
+            { id: 'soft', label: 'やわらかい', existsTags: ['soft'], match: t => t.includes('soft') },
+            { id: 'baby', label: '乳幼児向け', existsTags: ['baby'], match: t => t.includes('baby') },
+            { id: 'elderly', label: '高齢者向け', existsTags: ['elderly'], match: t => t.includes('elderly') },
+            { id: 'rolling', label: 'ローリングストック', existsTags: ['rolling'], match: t => t.includes('rolling') },
+            { id: 'long-shelf', label: '長期保存', existsTags: ['long-shelf'], match: t => t.includes('long-shelf') }
+        ];
+        // カードに補助表示する重要タグ (最大2個)
+        const CARD_TAG_LABELS = [
+            ['no-cook', '調理不要'], ['soft', 'やわらかい'], ['baby', '乳幼児向け'],
+            ['elderly', '高齢者向け'], ['long-shelf', '長期保存'], ['rolling', 'ローリングストック']
+        ];
+
+        let modalState = { tab: 'master', cat: 'all', tags: new Set(), selected: new Set() };
+
+        function escapeHtml(s) {
+            return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+        }
+
+        function modalCategoryMatch(m, cat) {
+            if (cat === 'all') return true;
+            if (cat === 'water') return m.meal_role === 'drink';
+            if (cat === 'supplement') return m.category === 'supplement';
+            return m.meal_role === cat;
+        }
+        function modalCategoryLabel(m) {
+            if (m.category === 'supplement') return '栄養補助';
+            const map = { drink: '水', staple: '主食', main: '主菜', side: '副菜・汁物', snack: '間食・嗜好品', special: '特別食' };
+            return map[m.meal_role] || 'その他';
+        }
+        // 統計行: 水は容量優先、それ以外はカロリー。販売単位を併記
+        function masterStatLine(m) {
+            const unit = m.consume_unit || '個';
+            const pack = m.pack_label || ((m.pack_size && m.pack_size > 1) ? `${m.pack_size}${unit}入` : '単品');
+            if (m.meal_role === 'drink' && m.water_per_unit) {
+                const l = m.water_per_unit / 1000;
+                return `1${unit} ${l % 1 === 0 ? l : l.toFixed(1)}L ｜ ${pack}`;
+            }
+            return `1${unit} ${m.cal_per_unit || 0} kcal ｜ ${pack}`;
+        }
+
+        function switchAddTab(tab) {
+            modalState.tab = tab;
+            const master = document.getElementById('add-pane-master');
+            const manual = document.getElementById('add-pane-manual');
+            const tabM = document.getElementById('add-tab-master');
+            const tabF = document.getElementById('add-tab-manual');
+            const on = 'px-3 py-2 text-sm font-bold border-b-2 border-teal-700 text-teal-700';
+            const off = 'px-3 py-2 text-sm font-bold border-b-2 border-transparent text-slate-400 hover:text-slate-600';
+            if (tab === 'master') {
+                master.classList.remove('hidden'); master.classList.add('flex');
+                manual.classList.add('hidden'); manual.classList.remove('flex');
+                tabM.className = on; tabF.className = off;
+            } else {
+                manual.classList.remove('hidden'); manual.classList.add('flex');
+                master.classList.add('hidden'); master.classList.remove('flex');
+                tabF.className = on; tabM.className = off;
+            }
+        }
+
+        function renderModalFilters() {
+            const catRow = document.getElementById('master-cat-row');
+            catRow.innerHTML = MODAL_CATEGORIES.map(c => {
+                const active = modalState.cat === c.id;
+                return `<button onclick="setModalCat('${c.id}')" class="px-2.5 py-1 rounded-full text-xs font-bold border transition-colors ${active ? 'bg-teal-700 text-white border-teal-700' : 'bg-white text-slate-600 border-slate-300 hover:border-teal-700'}">${c.label}</button>`;
+            }).join('');
+
+            const allTags = new Set();
+            MASTER.forEach(m => (m.tags || []).forEach(t => allTags.add(t)));
+            const tagRow = document.getElementById('master-tag-row');
+            tagRow.innerHTML = MODAL_TAG_FILTERS
+                .filter(f => f.existsTags.some(t => allTags.has(t)))  // 存在しないタグのフィルターは表示しない
+                .map(f => {
+                    const active = modalState.tags.has(f.id);
+                    return `<button onclick="toggleModalTag('${f.id}')" class="px-2.5 py-1 rounded-full text-xs border transition-colors ${active ? 'bg-slate-700 text-white border-slate-700' : 'bg-slate-50 text-slate-500 border-slate-200 hover:border-slate-400'}">${f.label}</button>`;
+                }).join('');
+        }
+        function setModalCat(cat) { modalState.cat = cat; renderModalFilters(); renderMasterCards(); }
+        function toggleModalTag(id) {
+            if (modalState.tags.has(id)) {
+                modalState.tags.delete(id);
+            } else {
+                modalState.tags.add(id);
+                // タグでの絞り込みはカテゴリ横断で探す用途のため、カテゴリを「すべて」へ戻す
+                modalState.cat = 'all';
+            }
+            renderModalFilters(); renderMasterCards();
+        }
+
+        function renderMasterCards() {
+            const grid = document.getElementById('master-card-grid');
+            const q = document.getElementById('master-search').value.trim().toLowerCase();
+            const activeFilters = MODAL_TAG_FILTERS.filter(f => modalState.tags.has(f.id));
+            const inPlanIds = new Set(state.items.map(i => i.id));
+
+            const cards = [];
+            MASTER.forEach(m => {
+                if (!modalCategoryMatch(m, modalState.cat)) return;
+                const tags = m.tags || [];
+                if (!activeFilters.every(f => f.match(tags))) return;
+                if (q) {
+                    const hay = `${m.name} ${m.desc || ''} ${tags.join(' ')}`.toLowerCase();
+                    if (!hay.includes(q)) return;
+                }
+                const added = inPlanIds.has(m.id);
+                const selected = modalState.selected.has(m.id);
+                const catLabel = modalCategoryLabel(m);
+                const extraTags = CARD_TAG_LABELS
+                    .filter(([tg]) => tags.includes(tg)).slice(0, 2)
+                    .map(([, lb]) => `<span class="px-1.5 py-0.5 rounded bg-slate-100 text-slate-500 text-[10px]">${lb}</span>`)
+                    .join('');
+                const specialNote = m.meal_role === 'special'
+                    ? `<p class="text-[11px] text-amber-700 mt-1">対象者に合わせて調整</p>` : '';
+                const stateClass = added
+                    ? 'opacity-50 cursor-not-allowed bg-slate-50 border-slate-200'
+                    : selected
+                        ? 'border-teal-700 bg-teal-50 cursor-pointer'
+                        : 'border-slate-200 bg-white hover:border-teal-700 cursor-pointer';
+                const mark = added
+                    ? `<span class="text-[11px] font-bold text-slate-400 shrink-0">追加済み</span>`
+                    : `<span class="w-5 h-5 rounded-full border flex items-center justify-center shrink-0 ${selected ? 'bg-teal-700 border-teal-700 text-white' : 'border-slate-300 text-slate-300'}">${selected ? '✓' : '＋'}</span>`;
+                cards.push(`
+                    <div onclick="${added ? '' : `toggleMasterSelect('${m.id}')`}"
+                        class="border rounded-lg p-3 transition-colors select-none ${stateClass}">
+                        <div class="flex justify-between items-start gap-2">
+                            <span class="font-bold text-sm text-slate-700 leading-snug">${escapeHtml(m.name)}</span>
+                            ${mark}
+                        </div>
+                        <div class="flex flex-wrap items-center gap-1 mt-1">
+                            <span class="px-1.5 py-0.5 rounded bg-teal-50 text-teal-800 text-[10px] font-bold">${catLabel}</span>
+                            ${extraTags}
+                        </div>
+                        <p class="text-xs text-slate-600 mt-1.5 font-mono">${masterStatLine(m)}</p>
+                        ${m.desc ? `<p class="text-[11px] text-slate-400 mt-1 leading-snug">${escapeHtml(m.desc)}</p>` : ''}
+                        ${specialNote}
+                    </div>`);
+            });
+            grid.innerHTML = cards.length ? cards.join('')
+                : `<p class="text-sm text-slate-400 col-span-full py-8 text-center">条件に一致する品目がありません。<br>「その他を手入力」タブから追加できます。</p>`;
+            updateModalFooter();
+        }
+
+        function toggleMasterSelect(id) {
+            if (state.items.some(i => i.id === id)) return; // 追加済みは選択不可
+            if (modalState.selected.has(id)) modalState.selected.delete(id); else modalState.selected.add(id);
+            renderMasterCards();
+        }
+        function updateModalFooter() {
+            const n = modalState.selected.size;
+            document.getElementById('master-selected-count').textContent = `選択中 ${n}品`;
+            document.getElementById('master-add-btn').disabled = n === 0;
+        }
+
+        // 選択したマスター品目を一括追加する。
+        // 追加後の再計算では、P0-3と同じ「自動管理中の品目だけ追従」の規則を適用し、
+        // 手動編集済みの数量を巻き込まない。
+        function addSelectedMasterItems() {
+            if (modalState.selected.size === 0) return;
+            const autoManagedIds = collectAutoManagedIds(state.items);
+            modalState.selected.forEach(id => {
+                if (state.items.some(i => i.id === id)) return; // 同一マスターIDの重複追加は行わない
+                const m = MASTER.get(id);
+                if (!m) return;
+                state.items.push({
+                    id: m.id,
+                    masterRef: m.id,
+                    name: m.name,
+                    category: m.category,
+                    unit: m.consume_unit,
+                    cal: m.cal_per_unit || 0,
+                    water: m.water_per_unit || 0,
+                    desc: m.desc || "",
+                    meal_role: m.meal_role,
+                    tags: m.tags || [],
+                    unit_gram: m.unit_gram,
+                    units_per_serving: m.units_per_serving,
+                    pack_size: m.pack_size,
+                    pack_label: m.pack_label,
+                    daily_coeff: m.daily_coeff,
+                    coeff_basis: m.coeff_basis,
+                    count: 1,
+                    recommended: 1,
+                    isCustom: true,      // リセット保全・追従除外の対象 (ユーザー追加品)
+                    isMasterItem: true   // マスター由来であることの識別
+                });
+            });
+            recalculateRecommended();
+            applyAutoManagedCounts(state.items, autoManagedIds);
+            modalState.selected.clear();
+            state.lastSaved = "Unsaved";
+            saveState();
+            renderAll(true);
+            closeAddItemModal();
+        }
+
         function openAddItemModal() {
             const modal = document.getElementById('add-item-modal');
             modal.classList.remove('hidden');
             modal.classList.add('flex');
-            // Reset fields
+            // モーダル状態をリセット (デフォルトは「マスターから選ぶ」)
+            modalState = { tab: 'master', cat: 'all', tags: new Set(), selected: new Set() };
+            document.getElementById('master-search').value = '';
+            switchAddTab('master');
+            renderModalFilters();
+            renderMasterCards();
+            // 手入力フォームもリセット
             document.getElementById('add-name').value = '';
             document.getElementById('add-count').value = '1';
             document.getElementById('add-unit').value = '個';
@@ -684,8 +1253,8 @@
             const category = document.getElementById('add-category').value;
             const desc = document.getElementById('add-desc').value.trim();
 
-            // Create new ID (max + 1)
-            const newId = state.items.length > 0 ? Math.max(...state.items.map(i => i.id)) + 1 : 1;
+            // カスタム品ID: マスターID(文字列)と衝突しない 'C' + タイムスタンプ
+            const newId = 'C' + Date.now();
 
             const newItem = {
                 id: newId,
@@ -706,8 +1275,11 @@
             // For custom items, maybe we want recommended to match count or follow logic?
             // Let's let the logic decide recommended baseline.
 
+            // 追加による再配分でも、P0-3と同じ「自動管理中の品目だけ追従」の規則を適用する
+            const autoManagedIds = collectAutoManagedIds(state.items);
             state.items.push(newItem);
             recalculateRecommended(); // Apply standard logic to new item
+            applyAutoManagedCounts(state.items, autoManagedIds);
 
             // If logic set recommended very low but user added many, maybe keep user count?
             // updateConditions already handles this (it updates state).
@@ -781,13 +1353,16 @@
         function renderStats() {
             // Basic Stats
             document.getElementById('total-days-display').textContent = state.household.days + "日";
+            document.getElementById('total-items-display').textContent = state.items.length + "品";
 
             /* * AI_NOTE: 重量計算ロジック (MOCK)
              * 現在は水=2kg, その他=0.3kg という固定値で概算しています。
              * 本来は ItemCatalog に 'weight_per_unit' を持ち、正確に積算する必要があります。
              */
             const weight = state.items.reduce((acc, item) => {
-                const unitWeight = item.category === 'water' ? 2 : 0.3;
+                // マスター品はunit_gramから正確に積算。カスタム品は従来の概算値
+                const unitWeight = item.unit_gram != null ? item.unit_gram / 1000
+                    : (item.category === 'water' ? 2 : 0.3);
                 return acc + (item.count * unitWeight);
             }, 0);
             document.getElementById('total-weight-display').textContent = `約${Math.round(weight)}kg`;
@@ -803,11 +1378,17 @@
             const childCount = state.household.children;
             const days = state.household.days;
 
-            const dailyTargetCal = (adultCount * 2000) + (childCount * 1400);
-            const dailyTargetWater = (adultCount * 3000) + (childCount * 2000); // ml
+            const dailyTargetCal = Math.round(adultCount * NUTRI.ADULT_CAL + childCount * NUTRI.ADULT_CAL * NUTRI.CHILD_CAL_FACTOR);
+            const dailyTargetWater = (adultCount + childCount) * NUTRI.WATER_ML; // ml (全員一律3L/日)
 
-            const totalCurrentCal = state.items.reduce((acc, item) => acc + (item.count * (item.cal || 0)), 0);
-            const totalCurrentWater = state.items.reduce((acc, item) => acc + (item.count * (item.water || 0)), 0);
+            // カロリー検算: 特別食(daily_coeff品)は家族全員の食事に供されないため除外
+            const totalCurrentCal = state.items.reduce((acc, item) =>
+                acc + (item.daily_coeff == null ? item.count * (item.cal || 0) : 0), 0);
+            // 水分検算: 「水」品目のみ(ジュース・ミルク等は不算入)
+            const totalCurrentWater = state.items.reduce((acc, item) => {
+                const isDrink = item.meal_role === 'drink' || (item.meal_role == null && item.category === 'water' && (item.water || 0) > 0);
+                return acc + (isDrink ? item.count * (item.water || 0) : 0);
+            }, 0);
 
             const dailyCurrentCal = totalCurrentCal / days;
             const dailyCurrentWater = totalCurrentWater / days;
@@ -852,7 +1433,7 @@
 
                 // --- LIST ITEM HTML ---
                 const listHtml = `
-                <div class="flex flex-col border-b border-slate-100 cursor-pointer ${animClass} group" onclick="toggleDetails(${item.id})">
+                <div class="flex flex-col border-b border-slate-100 cursor-pointer ${animClass} group" onclick='toggleDetails(${JSON.stringify(item.id)})'>
                     <div class="flex items-center p-3 hover:bg-slate-50 transition-colors">
                         <div class="flex-1 pointer-events-none">
                             <span class="block font-bold text-slate-800 text-[0.95rem]">
@@ -864,14 +1445,14 @@
                             </div>
                         </div>
                         <div class="flex items-center gap-2 cursor-default" onclick="event.stopPropagation()">
-                            <button class="w-7 h-7 flex items-center justify-center border border-slate-300 rounded text-slate-600 bg-white hover:bg-slate-100 transition-colors" onclick="updateQty(${item.id}, -1)">
+                            <button class="w-7 h-7 flex items-center justify-center border border-slate-300 rounded text-slate-600 bg-white hover:bg-slate-100 transition-colors" onclick='updateQty(${JSON.stringify(item.id)}, -1)'>
                                 <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M19 13H5v-2h14v2z"/></svg>
                             </button>
                             <input type="text" class="w-12 text-center border border-slate-300 rounded text-sm font-bold p-1 bg-white" value="${item.count}" readonly>
-                            <button class="w-7 h-7 flex items-center justify-center border border-slate-300 rounded text-slate-600 bg-white hover:bg-slate-100 transition-colors" onclick="updateQty(${item.id}, 1)">
+                            <button class="w-7 h-7 flex items-center justify-center border border-slate-300 rounded text-slate-600 bg-white hover:bg-slate-100 transition-colors" onclick='updateQty(${JSON.stringify(item.id)}, 1)'>
                                 <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
                             </button>
-                            <button class="w-7 h-7 flex items-center justify-center text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors ml-1" onclick="deleteItem(${item.id})" title="削除">
+                            <button class="w-7 h-7 flex items-center justify-center text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors ml-1" onclick='deleteItem(${JSON.stringify(item.id)})' title="削除">
                                 <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
                             </button>
                         </div>
@@ -887,7 +1468,7 @@
 
                 // --- CARD ITEM HTML ---
                 const cardHtml = `
-                <div class="bg-white border border-slate-200 rounded-lg p-4 flex flex-col items-center text-center relative cursor-pointer hover:-translate-y-0.5 hover:shadow-md transition-all ${animClass}" onclick="toggleDetails(${item.id})">
+                <div class="bg-white border border-slate-200 rounded-lg p-4 h-full flex flex-col items-center text-center relative cursor-pointer hover:-translate-y-0.5 hover:shadow-md transition-all ${animClass}" onclick='toggleDetails(${JSON.stringify(item.id)})'>
                     <span class="mt-2 font-bold text-slate-800 text-sm pointer-events-none">
                         ${item.name}
                     </span>
@@ -896,15 +1477,15 @@
                         現在: ${item.count}${item.unit}
                     </div>
                     <div class="flex items-center gap-2 mt-auto w-full justify-center cursor-default" onclick="event.stopPropagation()">
-                        <button class="w-7 h-7 flex items-center justify-center border border-slate-300 rounded text-slate-600 bg-white hover:bg-slate-100 transition-colors" onclick="updateQty(${item.id}, -1)">
+                        <button class="w-7 h-7 flex items-center justify-center border border-slate-300 rounded text-slate-600 bg-white hover:bg-slate-100 transition-colors" onclick='updateQty(${JSON.stringify(item.id)}, -1)'>
                             <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M19 13H5v-2h14v2z"/></svg>
                         </button>
                         <input type="text" class="w-10 text-center border border-slate-300 rounded text-sm font-bold p-1 bg-white" value="${item.count}" readonly>
-                        <button class="w-7 h-7 flex items-center justify-center border border-slate-300 rounded text-slate-600 bg-white hover:bg-slate-100 transition-colors" onclick="updateQty(${item.id}, 1)">
+                        <button class="w-7 h-7 flex items-center justify-center border border-slate-300 rounded text-slate-600 bg-white hover:bg-slate-100 transition-colors" onclick='updateQty(${JSON.stringify(item.id)}, 1)'>
                             <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
                         </button>
                     </div>
-                    <button class="mt-2 text-xs text-slate-400 hover:text-red-500 hover:bg-red-50 rounded px-2 py-0.5 transition-colors" onclick="event.stopPropagation(); deleteItem(${item.id})">
+                    <button class="mt-2 text-xs text-slate-400 hover:text-red-500 hover:bg-red-50 rounded px-2 py-0.5 transition-colors" onclick='event.stopPropagation(); deleteItem(${JSON.stringify(item.id)})'>
                         削除
                     </button>
                     <!-- Detail Section for Card View -->
@@ -920,8 +1501,8 @@
             });
         }
 
-        // Initialize (with animation)
-        renderAll(true);
+        // Initialize: データ読み込み後にレンダリング (I-1)
+        init();
 
     </script>
 </body>
