@@ -1432,7 +1432,7 @@
         "protein_note": "日本食品標準成分表（八訂）増補2023年 13059「乳児用液体ミルク」の可食部100gあたりたんぱく質 1.5g × 240g で換算。明治の公式サイトに接続できなかったため成分表で代用。240mlを240gとして換算（unit_gram）"
       },
       "assign_note": "coeff_basis=children: 子供0人なら自動的に0本。将来「乳幼児数」入力実装時にbasisをinfantsへ置換。daily_coeff=3.0本/乳児/日 仮。該当人数は現状(A+C)で代用→将来乳幼児数入力で置換",
-      "coeff_basis": "children"
+      "coeff_basis": "infants"
     },
     {
       "id": "P002",
@@ -1462,7 +1462,7 @@
         "protein_note": "日本食品標準成分表（八訂）増補2023年 13011「乳児用調製粉乳」の可食部100gあたりたんぱく質 12.4g × 800g で換算。明治の公式サイトに接続できなかったため成分表で代用"
       },
       "assign_note": "daily_coeff=0.05(1缶≒20日分)仮",
-      "coeff_basis": "children"
+      "coeff_basis": "infants"
     },
     {
       "id": "P003",
@@ -1494,7 +1494,7 @@
         "protein_note": "メーカー公式の栄養成分表示（1袋80gあたり）。キユーピーのベビーフードのうち内容量80gのパウチ品（やさいとなかよし 3品）から、kcal が最も大きいミートソースを代表にした"
       },
       "assign_note": "月齢区分は品目分割せずdesc注記で対応(確定)。daily_coeff=2.0食/乳児/日 仮",
-      "coeff_basis": "children"
+      "coeff_basis": "infants"
     },
     {
       "id": "P004",
