@@ -1,0 +1,32 @@
+[
+  {
+    "id": "standard",
+    "name": "標準",
+    "file": "standard.json"
+  },
+  {
+    "id": "elderly",
+    "name": "高齢者向け",
+    "file": "elderly.json"
+  },
+  {
+    "id": "baby",
+    "name": "乳幼児がいる世帯向け",
+    "file": "baby.json"
+  },
+  {
+    "id": "family-kids",
+    "name": "子育て世帯向け",
+    "file": "family-kids.json"
+  },
+  {
+    "id": "woman",
+    "name": "女性向け",
+    "file": "woman.json"
+  },
+  {
+    "id": "no-cook",
+    "name": "調理ナシ",
+    "file": "no-cook.json"
+  }
+]

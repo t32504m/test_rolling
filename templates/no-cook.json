@@ -1,0 +1,59 @@
+{
+  "id": "no-cook",
+  "name": "調理ナシ",
+  "target": "火や湯が使えない状況に備えたい世帯",
+  "description": "開封してそのまま食べられる中核品に絞った構成です。梅干し・ふりかけ等の補助的な品目は副菜数へ算入されるため外しています。",
+  "basis": "農林水産省ガイド(そのまま食べられる食品)",
+  "exclude_tags": [
+    "needs-hot-water",
+    "needs-water",
+    "needs-heat",
+    "needs-cook"
+  ],
+  "items": [
+    {
+      "ref": "W004",
+      "weight": 1
+    },
+    {
+      "ref": "S006",
+      "weight": 3
+    },
+    {
+      "ref": "S007",
+      "weight": 2
+    },
+    {
+      "ref": "S012",
+      "weight": 1
+    },
+    {
+      "ref": "M001",
+      "weight": 1
+    },
+    {
+      "ref": "M006",
+      "weight": 2
+    },
+    {
+      "ref": "M005",
+      "weight": 1
+    },
+    {
+      "ref": "V001",
+      "weight": 2
+    },
+    {
+      "ref": "V010",
+      "weight": 1
+    },
+    {
+      "ref": "K003",
+      "weight": 2
+    },
+    {
+      "ref": "K001",
+      "weight": 1
+    }
+  ]
+}
