@@ -1269,7 +1269,7 @@
     },
     {
       "id": "K003",
-      "name": "保存用ようかん",
+      "name": "ようかん",
       "category": "snack",
       "meal_role": "snack",
       "tags": [
@@ -1284,22 +1284,21 @@
       "units_per_serving": 1,
       "daily_coeff": null,
       "variant_group": null,
-      "unit_gram": 60,
-      "cal_per_unit": 171,
+      "unit_gram": 58,
+      "cal_per_unit": 161,
       "water_per_unit": 0,
-      "protein_per_unit": 2.16,
-      "pack_size": 5,
-      "pack_label": "1箱(5本入)",
-      "size_note": "1本 60g、5本入りの箱（300g）。1本は手で持てる細長い個包装のようかん",
-      "desc": "5年保存級。やわらかく高齢者にも食べやすい。",
+      "pack_size": 1,
+      "pack_label": "1本",
+      "size_note": "1本 58g。手で持てる細長い個包装のようかん",
+      "desc": "1本ずつ包装された小さなようかん。やわらかく高齢者にも食べやすい。",
       "source": {
         "item_basis": "maff-guide-general",
-        "nutrition_basis": "井村屋 えいようかん 60g",
+        "nutrition_basis": "井村屋 58gミニようかん 煉 58g",
         "checked": "2026-07",
-        "protein_url": "https://fooddb.mext.go.jp/details/details.pl?ITEM_NO=15_15038_7",
-        "protein_note": "日本食品標準成分表（八訂）増補2023年 15038「練りようかん」の可食部100gあたりたんぱく質 3.6g × 60g で換算。成分表の値は推計値。井村屋の公式商品ページにたんぱく質の表示がないため成分表で代用",
-        "pack_url": "https://lohaco.yahoo.co.jp/store/h-lohaco/item/waw2693/",
-        "pack_note": "代表商品のえいようかんは、5本入りの箱でしか売られていない（メーカーの商品ページ https://www.imuraya.co.jp/goods/yokan/c-eiyo/eiyo/ の内容量が「300g（60g×5本）」。LOHACO も「1組(5本入)」）。同じ種類のようかんなら1本で買える商品がある（PR 本文の「オーナーの判断が要る品目」を参照）"
+        "kcal_url": "https://www.imuraya.co.jp/goods/yokan/c-nogt/58yokann/",
+        "kcal_note": "メーカー公式の商品ページの表示（161kcal／1本（58g）あたり）。たんぱく質は公式ページにも、ほかの公式の資料にも表示が見つからなかったため、protein_per_unit は入れていない（不明）。代表商品は、2026-10-22 のオーナー決定（統括から伝達）により、えいようかん（60g×5本の箱）からこの商品に替えた",
+        "pack_url": "https://lohaco.yahoo.co.jp/store/h-lohaco/item/u951081/",
+        "pack_note": "1本で売られている（LOHACO「井村屋 ミニようかん 煉 58g 1本」）。10本・30本のまとめ売りや、メーカーの「4本入ミニようかん」もある"
       },
       "assign_note": "",
       "coeff_basis": null
