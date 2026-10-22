@@ -154,7 +154,7 @@
       "daily_coeff": null,
       "variant_group": null,
       "unit_gram": 100,
-      "cal_per_unit": 356,
+      "cal_per_unit": 377,
       "water_per_unit": 0,
       "protein_per_unit": 6.9,
       "pack_size": 1,
@@ -165,7 +165,9 @@
         "nutrition_basis": "尾西食品 五目ごはん 100g",
         "checked": "2026-07",
         "protein_url": "https://www.onisifoods.co.jp/products/gomoku.html",
-        "protein_note": "メーカー公式の栄養成分表示（100g尾西の五目ごはん、1食100gあたり）"
+        "protein_note": "メーカー公式の栄養成分表示（100g尾西の五目ごはん、1食100gあたり）",
+        "kcal_url": "https://www.onisifoods.co.jp/products/gomoku.html",
+        "kcal_note": "メーカー公式の栄養成分表示（100g尾西の五目ごはん、1食100gあたり）"
       },
       "assign_note": "味の個別化(五目/カレー等)はM-3の代表商品選定で対応",
       "coeff_basis": null
@@ -248,7 +250,7 @@
       "daily_coeff": null,
       "variant_group": null,
       "unit_gram": 250,
-      "cal_per_unit": 90,
+      "cal_per_unit": 85,
       "water_per_unit": 0,
       "protein_per_unit": 1.5,
       "pack_size": 1,
@@ -259,7 +261,9 @@
         "nutrition_basis": "味の素 おかゆ白がゆ 250g",
         "checked": "2026-07",
         "protein_url": "https://www.ajinomoto.co.jp/products/detail/?ProductName=okayu_1",
-        "protein_note": "メーカー公式の栄養成分表示（味の素KKおかゆ 白がゆ、1人前250gあたり）"
+        "protein_note": "メーカー公式の栄養成分表示（味の素KKおかゆ 白がゆ、1人前250gあたり）",
+        "kcal_url": "https://www.ajinomoto.co.jp/products/detail/?ProductName=okayu_1",
+        "kcal_note": "メーカー公式の栄養成分表示（味の素KKおかゆ 白がゆ、1人前250gあたり）"
       },
       "assign_note": "",
       "coeff_basis": null
@@ -278,15 +282,20 @@
       "daily_coeff": null,
       "variant_group": null,
       "unit_gram": 100,
-      "cal_per_unit": 325,
+      "cal_per_unit": 305,
       "water_per_unit": 0,
+      "protein_per_unit": 6.4,
       "pack_size": 1,
       "pack_label": "1缶",
       "desc": "開けてすぐ食べられる長期保存パン。",
       "source": {
         "item_basis": "maff-guide-general",
-        "nutrition_basis": "パン・アキモト PANCAN 100g",
-        "checked": "2026-07"
+        "nutrition_basis": "パン・アキモト アキモトのパンのかんづめ オレンジ味（乳酸菌入り）100g",
+        "checked": "2026-07",
+        "kcal_url": "https://www.panakimoto.com/products_pancan/pdf/202504_genzairyou_s5.pdf",
+        "kcal_note": "メーカー公式の栄養成分及び原材料表示（PDF、2025年4月製造分より）のオレンジ味の値。PDF に基準量（1缶か100gか）の記載はないが、1缶が100g（https://www.panakimoto.com/products_pancan/ の規格「100g × 24 缶」）のため同じ値になる。味はラインアップの最初に載っているオレンジ味を代表にした（ストロベリー味 299kcal、ブルーベリー味 297kcal）",
+        "protein_url": "https://www.panakimoto.com/products_pancan/pdf/202504_genzairyou_s5.pdf",
+        "protein_note": "メーカー公式の栄養成分及び原材料表示（PDF、2025年4月製造分より）のオレンジ味の値。PDF に基準量（1缶か100gか）の記載はないが、1缶が100g（https://www.panakimoto.com/products_pancan/ の規格「100g × 24 缶」）のため同じ値になる。味はラインアップの最初に載っているオレンジ味を代表にした（ストロベリー味 299kcal、ブルーベリー味 297kcal）"
       },
       "assign_note": "",
       "coeff_basis": null
@@ -362,7 +371,7 @@
       "daily_coeff": null,
       "variant_group": null,
       "unit_gram": 78,
-      "cal_per_unit": 351,
+      "cal_per_unit": 364,
       "water_per_unit": 0,
       "protein_per_unit": 10.7,
       "pack_size": 1,
@@ -373,7 +382,9 @@
         "nutrition_basis": "日清カップヌードル 78g",
         "checked": "2026-07",
         "protein_url": "https://www.nissin.com/jp/product/items/13462/",
-        "protein_note": "メーカー公式の栄養成分表示（カップヌードル、1食78gあたり）"
+        "protein_note": "メーカー公式の栄養成分表示（カップヌードル、1食78gあたり）",
+        "kcal_url": "https://www.nissin.com/jp/product/items/13462/",
+        "kcal_note": "メーカー公式の栄養成分表示（カップヌードル、1食78gあたり。めん・かやく349kcal＋スープ15kcal）"
       },
       "assign_note": "",
       "coeff_basis": null
@@ -512,7 +523,7 @@
       "daily_coeff": null,
       "variant_group": null,
       "unit_gram": 70,
-      "cal_per_unit": 190,
+      "cal_per_unit": 205,
       "water_per_unit": 0,
       "protein_per_unit": 13.4,
       "pack_size": 3,
@@ -523,7 +534,9 @@
         "nutrition_basis": "はごろも シーチキンマイルド 70g",
         "checked": "2026-07",
         "protein_url": "https://www.hagoromofoods.co.jp/products/detail/293.html",
-        "protein_note": "メーカー公式の栄養成分表示（はごろもフーズ シーチキンマイルド70g、1缶あたり・液汁含む）"
+        "protein_note": "メーカー公式の栄養成分表示（はごろもフーズ シーチキンマイルド70g、1缶あたり・液汁含む）",
+        "kcal_url": "https://www.hagoromofoods.co.jp/products/detail/293.html",
+        "kcal_note": "メーカー公式の栄養成分表示（はごろもフーズ シーチキンマイルド70g、1缶あたり・液汁含む）"
       },
       "assign_note": "",
       "coeff_basis": null
@@ -781,7 +794,7 @@
       "daily_coeff": null,
       "variant_group": null,
       "unit_gram": 190,
-      "cal_per_unit": 68,
+      "cal_per_unit": 76,
       "water_per_unit": 0,
       "protein_per_unit": 2.3,
       "pack_size": 6,
@@ -789,10 +802,12 @@
       "desc": "災害時に不足しがちなビタミン補給の柱。",
       "source": {
         "item_basis": "maff-guide-general",
-        "nutrition_basis": "伊藤園 1日分の野菜(長期保存缶) 190g",
+        "nutrition_basis": "伊藤園 1日分の野菜 缶 190g",
         "checked": "2026-07",
         "protein_url": "https://www.itoen.jp/products/41247/",
-        "protein_note": "メーカー公式の栄養成分表示（伊藤園 1日分の野菜 缶 190g、1本あたり）"
+        "protein_note": "メーカー公式の栄養成分表示（伊藤園 1日分の野菜 缶 190g、1本あたり）",
+        "kcal_url": "https://www.itoen.jp/products/41247/",
+        "kcal_note": "メーカー公式の栄養成分表示（伊藤園 1日分の野菜 缶 190g、1本あたり）"
       },
       "assign_note": "水分寄与あり(water_per_unitはM-3で記録)",
       "coeff_basis": null
@@ -842,16 +857,21 @@
       "units_per_serving": 1,
       "daily_coeff": null,
       "variant_group": null,
-      "unit_gram": 100,
-      "cal_per_unit": 300,
+      "unit_gram": 65,
+      "cal_per_unit": 218,
       "water_per_unit": 0,
+      "protein_per_unit": 0.5,
       "pack_size": 1,
       "pack_label": "1袋",
       "desc": "常温保存できる果物。",
       "source": {
         "item_basis": "maff-guide-general",
-        "nutrition_basis": "一般的なミックスドライフルーツ 100g",
-        "checked": "2026-07"
+        "nutrition_basis": "共立食品 フルーツミックス チャック付 65g",
+        "checked": "2026-07",
+        "kcal_url": "https://www.kyoritsu-foods.co.jp/product/173/",
+        "kcal_note": "メーカー公式の栄養成分表示（1袋65gあたり、推定値）",
+        "protein_url": "https://www.kyoritsu-foods.co.jp/product/173/",
+        "protein_note": "メーカー公式の栄養成分表示（1袋65gあたり、推定値）"
       },
       "assign_note": "",
       "coeff_basis": null
@@ -870,16 +890,21 @@
       "units_per_serving": 1,
       "daily_coeff": null,
       "variant_group": null,
-      "unit_gram": 40,
-      "cal_per_unit": 50,
+      "unit_gram": 16,
+      "cal_per_unit": 34.08,
       "water_per_unit": 0,
+      "protein_per_unit": 3.264,
       "pack_size": 1,
       "pack_label": "1袋",
       "desc": "汁物に入れるだけで野菜を補える。",
       "source": {
         "item_basis": "maff-guide-general",
-        "nutrition_basis": "一般的な乾燥野菜ミックス 40g",
-        "checked": "2026-07"
+        "nutrition_basis": "理研ビタミン ふえるわかめちゃん 三陸産 16g",
+        "checked": "2026-07",
+        "kcal_url": "https://www.rikenvitamin.jp/products/fueruwakame/wakamechan/sanriku.html",
+        "kcal_note": "メーカー公式の栄養成分表示は1g（みそ汁1杯分相当）あたり 2.13kcal・たんぱく質 0.204g。内容量16gを掛けて1袋あたりに換算（2.13×16＝34.08kcal、0.204×16＝3.264g）。乾燥野菜ミックスでは公式ページに表示のある大手の商品が見つからなかったため、品目名の「乾燥わかめ」から代表を決めた",
+        "protein_url": "https://www.rikenvitamin.jp/products/fueruwakame/wakamechan/sanriku.html",
+        "protein_note": "メーカー公式の栄養成分表示は1g（みそ汁1杯分相当）あたり 2.13kcal・たんぱく質 0.204g。内容量16gを掛けて1袋あたりに換算（2.13×16＝34.08kcal、0.204×16＝3.264g）。乾燥野菜ミックスでは公式ページに表示のある大手の商品が見つからなかったため、品目名の「乾燥わかめ」から代表を決めた"
       },
       "assign_note": "",
       "coeff_basis": null
@@ -928,16 +953,21 @@
       "units_per_serving": 1,
       "daily_coeff": null,
       "variant_group": null,
-      "unit_gram": 18,
-      "cal_per_unit": 30,
+      "unit_gram": 10,
+      "cal_per_unit": 37,
       "water_per_unit": 0,
+      "protein_per_unit": 2.4,
       "pack_size": 10,
       "pack_label": "10食入",
       "desc": "温かい汁物は災害時の満足感に直結。",
       "source": {
         "item_basis": "maff-guide-general",
-        "nutrition_basis": "アマノフーズ等フリーズドライみそ汁 1食",
-        "checked": "2026-07"
+        "nutrition_basis": "マルコメ フリーズドライ顆粒みそ汁 料亭の味 とうふ 1食10g",
+        "checked": "2026-07",
+        "kcal_url": "https://www.marukome.co.jp/product/detail/instant_159/",
+        "kcal_note": "メーカー公式の栄養成分表示（1食10gあたり、表示値は目安）。アマノフーズの公式サイトは 403 で開けなかったため、接続できたマルコメのフリーズドライみそ汁から、具の定番であるとうふを代表にした",
+        "protein_url": "https://www.marukome.co.jp/product/detail/instant_159/",
+        "protein_note": "メーカー公式の栄養成分表示（1食10gあたり、表示値は目安）。アマノフーズの公式サイトは 403 で開けなかったため、接続できたマルコメのフリーズドライみそ汁から、具の定番であるとうふを代表にした"
       },
       "assign_note": "",
       "coeff_basis": null
@@ -1014,10 +1044,10 @@
       "units_per_serving": 1,
       "daily_coeff": null,
       "variant_group": null,
-      "unit_gram": 3,
-      "cal_per_unit": 12,
+      "unit_gram": 2.5,
+      "cal_per_unit": 10.7,
       "water_per_unit": 0,
-      "protein_per_unit": 0.7,
+      "protein_per_unit": 0.585,
       "pack_size": 20,
       "pack_label": "20袋入",
       "desc": "主食の食べ飽き対策。",
@@ -1026,7 +1056,9 @@
         "nutrition_basis": "一般的なふりかけ小袋 2.5g",
         "checked": "2026-07",
         "protein_url": "https://fooddb.mext.go.jp/details/details.pl?ITEM_NO=17_17127_7",
-        "protein_note": "日本食品標準成分表（八訂）増補2023年 17127「ふりかけ たまご」の可食部100gあたりたんぱく質 23.4g × 3g で換算。成分表の値は推計値。unit_gram（3g）で換算"
+        "protein_note": "日本食品標準成分表（八訂）増補2023年 17127「ふりかけ たまご」の可食部100gあたり 428kcal・たんぱく質 23.4g（推計値）を、nutrition_basis の内容量 2.5g で換算（428×2.5/100＝10.7kcal、23.4×2.5/100＝0.585g）。代表商品に考えた丸美屋 のりたまミニパック（50g・20袋入＝1袋2.5g、https://www.marumiya.co.jp/product/series/furikake/mini/index.html ）は公式ページに栄養成分の表示がないため、成分表で換算した",
+        "kcal_url": "https://fooddb.mext.go.jp/details/details.pl?ITEM_NO=17_17127_7",
+        "kcal_note": "日本食品標準成分表（八訂）増補2023年 17127「ふりかけ たまご」の可食部100gあたり 428kcal・たんぱく質 23.4g（推計値）を、nutrition_basis の内容量 2.5g で換算（428×2.5/100＝10.7kcal、23.4×2.5/100＝0.585g）。代表商品に考えた丸美屋 のりたまミニパック（50g・20袋入＝1袋2.5g、https://www.marumiya.co.jp/product/series/furikake/mini/index.html ）は公式ページに栄養成分の表示がないため、成分表で換算した"
       },
       "assign_note": "",
       "coeff_basis": null
@@ -1203,15 +1235,20 @@
       "daily_coeff": null,
       "variant_group": null,
       "unit_gram": 25,
-      "cal_per_unit": 150,
+      "cal_per_unit": 164,
       "water_per_unit": 0,
+      "protein_per_unit": 4.5,
       "pack_size": 1,
       "pack_label": "1袋(小分け)",
       "desc": "高カロリー・良質脂質。",
       "source": {
         "item_basis": "maff-guide-general",
-        "nutrition_basis": "一般的な素焼きミックスナッツ 25g",
-        "checked": "2026-07"
+        "nutrition_basis": "共立食品 素焼きミックスナッツ 6パック 1袋25g",
+        "checked": "2026-07",
+        "kcal_url": "https://www.kyoritsu-foods.co.jp/product/1573/",
+        "kcal_note": "メーカー公式の栄養成分表示（1袋25gあたり）",
+        "protein_url": "https://www.kyoritsu-foods.co.jp/product/1573/",
+        "protein_note": "メーカー公式の栄養成分表示（1袋25gあたり）"
       },
       "assign_note": "乳幼児は誤嚥リスク(消費者庁注意喚起)のためbaby-ng",
       "coeff_basis": null
@@ -1320,16 +1357,21 @@
       "units_per_serving": null,
       "daily_coeff": 1.0,
       "variant_group": null,
-      "unit_gram": 1,
-      "cal_per_unit": 0,
+      "unit_gram": 1.648,
+      "cal_per_unit": 5.0,
       "water_per_unit": 0,
+      "protein_per_unit": 0.41,
       "pack_size": 30,
       "pack_label": "1袋(30日分)",
       "desc": "野菜不足が続く場合のビタミン・ミネラル補完。",
       "source": {
         "item_basis": "maff-guide-hairyo",
-        "nutrition_basis": "一般的なマルチビタミン&ミネラル 1日分",
-        "checked": "2026-07"
+        "nutrition_basis": "DHC パーフェクト サプリ マルチビタミン&ミネラル 1日4粒（1,648mg）",
+        "checked": "2026-07",
+        "kcal_url": "https://www.dhc.co.jp/goods/70086.html",
+        "kcal_note": "メーカー公式の栄養成分表示（4粒1,648mgあたり＝1日摂取目安量）",
+        "protein_url": "https://www.dhc.co.jp/goods/70086.html",
+        "protein_note": "メーカー公式の栄養成分表示（4粒1,648mgあたり＝1日摂取目安量）"
       },
       "assign_note": "daily_coeff=1.0(1人1日1回分)仮。研究資料(災害時ビタミン栄養)が裏付け",
       "coeff_basis": "all"
@@ -1436,15 +1478,20 @@
       "daily_coeff": 2.0,
       "variant_group": null,
       "unit_gram": 80,
-      "cal_per_unit": 60,
+      "cal_per_unit": 44,
       "water_per_unit": 0,
+      "protein_per_unit": 1.7,
       "pack_size": 1,
       "pack_label": "1袋",
       "desc": "月齢に合ったものを選ぶこと(desc注記方式)。",
       "source": {
         "item_basis": "maff-guide-hairyo",
-        "nutrition_basis": "キユーピー等ベビーフードパウチ 80g",
-        "checked": "2026-07"
+        "nutrition_basis": "キユーピー やさいとなかよし ミートソース（フォン・ド・ヴォー入り）1歳半頃から 80g",
+        "checked": "2026-07",
+        "kcal_url": "https://www.kewpie.co.jp/babyfood/products/detail.php?code=4901577091537",
+        "kcal_note": "メーカー公式の栄養成分表示（1袋80gあたり）。キユーピーのベビーフードのうち内容量80gのパウチ品（やさいとなかよし 3品）から、kcal が最も大きいミートソースを代表にした",
+        "protein_url": "https://www.kewpie.co.jp/babyfood/products/detail.php?code=4901577091537",
+        "protein_note": "メーカー公式の栄養成分表示（1袋80gあたり）。キユーピーのベビーフードのうち内容量80gのパウチ品（やさいとなかよし 3品）から、kcal が最も大きいミートソースを代表にした"
       },
       "assign_note": "月齢区分は品目分割せずdesc注記で対応(確定)。daily_coeff=2.0食/乳児/日 仮",
       "coeff_basis": "children"
@@ -1494,15 +1541,20 @@
       "daily_coeff": 1.0,
       "variant_group": null,
       "unit_gram": 100,
-      "cal_per_unit": 80,
+      "cal_per_unit": 111,
       "water_per_unit": 0,
+      "protein_per_unit": 1.8,
       "pack_size": 1,
       "pack_label": "1袋",
       "desc": "UDF区分(舌でつぶせる等)は購入時に本人に合わせて選択。",
       "source": {
         "item_basis": "maff-guide-hairyo",
-        "nutrition_basis": "キユーピー やさしい献立(区分3) 100g",
-        "checked": "2026-07"
+        "nutrition_basis": "キユーピー やさしい献立 鯛雑炊 100g（区分3 舌でつぶせる）",
+        "checked": "2026-07",
+        "kcal_url": "https://www.kewpie.co.jp/udfood/product/udf03/udf03/4901577033285/",
+        "kcal_note": "メーカー公式の栄養成分表示（1袋100gあたり）。区分3「舌でつぶせる」の100g品（鯛雑炊・かに雑炊・鮭雑炊・鶏雑炊）のうち、一覧の最初に載っている鯛雑炊を代表にした",
+        "protein_url": "https://www.kewpie.co.jp/udfood/product/udf03/udf03/4901577033285/",
+        "protein_note": "メーカー公式の栄養成分表示（1袋100gあたり）。区分3「舌でつぶせる」の100g品（鯛雑炊・かに雑炊・鮭雑炊・鶏雑炊）のうち、一覧の最初に載っている鯛雑炊を代表にした"
       },
       "assign_note": "coeff_basis=adults: 将来「高齢者数」入力実装時にbasisをelderlyへ置換。v1では補助的位置づけ(coeff=1.0/該当者/日 仮)。食事全置換モデルは将来課題",
       "coeff_basis": "adults"
@@ -1520,16 +1572,21 @@
       "units_per_serving": null,
       "daily_coeff": 1.0,
       "variant_group": null,
-      "unit_gram": 2.5,
+      "unit_gram": 1.5,
       "cal_per_unit": 5,
       "water_per_unit": 0,
+      "protein_per_unit": 0.008,
       "pack_size": 30,
       "pack_label": "1袋(30本入)",
       "desc": "嚥下が心配な方の飲料・汁物用。",
       "source": {
         "item_basis": "maff-guide-hairyo",
-        "nutrition_basis": "一般的なとろみ調整食品 1本2.5g",
-        "checked": "2026-07"
+        "nutrition_basis": "キユーピー やさしい献立 とろみファイン 1本1.5g",
+        "checked": "2026-07",
+        "kcal_url": "https://www.kewpie.co.jp/udfood/product/toromi/toromi/4901577063046",
+        "kcal_note": "メーカー公式の栄養成分表示（1本1.5gあたり）。1.5g×50本入の商品ページ",
+        "protein_url": "https://www.kewpie.co.jp/udfood/product/toromi/toromi/4901577063046",
+        "protein_note": "メーカー公式の栄養成分表示（1本1.5gあたり）。1.5g×50本入の商品ページ"
       },
       "assign_note": "daily_coeff=1.0包/該当者/日 仮",
       "coeff_basis": "adults"
