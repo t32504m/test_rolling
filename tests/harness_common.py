@@ -53,17 +53,26 @@ def iter_cases(config):
     for template in load_template_index():
         for adults in cases["adults"]:
             for children in cases["children"]:
-                for days in cases["days"]:
-                    yield {
-                        "household": {"adults": adults, "children": children, "days": days},
-                        "template_id": template["id"],
-                    }
+                for infants in cases["infants"]:
+                    for days in cases["days"]:
+                        yield {
+                            "household": {"adults": adults, "children": children,
+                                          "infants": infants, "days": days},
+                            "template_id": template["id"],
+                        }
+
+
+def servings(item, count):
+    """数量（消費単位）を食数に直す。例：無洗米は 0.5 合で1食。"""
+    return count / (item.get("units_per_serving") or 1)
 
 
 def check_plan(plan, household, template_id, master, config, exclude_tags=(), exclude_ids=()):
     """解（plan）に対する常識チェックを行い、[(チェック名, 合否, 詳細)] を返す。"""
     results = []
     adults, children, days = household["adults"], household["children"], household["days"]
+    # 乳幼児（infants）は省略可能。普通の食事とエネルギーの目標には数えず、水と特別食だけに数える
+    infants = household.get("infants", 0)
     people = adults + children
     items = plan.get("items", [])
     counts = {}
@@ -123,11 +132,13 @@ def check_plan(plan, household, template_id, master, config, exclude_tags=(), ex
         results.append(("たんぱく質が目標以上", None, "品目マスタに protein_per_unit が1件もない"))
 
     # 水：必要量以上で、最大の水の1単位分を超えて過剰でない
-    need_ml = config["water"]["ml_per_person_per_day"] * people * days
+    water_cfg = config["water"]
+    water_people = adults + water_cfg["child_factor"] * children + water_cfg["infant_factor"] * infants
+    need_ml = water_cfg["ml_per_person_per_day"] * water_people * days
     water_ids = [i for i in chosen if master[i]["meal_role"] == "drink"]
     total_ml = sum(master[i]["water_per_unit"] * chosen[i] for i in water_ids)
     max_unit = max((master[i]["water_per_unit"] for i in water_ids), default=0)
-    water_ok = need_ml <= total_ml < need_ml + max(max_unit, 1)
+    water_ok = need_ml - FLOAT_TOLERANCE <= total_ml < need_ml + max(max_unit, 1)
     results.append(("水が必要量どおり（不足も過剰もない）", water_ok,
                     f"{total_ml / 1000:.1f} L / 必要 {need_ml / 1000:.1f} L"))
 
@@ -163,5 +174,35 @@ def check_plan(plan, household, template_id, master, config, exclude_tags=(), ex
         if got < need:
             short.append(f"{role}: {got}品目（最低 {need}）")
     results.append(("品目に多様性がある", not short, "; ".join(short) or "OK"))
+
+    # 食事の回数：主食・主菜は「1食に1食分」が土台。購入単位への切り上げ分は許容する。
+    # 超える場合は、ソルバーが meta.meal_extras[役割].reason に理由を書いていれば合格とする
+    meals_cfg = config["meals"]
+    meals = meals_cfg["per_person_per_day"] * people * days
+    extras = plan.get("meta", {}).get("meal_extras") or {}
+    over_meals = []
+    meal_notes = []
+    for role, per_meal in meals_cfg["max_servings_per_meal_by_role"].items():
+        role_ids = [i for i in food_ids if master[i]["meal_role"] == role]
+        got = sum(servings(master[i], chosen[i]) for i in role_ids)
+        rounding = sum(servings(master[i], master[i]["pack_size"] - 1) for i in role_ids)
+        allowed = per_meal * meals
+        if got <= allowed + rounding + FLOAT_TOLERANCE:
+            meal_notes.append(f"{role} {got:g}食分 / 食事 {meals}回")
+            continue
+        reason = (extras.get(role) or {}).get("reason")
+        if isinstance(reason, str) and reason.strip():
+            meal_notes.append(f"{role} {got:g}食分 / 食事 {meals}回（超過の理由：{reason.strip()}）")
+        else:
+            over_meals.append(f"{role} {got:g}食分が食事 {meals}回を超え、理由（meta.meal_extras）がない")
+    results.append(("主食・主菜が食事の回数に見合う", not over_meals,
+                    "; ".join(over_meals) or "; ".join(meal_notes)))
+
+    # 根拠：選んだ品目（水・特別食を含む）すべてに、数の根拠の説明がある
+    rationale = plan.get("meta", {}).get("rationale") or {}
+    no_reason = [i for i in chosen
+                 if not (isinstance(rationale.get(i), str) and rationale[i].strip())]
+    results.append(("各品目の数に根拠の説明がある", not no_reason,
+                     f"説明がない: {', '.join(no_reason)}" if no_reason else "OK"))
 
     return results

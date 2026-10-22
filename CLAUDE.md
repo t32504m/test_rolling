@@ -33,7 +33,7 @@
 - `tests/` … 単体テスト（標準ライブラリの unittest のみ）
 - `scripts/sanity_report.py` … オーナー向けの常識チェック報告を出力する
 
-既知の問題：子供の係数が planner（0.8）と calendar（0.6）で一致していない。
+既知の問題：子供の係数が planner（0.8）と calendar（0.6）で一致していない。0.8 にそろえる（オーナー承認 2026-10-22）。
 
 ## 作るもの（優先順）
 
@@ -45,13 +45,20 @@
   ```python
   from solver import solve
   result = solve(
-      household={"adults": 2, "children": 1, "days": 3},
+      household={"adults": 2, "children": 1, "infants": 0, "days": 3},  # infants（乳幼児）は省略可、既定 0
       template_id="standard",   # templates/index.json の id。None ならマスタ全体から選ぶ
       exclude_tags=[],          # 例: ["needs-cook"]。テンプレートの exclude_tags と合わせて除外する
       exclude_ids=[],           # 例: ["V001"]
   )
-  # result == {"items": [{"id": "S002", "count": 6}, ...], "meta": {...}}
+  # result == {"items": [{"id": "S002", "count": 6}, ...],
+  #            "meta": {"rationale": {"S002": "なぜこの数か（日本語）", ...},
+  #                     "meal_extras": {"staple": {"servings": 4, "reason": "..."}}, ...}}
   ```
+
+- 世帯の区分は東京備蓄ナビにそろえる：`children` は3歳〜小学生（エネルギー・水とも大人の0.8倍）、
+  `infants` は乳幼児（普通の食事には数えず、水は0.8倍、ミルクなどの特別食だけで数える）。中学生以上は `adults`。
+- 量の土台は食事の回数（1人1日3食。主食・主菜は1食に1食分）。それを超える場合は `meta.meal_extras` に理由を書く。
+- 選んだすべての品目に、数の根拠を `meta.rationale` に日本語で書く（オーナーが常識チェック報告で読む）。
 
 - 問題の型は栄養制約付きの献立問題（diet problem）。整数計画法で解く。
 - 「野菜ジュース52本」のような常識的にありえない結果を出さないこと。ただし「1品目は何個まで」という

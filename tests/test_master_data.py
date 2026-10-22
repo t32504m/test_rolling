@@ -9,6 +9,10 @@ REQUIRED_KEYS = (
     "unit_gram", "cal_per_unit", "water_per_unit", "pack_size", "source",
 )
 ALLOWED_ROLES = {"drink", "staple", "main", "side", "snack", "special"}
+# 特別食（daily_coeff のある品目）の数量の基準になる人。infants は乳幼児
+ALLOWED_COEFF_BASIS = {"all", "adults", "children", "infants"}
+# 乳児用の特別食。東京備蓄ナビと同じく、乳幼児の人数だけで数える（docs/tokyo_bichiku_navi.md）
+INFANT_ONLY_IDS = ("P001", "P002", "P003")
 # 将来追加される栄養値。入れる場合は数値で、出典（source）を伴うこと
 OPTIONAL_NUTRIENTS = ("protein_per_unit", "salt_g_per_unit")
 
@@ -65,6 +69,18 @@ class MasterDataTest(unittest.TestCase):
                     self.assertTrue(isinstance(url, str) and url.startswith("http"),
                                     "protein_per_unit の根拠 source.protein_url がない")
 
+    def test_special_items_have_a_known_basis(self):
+        for item in self.items:
+            if item["daily_coeff"] is not None:
+                with self.subTest(item=item["id"]):
+                    self.assertIn(item.get("coeff_basis") or "all", ALLOWED_COEFF_BASIS)
+
+    def test_infant_items_count_only_infants(self):
+        items = {i["id"]: i for i in self.items}
+        for item_id in INFANT_ONLY_IDS:
+            with self.subTest(item=item_id):
+                self.assertEqual(items[item_id].get("coeff_basis"), "infants")
+
     def test_drink_items_provide_water(self):
         for item in self.items:
             if item["meal_role"] == "drink":
@@ -98,6 +114,11 @@ class SanityConfigTest(unittest.TestCase):
         self.assertGreater(config["energy"]["adult_kcal_per_day"], 0)
         self.assertGreaterEqual(config["energy"]["max_ratio_to_target"], 1)
         self.assertGreater(config["water"]["ml_per_person_per_day"], 0)
+        self.assertTrue(0 < config["water"]["child_factor"] <= 1)
+        self.assertTrue(0 < config["water"]["infant_factor"] <= 1)
+        self.assertGreater(config["meals"]["per_person_per_day"], 0)
+        for value in config["meals"]["max_servings_per_meal_by_role"].values():
+            self.assertGreater(value, 0)
         caps = config["per_item_caps"]
         self.assertTrue(0 < caps["max_kcal_share_of_total"] <= 1)
         for value in caps["max_units_per_person_day_by_role"].values():

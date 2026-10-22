@@ -12,10 +12,46 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "tests"))
 
 from harness_common import (  # noqa: E402
-    ROOT, check_plan, iter_cases, load_config, load_master, solver_available,
+    ROOT, check_plan, iter_cases, load_config, load_master, servings, solver_available,
 )
 
 MARK = {True: "OK", False: "**NG**", None: "未判定"}
+# 「なぜこの数なのか」を表で示す例の世帯（実験で主に使う条件）
+EXAMPLE = {"household": {"adults": 2, "children": 1, "infants": 0, "days": 3}, "template_id": "standard"}
+
+
+def household_label(hh):
+    label = f"大人{hh['adults']} 子供{hh['children']}"
+    if hh.get("infants"):
+        label += f" 乳幼児{hh['infants']}"
+    return f"{label} / {hh['days']}日"
+
+
+def staple_vs_meals(plan, hh, master, config):
+    meals = config["meals"]["per_person_per_day"] * (hh["adults"] + hh["children"]) * hh["days"]
+    got = sum(servings(master[e["id"]], e["count"]) for e in plan["items"]
+              if master[e["id"]]["meal_role"] == "staple")
+    return f"{got:g} / {meals}"
+
+
+def example_section(solve, master, config):
+    hh, template_id = EXAMPLE["household"], EXAMPLE["template_id"]
+    plan = solve(household=hh, template_id=template_id, exclude_tags=[], exclude_ids=[])
+    rationale = plan.get("meta", {}).get("rationale") or {}
+    rows = [f"| {master[e['id']]['name']} | {e['count']} {master[e['id']]['consume_unit']} | "
+            f"{rationale.get(e['id'], '（説明がない）')} |"
+            for e in plan["items"] if e["count"] > 0]
+    extras = plan.get("meta", {}).get("meal_extras") or {}
+    extra_lines = [f"- {role}：{info.get('reason', '')}" for role, info in extras.items()]
+    return [
+        f"## 例：{template_id} / {household_label(hh)} の内訳と根拠",
+        "",
+        "| 品目 | 数 | 根拠 |",
+        "| --- | --- | --- |",
+        *rows,
+        "",
+        *(["食事の回数を超えて追加したもの：", "", *extra_lines, ""] if extra_lines else []),
+    ]
 
 
 def data_status(master):
@@ -57,8 +93,9 @@ def build_report():
         ng_count += bool(ngs)
         juice = sum(e["count"] for e in plan["items"] if e["id"] == "V001")
         kinds = sum(1 for e in plan["items"] if e["count"] > 0)
-        label = f"{case['template_id']} / 大人{hh['adults']} 子供{hh['children']} / {hh['days']}日"
-        rows.append(f"| {label} | {kinds} | {juice} | {'OK' if not ngs else '**NG**'} | {'; '.join(ngs) or '—'} |")
+        label = f"{case['template_id']} / {household_label(hh)}"
+        staple = staple_vs_meals(plan, hh, master, config)
+        rows.append(f"| {label} | {kinds} | {staple} | {juice} | {'OK' if not ngs else '**NG**'} | {'; '.join(ngs) or '—'} |")
 
     total = len(rows)
     lines += [
@@ -66,15 +103,21 @@ def build_report():
         "",
         f"{total} 通りの世帯条件のうち、NG があったのは {ng_count} 通りです。",
         "",
-        "| 条件 | 品目の種類数 | 野菜ジュースの本数 | 判定 | NG の内容 |",
-        "| --- | --- | --- | --- | --- |",
+        "「主食 / 食事」は、主食の食数と食事の回数（3食 × 大人と子供の人数 × 日数）です。",
+        "",
+        "| 条件 | 品目の種類数 | 主食 / 食事 | 野菜ジュースの本数 | 判定 | NG の内容 |",
+        "| --- | --- | --- | --- | --- | --- |",
         *rows,
         "",
+        *example_section(solve, master, config),
         "## 判定に使った閾値（tests/sanity_config.json）",
         "",
         f"- エネルギー：大人 {config['energy']['adult_kcal_per_day']} kcal/日、子供係数 {config['energy']['child_factor']}、"
         f"上限は目標の {config['energy']['max_ratio_to_target']} 倍",
-        f"- 水：1人1日 {config['water']['ml_per_person_per_day']} ml",
+        f"- 水：1人1日 {config['water']['ml_per_person_per_day']} ml（子供 {config['water']['child_factor']} 倍、"
+        f"乳幼児 {config['water']['infant_factor']} 倍）",
+        f"- 食事の回数：1人1日 {config['meals']['per_person_per_day']} 食。1食あたり "
+        f"{config['meals']['max_servings_per_meal_by_role']}（超える場合は理由が必要）",
         f"- 1品目の上限：1人1日あたり {config['per_item_caps']['max_units_per_person_day_by_role']}、"
         f"エネルギーの {config['per_item_caps']['max_kcal_share_of_total']:.0%} まで",
         f"- 多様性：{config['diversity']['min_distinct_items_by_role']}",
