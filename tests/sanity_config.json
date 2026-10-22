@@ -1,0 +1,53 @@
+{
+  "_note": "常識チェックの閾値。オーナーとの約束なので、テストを通すために緩めてはならない。変更が必要ならオーナーに報告して判断を仰ぐ。値の多くは仮置きで、出典の確定が必要なものは status を provisional としている。",
+
+  "energy": {
+    "adult_kcal_per_day": 2000,
+    "child_factor": 0.8,
+    "max_ratio_to_target": 1.5,
+    "status": "provisional",
+    "basis": "避難所における食事提供の栄養参照量（1,800〜2,200 kcal/人日）の中央値。子供の係数は planner.html の値。上限比は過剰備蓄を防ぐための仮の値"
+  },
+
+  "protein": {
+    "adult_g_per_day": 55,
+    "child_factor": 0.8,
+    "status": "provisional",
+    "basis": "要出典確認（避難所の栄養参照量）。品目マスタに protein_per_unit が入るまで、このチェックはスキップされる"
+  },
+
+  "water": {
+    "ml_per_person_per_day": 3000,
+    "status": "provisional",
+    "basis": "農林水産省「災害時に備えた食品ストックガイド」の1人1日3リットル"
+  },
+
+  "per_item_caps": {
+    "_note": "1品目あたりの上限を、1人1日あたりの量（単位数）で表す。世帯の規模に比例するので、極端な世帯でも成り立つ。pack_size への切り上げ分は許容する",
+    "max_units_per_person_day_by_role": {
+      "staple": 2.0,
+      "main": 2.0,
+      "side": 1.0,
+      "snack": 1.0
+    },
+    "max_kcal_share_of_total": 0.4,
+    "status": "provisional"
+  },
+
+  "diversity": {
+    "_note": "役割ごとに、最低限この数の異なる品目を含める（テンプレートや除外条件で選べる品目がそれより少なければ、選べる数まで）",
+    "min_distinct_items_by_role": {
+      "staple": 2,
+      "main": 2
+    },
+    "status": "provisional"
+  },
+
+  "cases": {
+    "_note": "常識チェックを行う世帯条件の組み合わせ",
+    "adults": [1, 2, 4],
+    "children": [0, 1, 3],
+    "days": [3, 7],
+    "templates_from": "templates/index.json"
+  }
+}

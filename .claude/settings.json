@@ -1,0 +1,35 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 -m unittest *)",
+      "Bash(python3 scripts/*)",
+      "Bash(git status*)",
+      "Bash(git diff*)",
+      "Bash(git log*)"
+    ],
+    "deny": [
+      "Bash(git push origin main*)",
+      "Bash(git push origin HEAD:main*)",
+      "Bash(git push --force*)",
+      "Bash(git push -f*)",
+      "Bash(git add -f*)",
+      "Bash(git add --force*)",
+      "Read(./private/**)",
+      "Edit(./private/**)"
+    ]
+  },
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/stop_run_tests.py\"",
+            "timeout": 300,
+            "statusMessage": "単体テストを実行しています"
+          }
+        ]
+      }
+    ]
+  }
+}

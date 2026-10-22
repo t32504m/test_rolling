@@ -1,0 +1,13 @@
+# 参加者のデータ（アンケートの回答、事前アンケートの自由記述など）。絶対にコミットしない
+private/
+
+# 個人用の Claude Code 設定
+.claude/settings.local.json
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# 秘密情報
+.env
