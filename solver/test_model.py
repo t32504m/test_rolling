@@ -4,6 +4,7 @@ Run with: python3 -m unittest solver.test_model -v
 """
 
 import copy
+import math
 import unittest
 from unittest.mock import patch
 
@@ -37,18 +38,90 @@ class SolverModelTest(unittest.TestCase):
             with self.assertRaises(InfeasiblePlanError):
                 solve(self.household, "standard")
 
-    def test_partial_protein_data_is_explicitly_unassessed(self):
+    def test_partial_protein_data_is_a_conservative_lower_bound(self):
+        config = model._read("tests/sanity_config.json")
+        per_kcal = 2 * config["protein"]["adult_g_per_day"] / config["energy"]["adult_kcal_per_day"]
         original_read = model._read
         master = copy.deepcopy(original_read("data/items-master.json"))
         for item in master["items"]:
-            item["protein_per_unit"] = 0
+            item["protein_per_unit"] = per_kcal * item["cal_per_unit"]
         next(item for item in master["items"] if item["id"] == "S002")["protein_per_unit"] = None
+        next(item for item in master["items"] if item["id"] == "M006").pop("protein_per_unit")
+        with patch.object(model, "_read", side_effect=lambda path:
+                          master if path == "data/items-master.json" else original_read(path)):
+            plan = solve(self.household, "standard")
+        meta = plan["meta"]
+        self.assertEqual(meta["protein_constraint"], "active")
+        self.assertEqual(meta["protein_assumed_zero_ids"], ["M006", "S002"])
+        by_id = {item["id"]: item for item in master["items"]}
+        expected = sum((by_id[item["id"]].get("protein_per_unit") or 0) * item["count"]
+                       for item in plan["items"] if by_id[item["id"]]["daily_coeff"] is None)
+        self.assertEqual(meta["total_protein_g"], expected)
+        self.assertGreaterEqual(meta["total_protein_g"] + model.TOLERANCE, meta["target_protein_g"])
+
+    def test_partial_data_does_not_disable_an_infeasible_constraint(self):
+        original_read = model._read
+        master = copy.deepcopy(original_read("data/items-master.json"))
+        for item in master["items"]:
+            item.pop("protein_per_unit", None)
+        # A known value outside the candidate pool still enables the constraint:
+        # filtering must not silently turn an impossible protein target off.
+        next(item for item in master["items"] if item["id"] == "S001")["protein_per_unit"] = 0
+        with patch.object(model, "_read", side_effect=lambda path:
+                          master if path == "data/items-master.json" else original_read(path)):
+            with self.assertRaises(InfeasiblePlanError):
+                solve(self.household, "standard")
+
+    def test_only_a_master_without_protein_values_disables_constraint(self):
+        original_read = model._read
+        master = copy.deepcopy(original_read("data/items-master.json"))
+        for index, item in enumerate(master["items"]):
+            if index % 2:
+                item.pop("protein_per_unit", None)
+            else:
+                item["protein_per_unit"] = None
         with patch.object(model, "_read", side_effect=lambda path:
                           master if path == "data/items-master.json" else original_read(path)):
             meta = solve(self.household, "standard")["meta"]
         self.assertEqual(meta["protein_constraint"], "missing_data")
-        self.assertEqual(meta["missing_protein_ids"], ["S002"])
+        self.assertTrue(meta["missing_protein_ids"])
+        self.assertEqual(meta["protein_assumed_zero_ids"], [])
         self.assertIsNone(meta["total_protein_g"])
+
+    def test_roundoff_at_energy_and_protein_boundaries(self):
+        # Artificial equal foods force exactly one unit of each through the
+        # diversity/energy bounds. This exercises the real CBC + final checks.
+        original_read = model._read
+        config = original_read("tests/sanity_config.json")
+        household = {"adults": 1, "children": 3, "days": 7}
+        energy = config["energy"]
+        target = energy["adult_kcal_per_day"] * (1 + energy["child_factor"] * 3) * 7
+        protein = config["protein"]
+        protein_target = protein["adult_g_per_day"] * (1 + protein["child_factor"] * 3) * 7
+        for boundary in ("lower", "upper"):
+            with self.subTest(boundary=boundary):
+                cfg = copy.deepcopy(config)
+                if boundary == "upper":
+                    cfg["energy"]["adult_kcal_per_day"] = math.nextafter(energy["adult_kcal_per_day"], 0)
+                total = round(target if boundary == "lower" else target * energy["max_ratio_to_target"])
+                foods = [
+                    {"id": f"TEST{i}", "meal_role": role, "tags": [], "daily_coeff": None,
+                     "cal_per_unit": total / 4, "protein_per_unit": round(protein_target, 6) / 4,
+                     "pack_size": 1, "units_per_serving": 1}
+                    for i, role in enumerate(("staple", "staple", "main", "main"))
+                ]
+                water = next(item for item in original_read("data/items-master.json")["items"]
+                             if item["id"] == "W004")
+                def read(path):
+                    if path == "data/items-master.json":
+                        return {"items": foods + [water]}
+                    if path == "tests/sanity_config.json":
+                        return cfg
+                    return original_read(path)
+                with patch.object(model, "_read", side_effect=read):
+                    plan = solve(household)
+                self.assertEqual(plan["meta"]["total_kcal"], total)
+                self.assertEqual(plan["meta"]["total_protein_g"], round(protein_target, 6))
 
     def test_infeasible_exclusions_do_not_restore_forbidden_food(self):
         master = model._read("data/items-master.json")["items"]

@@ -77,10 +77,12 @@ def _water(pool, required_ml):
 
 def _optimize(problem, objective, phase):
     problem.setObjective(objective)
-    # Stable variable order, pinned CBC, one thread and fixed seeds make repeated
-    # experiments reproducible. Never return an unproven/partial solution.
+    # Stable variable order, pinned CBC, serial search and fixed seeds make
+    # repeated experiments reproducible. threads=0 disables worker threads;
+    # threads=1 can spend 10 seconds waiting for a worker after solving a case.
+    # Never return an unproven/partial solution.
     status = problem.solve(pulp.PULP_CBC_CMD(
-        msg=False, threads=1, timeLimit=30, gapRel=0, gapAbs=0,
+        msg=False, threads=0, timeLimit=30, gapRel=0, gapAbs=0,
         options=["randomSeed 1", "randomCbcSeed 1"],
     ))
     if status == pulp.LpStatusInfeasible:
@@ -94,8 +96,8 @@ def solve(household, template_id=None, exclude_tags=None, exclude_ids=None):
     """Return {items: [{id, count}], meta: {...}} or raise InfeasiblePlanError.
 
     All nutrition targets and caps are loaded from tests/sanity_config.json.
-    Incomplete protein data disables the *whole* protein constraint, explicitly
-    reported in meta; missing values are never treated as zero or invented.
+    Missing protein values contribute zero to a conservative protein lower
+    bound. Only a master without any protein values disables that constraint.
     """
     adults, children, days = _household(household)
     people_days = (adults + children) * days
@@ -140,12 +142,13 @@ def solve(household, template_id=None, exclude_tags=None, exclude_ids=None):
         problem += pulp.lpSum(selected[i] for i in available) >= min(minimum, len(available))
 
     missing_protein = [i for i, (item, _) in foods.items() if item.get("protein_per_unit") is None]
-    protein_active = not missing_protein
+    protein_active = any(item.get("protein_per_unit") is not None for item in master.values())
+    protein_values = {i: item.get("protein_per_unit") or 0 for i, (item, _) in foods.items()}
     target_protein = None
     if protein_active:
         protein = config["protein"]
         target_protein = protein["adult_g_per_day"] * (adults + protein["child_factor"] * children) * days
-        problem += pulp.lpSum(foods[i][0]["protein_per_unit"] * count for i, count in counts.items()) >= target_protein
+        problem += pulp.lpSum(protein_values[i] * count for i, count in counts.items()) >= target_protein
 
     # Template weights express relative servings. Convert those servings to
     # units, scale to the energy target, and minimize absolute energy deviations
@@ -195,13 +198,13 @@ def solve(household, template_id=None, exclude_tags=None, exclude_ids=None):
                     quantities[item_id] = count
 
     actual_kcal = sum(foods[i][0]["cal_per_unit"] * quantities.get(i, 0) for i in foods)
-    # Reject numeric feasibility-tolerance violations instead of silently
-    # reporting a plan just below an agreed nutrition target.
-    if not target_kcal <= actual_kcal <= upper_kcal:
+    # Accept representation noise at a boundary, but reject actual nutrition
+    # violations. TOLERANCE is numerical and does not change the agreed targets.
+    if not target_kcal - TOLERANCE <= actual_kcal <= upper_kcal + TOLERANCE:
         raise RuntimeError("CBC solution violates the energy bounds after rounding")
-    total_protein = (sum(foods[i][0]["protein_per_unit"] * quantities.get(i, 0) for i in foods)
+    total_protein = (sum(protein_values[i] * quantities.get(i, 0) for i in foods)
                      if protein_active else None)
-    if protein_active and total_protein < target_protein:
+    if protein_active and total_protein + TOLERANCE < target_protein:
         raise RuntimeError("CBC solution violates the protein target after rounding")
     return {
         "items": [{"id": i, "count": quantities[i]} for i in sorted(quantities)],
@@ -213,6 +216,7 @@ def solve(household, template_id=None, exclude_tags=None, exclude_ids=None):
             "water_ml": master[water_id]["water_per_unit"] * water_count,
             "protein_constraint": "active" if protein_active else "missing_data",
             "missing_protein_ids": missing_protein,
+            "protein_assumed_zero_ids": missing_protein if protein_active else [],
             "target_protein_g": target_protein,
             "total_protein_g": total_protein,
             "thresholds": "tests/sanity_config.json",
