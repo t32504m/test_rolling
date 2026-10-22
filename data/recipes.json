@@ -1,0 +1,859 @@
+{
+  "schema_version": "1.0",
+  "note": "備蓄品を使った既存のレシピ・食べ方の一覧（Issue #4）。すべて出典のページを実際に開いて確認したもの。summary は出典の本文を写さず、作り方を自分の言葉で要約したもの。分量や手順の詳細は出典を参照すること。amount と unit は出典の表記に合わせた（分量の記載がない場合は amount 1・unit「適量」）。servings が null のものは、出典に人数の記載がない。",
+  "recipes": [
+    {
+      "id": "R001",
+      "name": "パスタソースでミネストローネスープ",
+      "uses": [
+        {"item_id": "M009", "amount": 1, "unit": "袋"}
+      ],
+      "extra_ingredients": ["キャベツ", "じゃがいも", "玉ねぎ", "オリーブオイル", "顆粒コンソメ", "水", "ドライパセリ"],
+      "servings": 2,
+      "needs": ["needs-cook"],
+      "summary": "角切りにした野菜を油で炒め、水・ミートソース・コンソメを加えて、野菜が柔らかくなるまで煮る。ミートソースのうま味を、スープの味付けにそのまま生かす。",
+      "source": {
+        "publisher": "農林水産省",
+        "title": "aff（あふ）2026年3月号 簡単！備蓄食品アレンジレシピ（平時のレシピ／島本美由紀）",
+        "url": "https://www.maff.go.jp/j/pr/aff/2603/spe1_03.html",
+        "retrieved": "2026-10-22"
+      }
+    },
+    {
+      "id": "R002",
+      "name": "サバ味噌キャベツのレンジ蒸し",
+      "uses": [
+        {"item_id": "M001", "amount": 1, "unit": "缶"}
+      ],
+      "extra_ingredients": ["キャベツ", "顆粒鶏がらスープの素", "万能ねぎ", "しょうが"],
+      "servings": 2,
+      "needs": ["needs-heat"],
+      "summary": "ざく切りのキャベツとサバの味噌煮缶（缶汁ごと）を耐熱ボウルに入れ、鶏がらスープの素を加えて電子レンジで加熱する。よく混ぜて盛り、ねぎとしょうがをのせる。",
+      "source": {
+        "publisher": "農林水産省",
+        "title": "aff（あふ）2026年3月号 簡単！備蓄食品アレンジレシピ（平時のレシピ／島本美由紀）",
+        "url": "https://www.maff.go.jp/j/pr/aff/2603/spe1_03.html",
+        "retrieved": "2026-10-22"
+      }
+    },
+    {
+      "id": "R003",
+      "name": "ツナとお茶漬けの素パスタ",
+      "uses": [
+        {"item_id": "S008", "amount": 100, "unit": "g"},
+        {"item_id": "M002", "amount": 0.5, "unit": "缶"},
+        {"item_id": "V008", "amount": 1, "unit": "個"}
+      ],
+      "extra_ingredients": ["お茶漬けの素（海苔）", "大葉"],
+      "servings": 2,
+      "needs": ["needs-cook"],
+      "summary": "スパゲティを水に漬けておいてから短時間ゆで、ツナ（缶汁ごと）とお茶漬けの素で和える。大葉と梅干しをのせる。水に漬けておくと、ゆで時間と燃料を節約できる。",
+      "source": {
+        "publisher": "農林水産省",
+        "title": "aff（あふ）2026年3月号 簡単！備蓄食品アレンジレシピ（平時のレシピ／島本美由紀）",
+        "url": "https://www.maff.go.jp/j/pr/aff/2603/spe1_03.html",
+        "retrieved": "2026-10-22"
+      }
+    },
+    {
+      "id": "R004",
+      "name": "やわらかフルーツかんぱん",
+      "uses": [
+        {"item_id": "V002", "amount": 1, "unit": "適量"},
+        {"item_id": "S012", "amount": 1, "unit": "適量"}
+      ],
+      "extra_ingredients": [],
+      "servings": null,
+      "needs": ["no-cook"],
+      "summary": "フルーツ缶の中身をシロップごと器に移し、かんぱんを浸して好みの柔らかさにする。10分ほど浸すと、噛む力が弱い人も食べやすくなる。",
+      "source": {
+        "publisher": "農林水産省",
+        "title": "aff（あふ）2026年3月号 簡単！備蓄食品アレンジレシピ（災害時のレシピ／今泉マユ子）",
+        "url": "https://www.maff.go.jp/j/pr/aff/2603/spe1_03.html",
+        "retrieved": "2026-10-22"
+      }
+    },
+    {
+      "id": "R005",
+      "name": "ほっこりビーンズあん",
+      "uses": [
+        {"item_id": "M005", "amount": 1, "unit": "缶"}
+      ],
+      "extra_ingredients": ["ゆであずき"],
+      "servings": null,
+      "needs": ["no-cook"],
+      "summary": "ミックスビーンズの缶詰（またはパウチ）の中身をポリ袋に入れ、袋の外から手でつぶす。同じ量のゆであずきを加えて混ぜる。",
+      "source": {
+        "publisher": "農林水産省",
+        "title": "aff（あふ）2026年3月号 簡単！備蓄食品アレンジレシピ（災害時のレシピ／今泉マユ子）",
+        "url": "https://www.maff.go.jp/j/pr/aff/2603/spe1_03.html",
+        "retrieved": "2026-10-22"
+      }
+    },
+    {
+      "id": "R006",
+      "name": "サバとわかめのごま酢味噌和え",
+      "uses": [
+        {"item_id": "M001", "amount": 1, "unit": "缶"},
+        {"item_id": "V004", "amount": 1, "unit": "つまみ"}
+      ],
+      "extra_ingredients": ["酢", "白いりごま"],
+      "servings": null,
+      "needs": ["no-cook"],
+      "summary": "ポリ袋にサバの味噌煮（缶詰またはパウチ）、乾燥カットわかめ、酢、ごまを入れ、袋の外からもんで混ぜる。火も包丁も使わない。",
+      "source": {
+        "publisher": "農林水産省",
+        "title": "aff（あふ）2026年3月号 簡単！備蓄食品アレンジレシピ（災害時のレシピ／今泉マユ子）",
+        "url": "https://www.maff.go.jp/j/pr/aff/2603/spe1_03.html",
+        "retrieved": "2026-10-22"
+      }
+    },
+    {
+      "id": "R007",
+      "name": "梅とイワシとひじきの煮物風",
+      "uses": [
+        {"item_id": "V008", "amount": 1, "unit": "適量"},
+        {"item_id": "M003", "amount": 1, "unit": "缶"},
+        {"item_id": "V005", "amount": 1, "unit": "袋"}
+      ],
+      "extra_ingredients": ["かつお節"],
+      "servings": null,
+      "needs": ["no-cook"],
+      "summary": "ポリ袋に梅干し、イワシのかば焼き缶、ひじきのドライパック（缶詰・パウチ）、かつお節を入れ、梅干しを崩しながら混ぜる。最後に種を取り除く。",
+      "source": {
+        "publisher": "農林水産省",
+        "title": "aff（あふ）2026年3月号 簡単！備蓄食品アレンジレシピ（災害時のレシピ／今泉マユ子）",
+        "url": "https://www.maff.go.jp/j/pr/aff/2603/spe1_03.html",
+        "retrieved": "2026-10-22"
+      }
+    },
+    {
+      "id": "R008",
+      "name": "トマト風味のコンビーフコーン",
+      "uses": [
+        {"item_id": "M004", "amount": 1, "unit": "缶"}
+      ],
+      "extra_ingredients": ["コーン缶（またはパウチ）", "トマトジュース"],
+      "servings": null,
+      "needs": ["no-cook"],
+      "summary": "ポリ袋にコンビーフと水気を切ったコーン、少量のトマトジュースを入れ、袋の外から混ぜ合わせる。",
+      "source": {
+        "publisher": "農林水産省",
+        "title": "aff（あふ）2026年3月号 簡単！備蓄食品アレンジレシピ（災害時のレシピ／今泉マユ子）",
+        "url": "https://www.maff.go.jp/j/pr/aff/2603/spe1_03.html",
+        "retrieved": "2026-10-22"
+      }
+    },
+    {
+      "id": "R009",
+      "name": "シャカシャカ大豆のふりかけ和え",
+      "uses": [
+        {"item_id": "M005", "amount": 1, "unit": "袋"},
+        {"item_id": "V009", "amount": 1, "unit": "適量"}
+      ],
+      "extra_ingredients": [],
+      "servings": null,
+      "needs": ["no-cook"],
+      "summary": "大豆のドライパック（パウチ）の封を開けて好みのふりかけを入れ、口を折って振り混ぜる。器も要らない。",
+      "source": {
+        "publisher": "農林水産省",
+        "title": "aff（あふ）2026年3月号 簡単！備蓄食品アレンジレシピ（災害時のレシピ／今泉マユ子）",
+        "url": "https://www.maff.go.jp/j/pr/aff/2603/spe1_03.html",
+        "retrieved": "2026-10-22"
+      }
+    },
+    {
+      "id": "R010",
+      "name": "お湯ポチャ茶碗蒸し",
+      "uses": [
+        {"item_id": "V006", "amount": 1, "unit": "袋"}
+      ],
+      "extra_ingredients": ["卵", "水"],
+      "servings": 1,
+      "needs": ["needs-cook"],
+      "summary": "耐熱性のポリ袋に卵・粉末のお吸い物・水を入れて混ぜ、空気を抜いて結ぶ。皿を敷いた鍋で湯せんして加熱し、火を止めて蒸らす。お吸い物の代わりにアサリ缶やカニ缶でもよい。",
+      "source": {
+        "publisher": "農林水産省",
+        "title": "aff（あふ）2026年3月号 簡単！備蓄食品アレンジレシピ（災害時のレシピ／今泉マユ子）",
+        "url": "https://www.maff.go.jp/j/pr/aff/2603/spe1_03.html",
+        "retrieved": "2026-10-22"
+      }
+    },
+    {
+      "id": "R011",
+      "name": "お湯ポチャスパゲティ ツナと塩昆布",
+      "uses": [
+        {"item_id": "S008", "amount": 1, "unit": "人分"},
+        {"item_id": "M002", "amount": 1, "unit": "缶"}
+      ],
+      "extra_ingredients": ["塩昆布", "水", "コーン（好みで）", "刻み海苔（好みで）"],
+      "servings": 1,
+      "needs": ["needs-cook"],
+      "summary": "半分に折ったスパゲティと少量の水を耐熱性のポリ袋に入れて結び、鍋で湯せんして加熱する。袋を開けてツナ（汁ごと）と塩昆布を混ぜる。少ない水でパスタをゆでられ、湯は再利用できる。",
+      "source": {
+        "publisher": "農林水産省",
+        "title": "aff（あふ）2026年3月号 簡単！備蓄食品アレンジレシピ（災害時のレシピ／今泉マユ子）",
+        "url": "https://www.maff.go.jp/j/pr/aff/2603/spe1_03.html",
+        "retrieved": "2026-10-22"
+      }
+    },
+    {
+      "id": "R012",
+      "name": "ポリ袋でごはんを炊いて作るカレー",
+      "uses": [
+        {"item_id": "S010", "amount": 90, "unit": "g"},
+        {"item_id": "M006", "amount": 1, "unit": "袋"}
+      ],
+      "extra_ingredients": ["水"],
+      "servings": 1,
+      "needs": ["needs-cook"],
+      "summary": "無洗米と水を耐熱性のポリ袋に入れて浸水させ、皿を沈めた鍋で湯せんしてご飯を炊き、余熱で蒸らす。同じ湯でレトルトカレーも温めてかける。",
+      "source": {
+        "publisher": "農林水産省",
+        "title": "aff（あふ）2026年3月号 ローリングストックを推奨する企業の取り組み（ハウス食品のローリングストックレシピ）",
+        "url": "https://www.maff.go.jp/j/pr/aff/2603/spe1_04.html",
+        "retrieved": "2026-10-22"
+      }
+    },
+    {
+      "id": "R013",
+      "name": "お雑煮風（お餅×インスタントのお吸い物）",
+      "uses": [
+        {"item_id": "V006", "amount": 1, "unit": "袋"}
+      ],
+      "extra_ingredients": ["切り餅"],
+      "servings": null,
+      "needs": ["needs-cook", "needs-hot-water"],
+      "summary": "お湯を注ぐだけのお吸い物（インスタント・フリーズドライ）や簡易だしに、焼くか煮た切り餅を合わせて、お雑煮風の汁物にする。好みで乾物や肉・魚の缶詰を加えてもよい。",
+      "source": {
+        "publisher": "農林水産省",
+        "title": "いまどき！家庭備蓄 お餅で備蓄！",
+        "url": "https://www.maff.go.jp/j/zyukyu/foodstock/imadoki/imadoki02_12.html",
+        "retrieved": "2026-10-22"
+      }
+    },
+    {
+      "id": "R014",
+      "name": "栄養補助ゼリーをそのまま",
+      "uses": [
+        {"item_id": "N002", "amount": 1, "unit": "袋"}
+      ],
+      "extra_ingredients": [],
+      "servings": 1,
+      "needs": ["no-cook"],
+      "summary": "加熱も水も要らず、袋からそのまま食べる。水分と栄養を同時にとれ、子どもや高齢の人でも食べやすい。普段の買い物で少し多めに買い、食べた分を買い足す。",
+      "source": {
+        "publisher": "農林水産省",
+        "title": "いまどき！家庭備蓄 一石何鳥？栄養補助ゼリー",
+        "url": "https://www.maff.go.jp/j/zyukyu/foodstock/imadoki/imadoki10.html",
+        "retrieved": "2026-10-22"
+      }
+    },
+    {
+      "id": "R015",
+      "name": "保存用ようかんをおやつに",
+      "uses": [
+        {"item_id": "K003", "amount": 1, "unit": "本"}
+      ],
+      "extra_ingredients": [],
+      "servings": 1,
+      "needs": ["no-cook"],
+      "summary": "賞味期限の長いようかんなどの備蓄向けのお菓子を、普段のおやつとして食べてみる。食べて好みの味を確かめ、食べた分を買い足す。",
+      "source": {
+        "publisher": "農林水産省",
+        "title": "いまどき！家庭備蓄 ほっと一息、スイーツ備蓄",
+        "url": "https://www.maff.go.jp/j/zyukyu/foodstock/imadoki/imadoki02.html",
+        "retrieved": "2026-10-22"
+      }
+    },
+    {
+      "id": "R016",
+      "name": "エナジーバーを間食に",
+      "uses": [
+        {"item_id": "N001", "amount": 1, "unit": "本"}
+      ],
+      "extra_ingredients": [],
+      "servings": 1,
+      "needs": ["no-cook"],
+      "summary": "栄養素が詰まったエナジーバーを、普段の間食としてそのまま食べる。コンパクトで腹持ちがよく、常備しておくと災害時にも役立つ。",
+      "source": {
+        "publisher": "農林水産省（NIPPON FOOD SHIFT）",
+        "title": "災害時にそなえる食品ストックガイド 単身者向け",
+        "url": "https://nippon-food-shift.maff.go.jp/foodstock/",
+        "retrieved": "2026-10-22"
+      }
+    },
+    {
+      "id": "R017",
+      "name": "さんま蒲焼きの卵とじ",
+      "uses": [
+        {"item_id": "M003", "amount": 1, "unit": "缶"}
+      ],
+      "extra_ingredients": ["卵", "三つ葉", "水"],
+      "servings": 2,
+      "needs": ["needs-cook"],
+      "summary": "鍋にさんま蒲焼きを缶汁ごと入れ、少量の水を加えて温める。溶き卵を回し入れたらすぐに火を止め、余熱で火を通して三つ葉を散らす。ご飯にのせれば丼にもなる。",
+      "source": {
+        "publisher": "農林水産省",
+        "title": "災害時に備えた食品ストックガイド（p.15「災害時の簡単レシピ」、レシピ作成：昭和女子大学現代ビジネス研究所 食プロジェクト）",
+        "url": "https://www.maff.go.jp/j/zyukyu/foodstock/guidebook/pdf/guidebook-3.pdf",
+        "retrieved": "2026-10-22"
+      }
+    },
+    {
+      "id": "R018",
+      "name": "わかめとコーンの和え物",
+      "uses": [
+        {"item_id": "V004", "amount": 2, "unit": "g"}
+      ],
+      "extra_ingredients": ["スイートコーン缶", "ベビーチーズ", "砂糖", "しょうゆ", "胡椒"],
+      "servings": 1,
+      "needs": ["needs-water"],
+      "summary": "乾燥わかめを手で砕き、少量の水で戻して絞る。ポリ袋の中で、コーン、ちぎったチーズ、調味料、コーンの汁少々と混ぜる。",
+      "source": {
+        "publisher": "農林水産省",
+        "title": "災害時に備えた食品ストックガイド（p.15「災害時の簡単レシピ」、レシピ作成：昭和女子大学現代ビジネス研究所 食プロジェクト）",
+        "url": "https://www.maff.go.jp/j/zyukyu/foodstock/guidebook/pdf/guidebook-3.pdf",
+        "retrieved": "2026-10-22"
+      }
+    },
+    {
+      "id": "R019",
+      "name": "包丁なし！火なし!! 袋の中で揉んで待つだけ和え物",
+      "uses": [
+        {"item_id": "V005", "amount": 15, "unit": "g"},
+        {"item_id": "M002", "amount": 1, "unit": "缶"},
+        {"item_id": "V008", "amount": 1, "unit": "個"}
+      ],
+      "extra_ingredients": ["塩昆布", "白いりごま"],
+      "servings": 2,
+      "needs": ["no-cook"],
+      "summary": "切り干し大根、ツナ（缶汁ごと）、塩昆布、種を取った梅干しをポリ袋でよく揉み、20分ほど置いて缶汁で切り干し大根を戻す。最後にごまをふる。",
+      "source": {
+        "publisher": "農林水産省",
+        "title": "災害時に備えた食品ストックガイド（p.16「災害時の簡単レシピ」、レシピ作成：DRY and PEACE）",
+        "url": "https://www.maff.go.jp/j/zyukyu/foodstock/guidebook/pdf/guidebook-3.pdf",
+        "retrieved": "2026-10-22"
+      }
+    },
+    {
+      "id": "R020",
+      "name": "一鍋で、栄養バランスもとれる 捨てる水無し乾物パスタ",
+      "uses": [
+        {"item_id": "S008", "amount": 200, "unit": "g"},
+        {"item_id": "V005", "amount": 8, "unit": "g"}
+      ],
+      "extra_ingredients": ["干し椎茸", "さきいか", "塩昆布", "削り節", "塩", "胡椒"],
+      "servings": 2,
+      "needs": ["needs-cook"],
+      "summary": "ショートパスタ、切り干し大根などの乾物、ひたひたの水を鍋に入れて煮る。パスタがゆで上がったら塩・胡椒で味を調える。ゆで汁を捨てずに食べきる。",
+      "source": {
+        "publisher": "農林水産省",
+        "title": "災害時に備えた食品ストックガイド（p.16「災害時の簡単レシピ」、レシピ作成：DRY and PEACE）",
+        "url": "https://www.maff.go.jp/j/zyukyu/foodstock/guidebook/pdf/guidebook-3.pdf",
+        "retrieved": "2026-10-22"
+      }
+    },
+    {
+      "id": "R021",
+      "name": "芋粥（乳幼児9〜12か月向け）",
+      "uses": [
+        {"item_id": "S010", "amount": 40, "unit": "g"}
+      ],
+      "extra_ingredients": ["さつまいも", "水", "塩"],
+      "servings": 1,
+      "needs": ["needs-cook"],
+      "summary": "無洗米、水、角切りにしたさつまいもをポリ袋に入れて口を結び、沸騰した鍋で湯せんして時間をかけて加熱する。家族の分と同時に作れる。",
+      "source": {
+        "publisher": "農林水産省",
+        "title": "要配慮者のための災害時に備えた食品ストックガイド（p.12 乳幼児向け、レシピ作成：地域栄養ケアPEACH厚木 江頭文江）",
+        "url": "https://www.maff.go.jp/j/zyukyu/foodstock/attach/pdf/guidebook-15.pdf",
+        "retrieved": "2026-10-22"
+      }
+    },
+    {
+      "id": "R022",
+      "name": "かぼちゃとにんじんのツナサラダ（乳幼児9〜12か月向け）",
+      "uses": [
+        {"item_id": "M002", "amount": 10, "unit": "g"},
+        {"item_id": "P002", "amount": 1, "unit": "小さじ"}
+      ],
+      "extra_ingredients": ["かぼちゃ", "にんじん"],
+      "servings": 1,
+      "needs": ["needs-cook"],
+      "summary": "一口大のかぼちゃと角切りのにんじんを、ツナ（水煮）と粉ミルクと一緒にポリ袋に入れて口を結び、沸騰した鍋で湯せんして加熱する。",
+      "source": {
+        "publisher": "農林水産省",
+        "title": "要配慮者のための災害時に備えた食品ストックガイド（p.12 乳幼児向け、レシピ作成：地域栄養ケアPEACH厚木 江頭文江）",
+        "url": "https://www.maff.go.jp/j/zyukyu/foodstock/attach/pdf/guidebook-15.pdf",
+        "retrieved": "2026-10-22"
+      }
+    },
+    {
+      "id": "R023",
+      "name": "ツナとじゃがいも煮",
+      "uses": [
+        {"item_id": "M002", "amount": 1, "unit": "缶"}
+      ],
+      "extra_ingredients": ["じゃがいも", "人参", "めんつゆの素"],
+      "servings": 1,
+      "needs": ["needs-cook"],
+      "summary": "乱切りのじゃがいもと人参を、ツナ（オイルごと）とめんつゆと一緒にポリ袋に入れて口を結び、沸騰した鍋で湯せんして煮る。袋の上からつぶせば、噛む力が弱い人にも食べやすい。",
+      "source": {
+        "publisher": "農林水産省",
+        "title": "要配慮者のための災害時に備えた食品ストックガイド（p.17 食べる機能が弱くなった方向け、レシピ作成：地域栄養ケアPEACH厚木 江頭文江）",
+        "url": "https://www.maff.go.jp/j/zyukyu/foodstock/attach/pdf/guidebook-15.pdf",
+        "retrieved": "2026-10-22"
+      }
+    },
+    {
+      "id": "R024",
+      "name": "カレーソースパスタ（アレルギー対応）",
+      "uses": [
+        {"item_id": "S008", "amount": 1, "unit": "人分"},
+        {"item_id": "P004", "amount": 1, "unit": "袋"}
+      ],
+      "extra_ingredients": ["チキン（レトルト）"],
+      "servings": 1,
+      "needs": ["needs-cook"],
+      "summary": "ライスパスタを表示どおりにゆで、温めたアレルギー対応のレトルトカレーをかけ、レトルトのチキンをのせる。特定原材料7品目を使わない組み合わせ。",
+      "source": {
+        "publisher": "農林水産省",
+        "title": "要配慮者のための災害時に備えた食品ストックガイド（p.25 アレルギー対応、レシピ作成：湘北短期大学 林典子）",
+        "url": "https://www.maff.go.jp/j/zyukyu/foodstock/attach/pdf/guidebook-15.pdf",
+        "retrieved": "2026-10-22"
+      }
+    },
+    {
+      "id": "R025",
+      "name": "やきとり炊き込みご飯",
+      "uses": [
+        {"item_id": "S010", "amount": 1, "unit": "紙コップ"},
+        {"item_id": "M004", "amount": 2, "unit": "缶"},
+        {"item_id": "V005", "amount": 4, "unit": "g"}
+      ],
+      "extra_ingredients": ["水", "かつおぶし（なくてもよい）"],
+      "servings": null,
+      "needs": ["needs-cook"],
+      "summary": "米と同じ量の水、焼き鳥缶（たれ味・塩味をたれごと）、乾燥ひじき、かつおぶしを耐熱性のポリ袋に入れて結び、湯を沸かした鍋で加熱してから蒸らす。",
+      "source": {
+        "publisher": "農林水産省 北陸農政局",
+        "title": "災害時にも役立つ和ごはんレシピ（2025年1月）p.4（高岡龍谷高等学校）",
+        "url": "https://www.maff.go.jp/hokuriku/food/attach/pdf/wasyoku-95.pdf",
+        "retrieved": "2026-10-22"
+      }
+    },
+    {
+      "id": "R026",
+      "name": "さば缶を使った和風炊き込みご飯",
+      "uses": [
+        {"item_id": "S010", "amount": 2, "unit": "合"},
+        {"item_id": "M001", "amount": 1, "unit": "缶"},
+        {"item_id": "V008", "amount": 2, "unit": "個"}
+      ],
+      "extra_ingredients": ["しめじ", "しょうゆ", "酒", "みりん", "水", "ごま"],
+      "servings": null,
+      "needs": ["needs-cook"],
+      "summary": "ポリ袋に米、さば缶、梅干し、しめじ、調味料、水を入れて結び、沸騰した鍋で加熱してから蒸らす。梅干しの種を除き、ごまを混ぜる。",
+      "source": {
+        "publisher": "農林水産省 北陸農政局",
+        "title": "災害時にも役立つ和ごはんレシピ（2025年1月）p.5（福井県立美方高等学校）",
+        "url": "https://www.maff.go.jp/hokuriku/food/attach/pdf/wasyoku-95.pdf",
+        "retrieved": "2026-10-22"
+      }
+    },
+    {
+      "id": "R027",
+      "name": "お手軽簡単カレー（野菜ジュースとカレー粉）",
+      "uses": [
+        {"item_id": "V001", "amount": 200, "unit": "ml"}
+      ],
+      "extra_ingredients": ["カレー粉", "具材（ウインナーや缶詰など）", "ごはん", "チーズ（好みで）", "ケチャップ（好みで）"],
+      "servings": null,
+      "needs": ["needs-cook"],
+      "summary": "鍋に野菜ジュース、カレー粉、ウインナーや缶詰などの具材を入れて煮込み、ご飯にかける。チーズやケチャップを入れると辛みがやわらぐ。",
+      "source": {
+        "publisher": "農林水産省 北陸農政局",
+        "title": "災害時にも役立つ和ごはんレシピ（2025年1月）p.7（啓新高等学校）",
+        "url": "https://www.maff.go.jp/hokuriku/food/attach/pdf/wasyoku-95.pdf",
+        "retrieved": "2026-10-22"
+      }
+    },
+    {
+      "id": "R028",
+      "name": "ツナとコーンのかんたん軍艦",
+      "uses": [
+        {"item_id": "M002", "amount": 0.5, "unit": "缶"},
+        {"item_id": "V009", "amount": 2, "unit": "枚"}
+      ],
+      "extra_ingredients": ["ライスペーパー", "コーン", "塩昆布", "水"],
+      "servings": null,
+      "needs": ["needs-water"],
+      "summary": "ポリ袋でツナ、コーン、塩昆布を混ぜる。水にさっとくぐらせたライスペーパーを丸め、味付け海苔を巻いて軍艦の形にし、上に具をのせる。",
+      "source": {
+        "publisher": "農林水産省 北陸農政局",
+        "title": "災害時にも役立つ和ごはんレシピ（2025年1月）p.8（福井県立美方高等学校）",
+        "url": "https://www.maff.go.jp/hokuriku/food/attach/pdf/wasyoku-95.pdf",
+        "retrieved": "2026-10-22"
+      }
+    },
+    {
+      "id": "R029",
+      "name": "和風パスタ（お茶漬けの素）",
+      "uses": [
+        {"item_id": "S008", "amount": 50, "unit": "g"},
+        {"item_id": "V005", "amount": 1, "unit": "小さじ"}
+      ],
+      "extra_ingredients": ["お茶漬けの素", "大葉", "塩", "水"],
+      "servings": null,
+      "needs": ["needs-cook"],
+      "summary": "沸かした湯の一部で乾燥ひじきを戻し、残りの湯でパスタをゆでる。ゆでたパスタを、ひじき、ちぎった大葉、お茶漬けの素と混ぜる。",
+      "source": {
+        "publisher": "農林水産省 北陸農政局",
+        "title": "災害時にも役立つ和ごはんレシピ（2025年1月）p.10（高岡龍谷高等学校）",
+        "url": "https://www.maff.go.jp/hokuriku/food/attach/pdf/wasyoku-95.pdf",
+        "retrieved": "2026-10-22"
+      }
+    },
+    {
+      "id": "R030",
+      "name": "サンマの混ぜビーフン",
+      "uses": [
+        {"item_id": "M003", "amount": 1, "unit": "缶"},
+        {"item_id": "M010", "amount": 6, "unit": "個（一口大）"}
+      ],
+      "extra_ingredients": ["ビーフン", "きくらげ", "塩こんぶ", "ごま油", "酢"],
+      "servings": null,
+      "needs": ["needs-water", "needs-hot-water"],
+      "summary": "ビーフン、きくらげ、高野豆腐を水に浸して戻す。ほぐしたサンマの蒲焼などすべての材料を耐熱性のポリ袋で揉み混ぜ、袋ごと熱湯に浸して温める。包丁を使わない。",
+      "source": {
+        "publisher": "農林水産省 北陸農政局",
+        "title": "災害時にも役立つ和ごはんレシピ（2025年1月）p.11（鵬学園高等学校）",
+        "url": "https://www.maff.go.jp/hokuriku/food/attach/pdf/wasyoku-95.pdf",
+        "retrieved": "2026-10-22"
+      }
+    },
+    {
+      "id": "R031",
+      "name": "わかめと切り干し大根の甘酢ごま和え",
+      "uses": [
+        {"item_id": "V005", "amount": 15, "unit": "g"},
+        {"item_id": "V004", "amount": 2, "unit": "g"}
+      ],
+      "extra_ingredients": ["しょうゆ", "砂糖", "酢", "塩", "すりごま"],
+      "servings": null,
+      "needs": ["needs-water"],
+      "summary": "切り干し大根と乾燥わかめをポリ袋で水に浸して戻す。別の袋で甘酢とすりごまを合わせ、水気を絞った具を入れて混ぜ、しばらく置いて味をなじませる。",
+      "source": {
+        "publisher": "農林水産省 北陸農政局",
+        "title": "災害時にも役立つ和ごはんレシピ（2025年1月）p.23（新潟県立新潟中央高等学校）",
+        "url": "https://www.maff.go.jp/hokuriku/food/attach/pdf/wasyoku-95.pdf",
+        "retrieved": "2026-10-22"
+      }
+    },
+    {
+      "id": "R032",
+      "name": "大豆とさば缶の和え物",
+      "uses": [
+        {"item_id": "M005", "amount": 3, "unit": "大さじ"},
+        {"item_id": "M001", "amount": 1, "unit": "大さじ"},
+        {"item_id": "V004", "amount": 1, "unit": "小さじ"}
+      ],
+      "extra_ingredients": ["だし醤油"],
+      "servings": null,
+      "needs": ["needs-water"],
+      "summary": "乾燥わかめを水で戻し、ほぐしたさば缶の身、水煮大豆、だし醤油と混ぜ合わせる。缶汁は入れすぎないようにする。",
+      "source": {
+        "publisher": "農林水産省 北陸農政局",
+        "title": "災害時にも役立つ和ごはんレシピ（2025年1月）p.27（福井県立美方高等学校）",
+        "url": "https://www.maff.go.jp/hokuriku/food/attach/pdf/wasyoku-95.pdf",
+        "retrieved": "2026-10-22"
+      }
+    },
+    {
+      "id": "R033",
+      "name": "和風ライスバーガー",
+      "uses": [
+        {"item_id": "S001", "amount": 100, "unit": "g"},
+        {"item_id": "V009", "amount": 2, "unit": "枚"}
+      ],
+      "extra_ingredients": ["プロセスチーズ", "ごま油", "しょう油", "七味唐辛子"],
+      "servings": 2,
+      "needs": ["needs-hot-water", "needs-cook"],
+      "summary": "お湯で戻したアルファ米（白飯）を丸く押し固め、しょう油を塗りながらフライパンで両面を焼く。チーズと海苔をはさんでバーガーにする。",
+      "source": {
+        "publisher": "尾西食品株式会社",
+        "title": "和風ライスバーガー | 尾西のアルファ米レシピ集",
+        "url": "https://www.onisifoods.co.jp/recipe/recipe_wa02.html",
+        "retrieved": "2026-10-22"
+      }
+    },
+    {
+      "id": "R034",
+      "name": "わかめ雑炊",
+      "uses": [
+        {"item_id": "S002", "amount": 100, "unit": "g"}
+      ],
+      "extra_ingredients": ["水", "鶏がらスープの素", "塩", "卵", "ねぎ"],
+      "servings": 3,
+      "needs": ["needs-cook"],
+      "summary": "わかめごはんのアルファ米を水と一緒に鍋で煮て、鶏がらスープの素と塩で味をつける。溶き卵を回し入れて蒸らし、ねぎを散らす。",
+      "source": {
+        "publisher": "尾西食品株式会社",
+        "title": "わかめ雑炊 | 尾西のアルファ米レシピ集",
+        "url": "https://www.onisifoods.co.jp/recipe/recipe_wa07.html",
+        "retrieved": "2026-10-22"
+      }
+    },
+    {
+      "id": "R035",
+      "name": "おはぎ（あんこ）",
+      "uses": [
+        {"item_id": "S003", "amount": 42, "unit": "g"}
+      ],
+      "extra_ingredients": ["あんこ（市販品）", "食塩（添付品）"],
+      "servings": null,
+      "needs": ["needs-hot-water"],
+      "summary": "白がゆのアルファ米をお湯で戻し、混ぜてから3つの俵形にまとめる。ラップに広げたあんこで包んでおはぎにする。",
+      "source": {
+        "publisher": "尾西食品株式会社",
+        "title": "おはぎ（あんこ） | 尾西のアルファ米レシピ集",
+        "url": "https://www.onisifoods.co.jp/recipe/recipe_sw05.html",
+        "retrieved": "2026-10-22"
+      }
+    },
+    {
+      "id": "R036",
+      "name": "トマトリゾット（白がゆ×トマトのスープ）",
+      "uses": [
+        {"item_id": "S003", "amount": 1, "unit": "袋"},
+        {"item_id": "V010", "amount": 1, "unit": "袋"}
+      ],
+      "extra_ingredients": ["水", "粉チーズ", "コショウ", "パセリ"],
+      "servings": 1,
+      "needs": ["needs-cook"],
+      "summary": "野菜たっぷりのトマトスープと少量の水を鍋で沸かし、白がゆのアルファ米を入れて混ぜながら加熱し、蓋をして蒸らす。粉チーズなどをふる。",
+      "source": {
+        "publisher": "尾西食品株式会社",
+        "title": "トマトリゾット | 尾西のアルファ米レシピ集",
+        "url": "https://www.onisifoods.co.jp/recipe/recipe_yo17.html",
+        "retrieved": "2026-10-22"
+      }
+    },
+    {
+      "id": "R037",
+      "name": "豆カレー（ドライカレー×豆のスープ）",
+      "uses": [
+        {"item_id": "S002", "amount": 1, "unit": "袋"},
+        {"item_id": "V010", "amount": 1, "unit": "袋"}
+      ],
+      "extra_ingredients": ["水", "パセリ（好みで）"],
+      "servings": 1,
+      "needs": ["needs-cook"],
+      "summary": "野菜たっぷりの豆のスープ、水、ドライカレーの調味粉末を鍋で沸かし、ドライカレーのアルファ米を入れて水気がなくなるまで煮てから蒸らす。",
+      "source": {
+        "publisher": "尾西食品株式会社",
+        "title": "豆カレー | 尾西のアルファ米レシピ集",
+        "url": "https://www.onisifoods.co.jp/recipe/recipe_yo16.html",
+        "retrieved": "2026-10-22"
+      }
+    },
+    {
+      "id": "R038",
+      "name": "アジアンデザート（カオニャオマムアン）",
+      "uses": [
+        {"item_id": "S002", "amount": 1, "unit": "袋"},
+        {"item_id": "V003", "amount": 3, "unit": "切れ"}
+      ],
+      "extra_ingredients": ["ココナッツミルクパウダー", "砂糖", "塩", "ミント等"],
+      "servings": 2,
+      "needs": ["needs-hot-water"],
+      "summary": "赤飯のアルファ米にココナッツミルクパウダー、砂糖、塩を加えてお湯で戻す。湯で戻したドライマンゴーをのせ、溶いたココナッツミルクをかける。",
+      "source": {
+        "publisher": "尾西食品株式会社",
+        "title": "アジアンデザート（カオニャオマムアン） | 尾西のアルファ米レシピ集",
+        "url": "https://www.onisifoods.co.jp/recipe/recipe_sw08.html",
+        "retrieved": "2026-10-22"
+      }
+    },
+    {
+      "id": "R039",
+      "name": "ツナマヨトースト・ピザトースト",
+      "uses": [
+        {"item_id": "S006", "amount": 1, "unit": "袋"},
+        {"item_id": "M002", "amount": 15, "unit": "g"}
+      ],
+      "extra_ingredients": ["マヨネーズ", "ピザ用トマトソースまたはケチャップ", "ピーマン", "トマト", "ピザ用チーズ", "コショウ"],
+      "servings": 1,
+      "needs": ["needs-heat"],
+      "summary": "保存パン（ひだまりパン）を横半分に切り、ツナマヨとピザソースをそれぞれ塗る。野菜とチーズをのせ、トースターで焼き色がつくまで焼く。",
+      "source": {
+        "publisher": "尾西食品株式会社",
+        "title": "ツナマヨトースト・ピザトースト | 尾西のアルファ米レシピ集",
+        "url": "https://www.onisifoods.co.jp/recipe/recipe_yo11.html",
+        "retrieved": "2026-10-22"
+      }
+    },
+    {
+      "id": "R040",
+      "name": "カレースープ",
+      "uses": [
+        {"item_id": "M006", "amount": 1, "unit": "袋"}
+      ],
+      "extra_ingredients": ["牛乳またはトマトジュース", "パセリ等（好みで）"],
+      "servings": 2,
+      "needs": ["needs-heat"],
+      "summary": "鍋にレトルトのビーフカレーを入れ、牛乳かトマトジュースを少しずつ加えて混ぜながら温め、スープにする。電子レンジでも作れる。",
+      "source": {
+        "publisher": "尾西食品株式会社",
+        "title": "カレースープ | 尾西のアルファ米レシピ集",
+        "url": "https://www.onisifoods.co.jp/recipe/recipe_yo12.html",
+        "retrieved": "2026-10-22"
+      }
+    },
+    {
+      "id": "R041",
+      "name": "パンの缶詰で手づくりラスク",
+      "uses": [
+        {"item_id": "S006", "amount": 1, "unit": "缶"}
+      ],
+      "extra_ingredients": ["バター", "グラニュー糖"],
+      "servings": null,
+      "needs": ["needs-cook"],
+      "summary": "パンの缶詰のパンを好きな大きさに切り、溶かしたバターを塗ってグラニュー糖をふり、低温のオーブンで焼いてラスクにする。",
+      "source": {
+        "publisher": "株式会社パン・アキモト",
+        "title": "PANCAN アレンジレシピ",
+        "url": "https://www.panakimoto.com/products_pancan/pdf/arrangerecipe.pdf",
+        "retrieved": "2026-10-22"
+      }
+    },
+    {
+      "id": "R042",
+      "name": "カップヌードル もやしナムル",
+      "uses": [
+        {"item_id": "S009", "amount": 1, "unit": "個"}
+      ],
+      "extra_ingredients": ["もやし", "ごま油"],
+      "servings": null,
+      "needs": ["needs-heat"],
+      "summary": "カップ麺の麺を袋に入れて砕く。電子レンジで加熱したもやしに、砕いた麺、スープ、具を混ぜ、ごま油をかける。お湯を注がずに副菜にする食べ方。",
+      "source": {
+        "publisher": "日清食品株式会社",
+        "title": "カップヌードル もやしナムル",
+        "url": "https://www.nissin.com/jp/product/recipes/351/",
+        "retrieved": "2026-10-22"
+      }
+    },
+    {
+      "id": "R043",
+      "name": "青菜のおかゆ（レトルトの白がゆ）",
+      "uses": [
+        {"item_id": "S005", "amount": 1, "unit": "袋"}
+      ],
+      "extra_ingredients": ["青菜（大根の葉、かぶの葉など）", "顆粒だしの素"],
+      "servings": 1,
+      "needs": ["needs-heat"],
+      "summary": "レトルトの白がゆを袋ごと湯せん（または電子レンジ）で温める。塩ゆでして刻んだ青菜にだしの素を混ぜ、おかゆにのせる。",
+      "source": {
+        "publisher": "味の素株式会社（味の素パーク）",
+        "title": "青菜のおかゆ～レトルトの白がゆを使って！～の作り方",
+        "url": "https://park.ajinomoto.co.jp/recipe/card/710085/",
+        "retrieved": "2026-10-22"
+      }
+    },
+    {
+      "id": "R044",
+      "name": "ちょい足し！大豆入りコーンスープ",
+      "uses": [
+        {"item_id": "V007", "amount": 1, "unit": "袋"},
+        {"item_id": "M005", "amount": 0.25, "unit": "カップ"}
+      ],
+      "extra_ingredients": ["湯"],
+      "servings": 1,
+      "needs": ["needs-hot-water"],
+      "summary": "粉末のコーンスープにお湯を注いでかき混ぜ、蒸し大豆（ドライパック）を加える。",
+      "source": {
+        "publisher": "味の素株式会社（味の素パーク）",
+        "title": "ちょい足し！大豆入りコーンスープの作り方",
+        "url": "https://park.ajinomoto.co.jp/recipe/card/709307/",
+        "retrieved": "2026-10-22"
+      }
+    },
+    {
+      "id": "R045",
+      "name": "ホットシリアル",
+      "uses": [
+        {"item_id": "S011", "amount": 80, "unit": "g"},
+        {"item_id": "V007", "amount": 2, "unit": "袋"}
+      ],
+      "extra_ingredients": ["牛乳"],
+      "servings": 2,
+      "needs": ["needs-heat"],
+      "summary": "温めた牛乳で粉末のコーンスープを溶き、コーンフレークを加える。",
+      "source": {
+        "publisher": "味の素株式会社（味の素パーク）",
+        "title": "ホットシリアルの作り方",
+        "url": "https://park.ajinomoto.co.jp/recipe/card/704925/",
+        "retrieved": "2026-10-22"
+      }
+    },
+    {
+      "id": "R046",
+      "name": "色々カップスープリゾット",
+      "uses": [
+        {"item_id": "S004", "amount": 200, "unit": "g"},
+        {"item_id": "V007", "amount": 1, "unit": "袋"}
+      ],
+      "extra_ingredients": ["スライスチーズ", "ベーコン", "湯"],
+      "servings": 1,
+      "needs": ["needs-heat"],
+      "summary": "市販のご飯を耐熱容器に入れ、粉末のカップスープをふりかける。チーズとベーコンをのせてお湯をかけ、電子レンジで加熱して混ぜる。",
+      "source": {
+        "publisher": "味の素株式会社（味の素パーク）",
+        "title": "色々カップスープリゾットの作り方",
+        "url": "https://park.ajinomoto.co.jp/recipe/card/706698/",
+        "retrieved": "2026-10-22"
+      }
+    },
+    {
+      "id": "R047",
+      "name": "かぼちゃのハロウィンマヨサラダ",
+      "uses": [
+        {"item_id": "M002", "amount": 70, "unit": "g"},
+        {"item_id": "K005", "amount": 1, "unit": "大さじ"},
+        {"item_id": "V003", "amount": 30, "unit": "g"}
+      ],
+      "extra_ingredients": ["かぼちゃ", "マヨネーズ", "こしょう", "ベビーリーフ", "ミニトマト"],
+      "servings": 4,
+      "needs": ["needs-heat"],
+      "summary": "電子レンジで加熱したかぼちゃをつぶし、ツナ、刻んだミックスナッツ、レーズン、マヨネーズと混ぜる。かぼちゃの皮で顔の飾りを付けて盛る。",
+      "source": {
+        "publisher": "味の素株式会社（味の素パーク）",
+        "title": "かぼちゃのハロウィンマヨサラダの作り方",
+        "url": "https://park.ajinomoto.co.jp/recipe/card/801665/",
+        "retrieved": "2026-10-22"
+      }
+    },
+    {
+      "id": "R048",
+      "name": "チョコバー",
+      "uses": [
+        {"item_id": "K002", "amount": 5, "unit": "枚"},
+        {"item_id": "K001", "amount": 50, "unit": "g"},
+        {"item_id": "S011", "amount": 25, "unit": "g"},
+        {"item_id": "V003", "amount": 50, "unit": "g"}
+      ],
+      "extra_ingredients": ["マシュマロ"],
+      "servings": 6,
+      "needs": ["needs-heat"],
+      "summary": "湯せんで溶かしたミルクチョコに、砕いたビスケットとマシュマロを混ぜる。ホワイトチョコには、コーンフレークとドライフルーツを混ぜる。それぞれバットで固めて切り分ける。",
+      "source": {
+        "publisher": "味の素株式会社（味の素パーク）",
+        "title": "チョコバーの作り方",
+        "url": "https://park.ajinomoto.co.jp/recipe/card/705841/",
+        "retrieved": "2026-10-22"
+      }
+    }
+  ]
+}
