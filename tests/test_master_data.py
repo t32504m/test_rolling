@@ -65,6 +65,26 @@ class MasterDataTest(unittest.TestCase):
                     self.assertTrue(isinstance(url, str) and url.startswith("http"),
                                     "protein_per_unit の根拠 source.protein_url がない")
 
+    def test_pack_size_has_its_own_source(self):
+        """購入単位（pack_size）は、代表商品を一般的な店で買うときの最小の単位。その根拠の URL を必須にする。
+        例：「ようかん5本」が、5本入りの商品を参照したためなのか、実際に5本単位でしか買えないのかを区別する。"""
+        for item in self.items:
+            with self.subTest(item=item["id"]):
+                source = item["source"]
+                url = source.get("pack_url")
+                self.assertTrue(isinstance(url, str) and url.startswith("http"),
+                                "pack_size の根拠 source.pack_url がない")
+                note = source.get("pack_note")
+                self.assertTrue(isinstance(note, str) and note.strip(),
+                                "source.pack_note（どの売り方を採ったか）がない")
+
+    def test_item_has_a_size_note_for_shoppers(self):
+        """買う人が、どの大きさの商品かを思い浮かべられるように、代表商品の大きさを文字で書く（写真は使わない）。"""
+        for item in self.items:
+            with self.subTest(item=item["id"]):
+                note = item.get("size_note")
+                self.assertTrue(isinstance(note, str) and note.strip(), "size_note がない")
+
     def test_drink_items_provide_water(self):
         for item in self.items:
             if item["meal_role"] == "drink":

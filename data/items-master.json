@@ -20,11 +20,14 @@
       "water_per_unit": 500,
       "pack_size": 24,
       "pack_label": "24本入ケース",
+      "size_note": "1本 500ml。自動販売機で売っている飲み物と同じ大きさのペットボトル",
       "desc": "長期保存水。持ち出し・小分けに便利なサイズ。",
       "source": {
         "item_basis": "maff-guide-general",
         "nutrition_basis": "一般的な長期保存水500ml",
-        "checked": "2026-07"
+        "checked": "2026-07",
+        "pack_url": "https://lohaco.yahoo.co.jp/store/h-lohaco/item/1385519/",
+        "pack_note": "水は Issue #12 の方針により今のケース単位のまま（ソルバーは水を本数で計算し、pack_size を使わない）。代表商品は特定の商品ではないため、例として LOHACO の「日本ミネラルウォーター 保存水500ml 1箱（24本入）」を根拠にした"
       },
       "assign_note": "drinkロールはml基準ノルマのためunits_per_serving/daily_coeff不使用",
       "coeff_basis": null
@@ -47,11 +50,14 @@
       "water_per_unit": 2000,
       "pack_size": 6,
       "pack_label": "6本入ケース",
+      "size_note": "1本 2L の大きなペットボトル",
       "desc": "長期保存水。備蓄の基本サイズ。",
       "source": {
         "item_basis": "maff-guide-general",
         "nutrition_basis": "一般的な長期保存水2L",
-        "checked": "2026-07"
+        "checked": "2026-07",
+        "pack_url": "https://www.cainz.com/g/4901291991472.html",
+        "pack_note": "水は Issue #12 の方針により今のケース単位のまま。代表商品は特定の商品ではないため、例としてカインズ（ホームセンター）の「【ケース販売】赤穂化成 備蓄水 2L×6本」（店舗販売あり）を根拠にした"
       },
       "assign_note": "",
       "coeff_basis": null
@@ -74,11 +80,14 @@
       "water_per_unit": 2000,
       "pack_size": 6,
       "pack_label": "6本入ケース",
+      "size_note": "1本 2L の大きなペットボトル",
       "desc": "日常使いしながら備えるローリングストック向き。",
       "source": {
         "item_basis": "maff-guide-general",
         "nutrition_basis": "一般的なミネラルウォーター2L",
-        "checked": "2026-07"
+        "checked": "2026-07",
+        "pack_url": "https://sundrug-online.com/products/4901777018686",
+        "pack_note": "水は Issue #12 の方針により今のケース単位のまま。通常のミネラルウォーター2Lは1本でも売られている（サンドラッグ「サントリー 天然水 2L」）。箱の入り数は銘柄によって違い、LOHACO ではサントリー・キリン・アサヒの2Lが9本入りの箱だった。6本入りの根拠は見つかっていない"
       },
       "assign_note": "保存水と製品性格が異なるため別品目（variantにしない）",
       "coeff_basis": null
@@ -102,11 +111,14 @@
       "water_per_unit": 1000,
       "pack_size": 12,
       "pack_label": "12本入ケース",
+      "size_note": "1本 1L のペットボトル（牛乳パック1本と同じ量）",
       "desc": "長期保存水。テンプレート標準サイズ(1L固定)。",
       "source": {
         "item_basis": "maff-guide-general",
         "nutrition_basis": "一般的な長期保存水1L",
-        "checked": "2026-07"
+        "checked": "2026-07",
+        "pack_url": "https://lohaco.yahoo.co.jp/category/64072/64412/64446/",
+        "pack_note": "不明：1L の長期保存水の商品と、その売り方（12本入りかどうか）を見つけられなかった。LOHACO の「非常食・保存水」売り場とサンドラッグで探したが、保存水は500ml（24本入）と2L（6本入）だけだった。水は Issue #12 の方針により値は今のまま"
       },
       "assign_note": "テンプレートの水はこの1品に固定(ユーザー指定)。サイズ切替はvariant_groupで将来対応"
     },
@@ -129,13 +141,16 @@
       "protein_per_unit": 6.3,
       "pack_size": 1,
       "pack_label": "1袋(スタンドパック)",
+      "size_note": "1袋 100g（お湯を入れると260gのごはんになる）。立てて置ける袋で、袋のままお湯を注いで食べる",
       "desc": "お湯または水で戻せるご飯。",
       "source": {
         "item_basis": "maff-guide-general",
         "nutrition_basis": "尾西食品 白飯 100g",
         "checked": "2026-07",
         "protein_url": "https://www.onisifoods.co.jp/products/hakuhan.html",
-        "protein_note": "メーカー公式の栄養成分表示（100g尾西の白飯、1食100gあたり）"
+        "protein_note": "メーカー公式の栄養成分表示（100g尾西の白飯、1食100gあたり）",
+        "pack_url": "https://lohaco.yahoo.co.jp/store/h-lohaco/item/waw3313/",
+        "pack_note": "1袋（1食）で売られている（LOHACO「尾西食品 アルファ米 白飯1袋入り 101SE 1食」）。メーカーの商品ページ https://www.onisifoods.co.jp/products/hakuhan.html にも1袋の希望小売価格（税込410円）と JAN コードがある"
       },
       "assign_note": "",
       "coeff_basis": null
@@ -159,6 +174,7 @@
       "protein_per_unit": 6.9,
       "pack_size": 1,
       "pack_label": "1袋(スタンドパック)",
+      "size_note": "1袋 100g（お湯を入れると260gのごはんになる）。立てて置ける袋で、袋のままお湯を注いで食べる",
       "desc": "五目・ドライカレー等。単体で食が進む。",
       "source": {
         "item_basis": "maff-guide-general",
@@ -167,7 +183,9 @@
         "protein_url": "https://www.onisifoods.co.jp/products/gomoku.html",
         "protein_note": "メーカー公式の栄養成分表示（100g尾西の五目ごはん、1食100gあたり）",
         "kcal_url": "https://www.onisifoods.co.jp/products/gomoku.html",
-        "kcal_note": "メーカー公式の栄養成分表示（100g尾西の五目ごはん、1食100gあたり）"
+        "kcal_note": "メーカー公式の栄養成分表示（100g尾西の五目ごはん、1食100gあたり）",
+        "pack_url": "https://lohaco.yahoo.co.jp/store/h-lohaco/item/waa7178/",
+        "pack_note": "1袋（1食）で売られている（LOHACO「尾西食品 アルファ米五目ごはん1食入り 501SE 1食」）。メーカーの商品ページ https://www.onisifoods.co.jp/products/gomoku.html にも1袋の希望小売価格（税込518円）と JAN コードがある"
       },
       "assign_note": "味の個別化(五目/カレー等)はM-3の代表商品選定で対応",
       "coeff_basis": null
@@ -193,13 +211,16 @@
       "protein_per_unit": 2.2,
       "pack_size": 1,
       "pack_label": "1袋(スタンドパック)",
+      "size_note": "1袋 42g（お湯を入れると245gのおかゆになる）。立てて置ける袋で、袋のままお湯を注いで食べる",
       "desc": "水でも戻せるおかゆ。やわらかく食べやすい。",
       "source": {
         "item_basis": "maff-guide-hairyo",
         "nutrition_basis": "尾西食品 白がゆ 42g(Web確認済)",
         "checked": "2026-07",
         "protein_url": "https://www.onisifoods.co.jp/products/shirogayu.html",
-        "protein_note": "メーカー公式の栄養成分表示（尾西の白がゆ、42gあたり）"
+        "protein_note": "メーカー公式の栄養成分表示（尾西の白がゆ、42gあたり）",
+        "pack_url": "https://lohaco.yahoo.co.jp/store/h-lohaco/item/waw1268/",
+        "pack_note": "1袋（1食）で売られている（LOHACO「尾西食品 アルファ米白がゆ 801KE 1食」）。メーカーの商品ページ https://www.onisifoods.co.jp/products/shirogayu.html にも1袋の希望小売価格（税込388円）と JAN コードがある"
       },
       "assign_note": "高齢者テンプレの主食中核",
       "coeff_basis": null
@@ -221,15 +242,18 @@
       "cal_per_unit": 294,
       "water_per_unit": 0,
       "protein_per_unit": 5.0,
-      "pack_size": 3,
-      "pack_label": "3食パック",
+      "pack_size": 1,
+      "pack_label": "1パック",
+      "size_note": "1パック 200g。電子レンジで温めるプラスチックの容器に入ったごはん",
       "desc": "要加熱。日常消費と兼ねやすい。",
       "source": {
         "item_basis": "maff-guide-general",
         "nutrition_basis": "サトウのごはん 200g",
         "checked": "2026-07",
         "protein_url": "https://fooddb.mext.go.jp/details/details.pl?ITEM_NO=1_01088_7",
-        "protein_note": "日本食品標準成分表（八訂）増補2023年 01088「水稲めし 精白米 うるち米」の可食部100gあたりたんぱく質 2.5g × 200g で換算。サトウ食品の公式サイトに接続できなかったため成分表で代用"
+        "protein_note": "日本食品標準成分表（八訂）増補2023年 01088「水稲めし 精白米 うるち米」の可食部100gあたりたんぱく質 2.5g × 200g で換算。サトウ食品の公式サイトに接続できなかったため成分表で代用",
+        "pack_url": "https://www.satosyokuhin.co.jp/products/products_rice_77.html",
+        "pack_note": "メーカーの商品一覧で、「新潟県産コシヒカリ 200g」（1食）が、「200g 3食パック」の商品とは別の商品として載っている。1パックでも売られている。3食パック・5食パックもある（サンドラッグ https://sundrug-online.com/products/4973360564511 ）"
       },
       "assign_note": "",
       "coeff_basis": null
@@ -255,6 +279,7 @@
       "protein_per_unit": 1.5,
       "pack_size": 1,
       "pack_label": "1袋",
+      "size_note": "1袋 250g（1人前）。レトルトの平たい袋",
       "desc": "そのまま食べられるおかゆ。体調不良時にも。",
       "source": {
         "item_basis": "maff-guide-hairyo",
@@ -263,7 +288,9 @@
         "protein_url": "https://www.ajinomoto.co.jp/products/detail/?ProductName=okayu_1",
         "protein_note": "メーカー公式の栄養成分表示（味の素KKおかゆ 白がゆ、1人前250gあたり）",
         "kcal_url": "https://www.ajinomoto.co.jp/products/detail/?ProductName=okayu_1",
-        "kcal_note": "メーカー公式の栄養成分表示（味の素KKおかゆ 白がゆ、1人前250gあたり）"
+        "kcal_note": "メーカー公式の栄養成分表示（味の素KKおかゆ 白がゆ、1人前250gあたり）",
+        "pack_url": "https://www.ajinomoto.co.jp/products/detail/?ProductName=okayu_1",
+        "pack_note": "メーカーの商品ページの「白がゆ250g」は1袋の商品。同じページの関連商品に、別の商品として「白がゆ 170g 3食入」がある。250g は1袋で売られる商品と判断した。一般的な店で1袋売りされているページは見つけられなかった（LOHACO は3袋・9袋のセットだけ）"
       },
       "assign_note": "",
       "coeff_basis": null
@@ -287,6 +314,7 @@
       "protein_per_unit": 6.4,
       "pack_size": 1,
       "pack_label": "1缶",
+      "size_note": "1缶 100g。片手で持てる大きさの缶に、パンが入っている",
       "desc": "開けてすぐ食べられる長期保存パン。",
       "source": {
         "item_basis": "maff-guide-general",
@@ -295,7 +323,9 @@
         "kcal_url": "https://www.panakimoto.com/products_pancan/pdf/202504_genzairyou_s5.pdf",
         "kcal_note": "メーカー公式の栄養成分及び原材料表示（PDF、2025年4月製造分より）のオレンジ味の値。PDF に基準量（1缶か100gか）の記載はないが、1缶が100g（https://www.panakimoto.com/products_pancan/ の規格「100g × 24 缶」）のため同じ値になる。味はラインアップの最初に載っているオレンジ味を代表にした（ストロベリー味 299kcal、ブルーベリー味 297kcal）",
         "protein_url": "https://www.panakimoto.com/products_pancan/pdf/202504_genzairyou_s5.pdf",
-        "protein_note": "メーカー公式の栄養成分及び原材料表示（PDF、2025年4月製造分より）のオレンジ味の値。PDF に基準量（1缶か100gか）の記載はないが、1缶が100g（https://www.panakimoto.com/products_pancan/ の規格「100g × 24 缶」）のため同じ値になる。味はラインアップの最初に載っているオレンジ味を代表にした（ストロベリー味 299kcal、ブルーベリー味 297kcal）"
+        "protein_note": "メーカー公式の栄養成分及び原材料表示（PDF、2025年4月製造分より）のオレンジ味の値。PDF に基準量（1缶か100gか）の記載はないが、1缶が100g（https://www.panakimoto.com/products_pancan/ の規格「100g × 24 缶」）のため同じ値になる。味はラインアップの最初に載っているオレンジ味を代表にした（ストロベリー味 299kcal、ブルーベリー味 297kcal）",
+        "pack_url": "https://www.panakimoto.com/products_pancan/",
+        "pack_note": "メーカーの商品一覧では、1缶ごとに JAN コード（オレンジ味 4900369490107）があり、「規格 100g × 24 缶」はケースの入り数。1缶で売られている一般的な店のページは開いて確認できなかった（LOHACO は6缶のギフトセットと10箱セットだけ）。値は今のままとした"
       },
       "assign_note": "",
       "coeff_basis": null
@@ -318,11 +348,14 @@
       "water_per_unit": 0,
       "pack_size": 1,
       "pack_label": "1個",
+      "size_note": "1個ずつ袋に入ったデニッシュパン",
       "desc": "賞味期限1〜2ヶ月級。ローリングストック向き。",
       "source": {
         "item_basis": "tokyo-bichiku",
         "nutrition_basis": "コモ デニッシュ系ロングライフパン",
-        "checked": "2026-07"
+        "checked": "2026-07",
+        "pack_url": "https://lohaco.yahoo.co.jp/store/h-lohaco/item/p642462/",
+        "pack_note": "1個で売られている（LOHACO「デニッシュ チョコ 1個 コモ ロングライフパン」）。2個・3個・5個・12個のセットもある"
       },
       "assign_note": "",
       "coeff_basis": null
@@ -344,15 +377,18 @@
       "cal_per_unit": 350,
       "water_per_unit": 0,
       "protein_per_unit": 9.5,
-      "pack_size": 5,
-      "pack_label": "1袋(500g=5束)",
+      "pack_size": 3,
+      "pack_label": "1袋(300g)",
+      "size_note": "1袋 300g（そうめん50gの束が6束）",
       "desc": "要調理・要水。1束=1食分目安。",
       "source": {
         "item_basis": "maff-guide-general",
         "nutrition_basis": "一般的なそうめん/うどん乾麺 100gあたり",
         "checked": "2026-07",
         "protein_url": "https://fooddb.mext.go.jp/details/details.pl?ITEM_NO=1_01043_7",
-        "protein_note": "日本食品標準成分表（八訂）増補2023年 01043「そうめん・ひやむぎ 乾」の可食部100gあたりたんぱく質 9.5g × 100g で換算。参考：干しうどん 乾（01041）は100gあたり8.5g"
+        "protein_note": "日本食品標準成分表（八訂）増補2023年 01043「そうめん・ひやむぎ 乾」の可食部100gあたりたんぱく質 9.5g × 100g で換算。参考：干しうどん 乾（01041）は100gあたり8.5g",
+        "pack_url": "https://lohaco.yahoo.co.jp/store/h-lohaco/item/8545839/",
+        "pack_note": "代表商品は特定の商品ではないため、よく売られている例として「揖保乃糸 手延素麺 上級品 300g 1袋」（LOHACO）を根拠にした。1単位は100gなので、300gの袋は3単位。旧値の5（500g）に根拠はなかった。500g の袋や、もっと小さい袋もある"
       },
       "assign_note": "1束(約100g)=1食として単位設計",
       "coeff_basis": null
@@ -376,6 +412,7 @@
       "protein_per_unit": 10.7,
       "pack_size": 1,
       "pack_label": "1個",
+      "size_note": "1個 78g。ふつうの大きさのカップ麺",
       "desc": "お湯だけで食べられる。",
       "source": {
         "item_basis": "maff-guide-general",
@@ -384,7 +421,9 @@
         "protein_url": "https://www.nissin.com/jp/product/items/13462/",
         "protein_note": "メーカー公式の栄養成分表示（カップヌードル、1食78gあたり）",
         "kcal_url": "https://www.nissin.com/jp/product/items/13462/",
-        "kcal_note": "メーカー公式の栄養成分表示（カップヌードル、1食78gあたり。めん・かやく349kcal＋スープ15kcal）"
+        "kcal_note": "メーカー公式の栄養成分表示（カップヌードル、1食78gあたり。めん・かやく349kcal＋スープ15kcal）",
+        "pack_url": "https://sundrug-online.com/products/49698626",
+        "pack_note": "1個で売られている（サンドラッグ「日清 カップヌードル 78G」）。メーカーの商品ページ https://www.nissin.com/jp/product/items/13462/ に1個の希望小売価格（税別248円）がある。荷姿は1ケース20食入"
       },
       "assign_note": "",
       "coeff_basis": null
@@ -408,13 +447,16 @@
       "protein_per_unit": 9.15,
       "pack_size": 13,
       "pack_label": "2kg袋(約13合)",
+      "size_note": "1袋 2kg（約13合）の米袋",
       "desc": "研ぎ水不要。要炊飯。",
       "source": {
         "item_basis": "maff-guide-general",
         "nutrition_basis": "無洗米(精白米) 1合150g換算",
         "checked": "2026-07",
         "protein_url": "https://fooddb.mext.go.jp/details/details.pl?ITEM_NO=1_01083_7",
-        "protein_note": "日本食品標準成分表（八訂）増補2023年 01083「水稲穀粒 精白米 うるち米」の可食部100gあたりたんぱく質 6.1g × 150g で換算"
+        "protein_note": "日本食品標準成分表（八訂）増補2023年 01083「水稲穀粒 精白米 うるち米」の可食部100gあたりたんぱく質 6.1g × 150g で換算",
+        "pack_url": "https://lohaco.yahoo.co.jp/store/h-lohaco/item/ue55973/",
+        "pack_note": "代表商品は特定の商品ではないため、例として LOHACO の「北海道産ななつぼし 2kg 1袋【無洗米】」を根拠にした。2kg ÷ 1合150g ＝ 約13合。もっと小さい売り方もある（サンドラッグ「アイリス 新潟県産こしひかり 無洗米 2合5袋 1.5kg」 https://sundrug-online.com/products/4967576150958 ）"
       },
       "assign_note": "1食=0.5合として units_per_serving=0.5。非整数servingの代表例",
       "coeff_basis": null
@@ -436,15 +478,18 @@
       "cal_per_unit": 150,
       "water_per_unit": 0,
       "protein_per_unit": 3.12,
-      "pack_size": 6,
-      "pack_label": "1箱(約240g=6食)",
+      "pack_size": 4,
+      "pack_label": "1袋(180g=約4.5食)",
+      "size_note": "1袋 180g",
       "desc": "そのままでも食べられる。1食=約40g。",
       "source": {
         "item_basis": "maff-guide-general",
         "nutrition_basis": "一般的なコーンフレーク 40gあたり",
         "checked": "2026-07",
         "protein_url": "https://fooddb.mext.go.jp/details/details.pl?ITEM_NO=1_01137_7",
-        "protein_note": "日本食品標準成分表（八訂）増補2023年 01137「コーンフレーク」の可食部100gあたりたんぱく質 7.8g × 40g で換算"
+        "protein_note": "日本食品標準成分表（八訂）増補2023年 01137「コーンフレーク」の可食部100gあたりたんぱく質 7.8g × 40g で換算",
+        "pack_url": "https://lohaco.yahoo.co.jp/store/h-lohaco/item/4086326/",
+        "pack_note": "代表商品は特定の商品ではないため、例として「ケロッグ コーンフレーク 180g 1袋」（LOHACO）を根拠にした。180g ÷ 40g ＝ 4.5 食で、pack_size は整数でなければならないため、切り捨てて4とした。旧値の6（約240g）の商品は見つからなかった"
       },
       "assign_note": "pack_size=1箱の食数(約6)としてM-3で確定",
       "coeff_basis": null
@@ -468,13 +513,16 @@
       "protein_per_unit": 7.1,
       "pack_size": 1,
       "pack_label": "1缶",
+      "size_note": "1缶 100g。片手で持てる大きさの缶に、小さなカンパンと氷砂糖が入っている",
       "desc": "主食代替になる保存食の定番。",
       "source": {
         "item_basis": "maff-guide-general",
         "nutrition_basis": "三立製菓 缶入カンパン 100g",
         "checked": "2026-07",
         "protein_url": "https://www.sanritsuseika.co.jp/products/%E7%BC%B6%E5%85%A5%E3%82%8A%E3%82%AB%E3%83%B3%E3%83%91%E3%83%B3100%EF%BD%87/",
-        "protein_note": "メーカー公式の栄養成分表示（三立製菓 缶入りカンパン100g、1缶100gあたり）"
+        "protein_note": "メーカー公式の栄養成分表示（三立製菓 缶入りカンパン100g、1缶100gあたり）",
+        "pack_url": "https://www.sanritsuseika.co.jp/products/%E7%BC%B6%E5%85%A5%E3%82%8A%E3%82%AB%E3%83%B3%E3%83%91%E3%83%B3100%EF%BD%87/",
+        "pack_note": "メーカーの商品ページは内容量100g・1缶あたりの栄養成分表示で、1缶を単位とする商品。一般的な店で1缶で売られているページは見つけられなかった（不明）。値は今のままとした"
       },
       "assign_note": "菓子ではなく主食枠として確定（乾パンの歴史的位置づけ）",
       "coeff_basis": null
@@ -498,13 +546,16 @@
       "protein_per_unit": 30.97,
       "pack_size": 1,
       "pack_label": "1缶",
+      "size_note": "1缶 190g。ツナ缶（70g）の2倍以上の量が入った缶",
       "desc": "DHA/EPA豊富。汁ごと使える。",
       "source": {
         "item_basis": "maff-guide-general",
         "nutrition_basis": "一般的なさば味噌煮缶 190g",
         "checked": "2026-07",
         "protein_url": "https://fooddb.mext.go.jp/details/details.pl?ITEM_NO=10_10165_7",
-        "protein_note": "日本食品標準成分表（八訂）増補2023年 10165「さば類 缶詰 みそ煮」の可食部100gあたりたんぱく質 16.3g × 190g で換算"
+        "protein_note": "日本食品標準成分表（八訂）増補2023年 10165「さば類 缶詰 みそ煮」の可食部100gあたりたんぱく質 16.3g × 190g で換算",
+        "pack_url": "https://lohaco.yahoo.co.jp/store/h-lohaco/item/rj42059/",
+        "pack_note": "代表商品は特定の商品ではないため、同じ内容量の例として「創健社 さば味噌煮 190g 1個」（LOHACO）を根拠にした。1缶で売られている"
       },
       "assign_note": "魚缶は栄養値が大きく異なるため別品目方式で確定",
       "coeff_basis": null
@@ -528,6 +579,7 @@
       "protein_per_unit": 13.4,
       "pack_size": 3,
       "pack_label": "3缶パック",
+      "size_note": "1缶 70g の小さな缶。3缶がまとめて包まれている",
       "desc": "使い回しやすい定番。油漬/水煮あり。",
       "source": {
         "item_basis": "maff-guide-general",
@@ -536,7 +588,9 @@
         "protein_url": "https://www.hagoromofoods.co.jp/products/detail/293.html",
         "protein_note": "メーカー公式の栄養成分表示（はごろもフーズ シーチキンマイルド70g、1缶あたり・液汁含む）",
         "kcal_url": "https://www.hagoromofoods.co.jp/products/detail/293.html",
-        "kcal_note": "メーカー公式の栄養成分表示（はごろもフーズ シーチキンマイルド70g、1缶あたり・液汁含む）"
+        "kcal_note": "メーカー公式の栄養成分表示（はごろもフーズ シーチキンマイルド70g、1缶あたり・液汁含む）",
+        "pack_url": "https://sundrug-online.com/products/4902560020824",
+        "pack_note": "サンドラッグでは「はごろも シーチキン マイルド 70g×3」（3缶パック）で売られている。LOHACO は4缶パック。メーカーの商品ページ（https://www.hagoromofoods.co.jp/products/detail/293.html ）は1缶の商品だが、1缶で売られている一般的な店のページは見つけられなかったため、値は今のままとした"
       },
       "assign_note": "",
       "coeff_basis": null
@@ -560,13 +614,16 @@
       "protein_per_unit": 17.4,
       "pack_size": 1,
       "pack_label": "1缶",
+      "size_note": "1缶 100g の缶。ツナ缶（70g）より少し多い量",
       "desc": "味付きでご飯が進む。",
       "source": {
         "item_basis": "maff-guide-general",
         "nutrition_basis": "一般的なさんま蒲焼缶 100g",
         "checked": "2026-07",
         "protein_url": "https://fooddb.mext.go.jp/details/details.pl?ITEM_NO=10_10178_7",
-        "protein_note": "日本食品標準成分表（八訂）増補2023年 10178「さんま 缶詰 かば焼」の可食部100gあたりたんぱく質 17.4g × 100g で換算"
+        "protein_note": "日本食品標準成分表（八訂）増補2023年 10178「さんま 缶詰 かば焼」の可食部100gあたりたんぱく質 17.4g × 100g で換算",
+        "pack_url": "https://sundrug-online.com/products/4901901356141",
+        "pack_note": "代表商品は特定の商品ではないため、同じ内容量の例として「マルハ さんま蒲焼 100g」（サンドラッグ）を根拠にした。1缶で売られている（LOHACO にも「マルハ さんま蒲焼 1缶」がある）"
       },
       "assign_note": "",
       "coeff_basis": null
@@ -590,13 +647,16 @@
       "protein_per_unit": 13.8,
       "pack_size": 1,
       "pack_label": "1缶",
+      "size_note": "1缶 75g の小さな缶。ツナ缶（70g）とほぼ同じ量",
       "desc": "動物性たんぱくの缶詰。",
       "source": {
         "item_basis": "maff-guide-general",
         "nutrition_basis": "ホテイ やきとりたれ味 75g",
         "checked": "2026-07",
         "protein_url": "https://fooddb.mext.go.jp/details/details.pl?ITEM_NO=11_11237_7",
-        "protein_note": "日本食品標準成分表（八訂）増補2023年 11237「にわとり 焼き鳥缶詰」の可食部100gあたりたんぱく質 18.4g × 75g で換算。ホテイフーズの公式サイトに接続できなかったため成分表で代用"
+        "protein_note": "日本食品標準成分表（八訂）増補2023年 11237「にわとり 焼き鳥缶詰」の可食部100gあたりたんぱく質 18.4g × 75g で換算。ホテイフーズの公式サイトに接続できなかったため成分表で代用",
+        "pack_url": "https://lohaco.yahoo.co.jp/store/h-lohaco/item/j095969/",
+        "pack_note": "不明：メーカー（ホテイフーズ）のサイトに接続できず、1缶で売られている一般的な店のページも見つけられなかった。LOHACO は3缶・5缶・10缶のセット（店がまとめたセット）。値は今のままとした"
       },
       "assign_note": "",
       "coeff_basis": null
@@ -620,13 +680,16 @@
       "protein_per_unit": 16.6,
       "pack_size": 1,
       "pack_label": "1袋",
+      "size_note": "1袋 90g の平たい袋",
       "desc": "植物性たんぱく。そのまま食べられる。",
       "source": {
         "item_basis": "maff-guide-general",
         "nutrition_basis": "一般的な蒸し大豆 100g",
         "checked": "2026-07",
         "protein_url": "https://fooddb.mext.go.jp/details/details.pl?ITEM_NO=4_04081_7",
-        "protein_note": "日本食品標準成分表（八訂）増補2023年 04081「蒸し大豆 黄大豆」の可食部100gあたりたんぱく質 16.6g × 100g で換算"
+        "protein_note": "日本食品標準成分表（八訂）増補2023年 04081「蒸し大豆 黄大豆」の可食部100gあたりたんぱく質 16.6g × 100g で換算",
+        "pack_url": "https://www.maruyanagi.co.jp/products/mushidaizu/",
+        "pack_note": "代表商品は特定の商品ではないため、例としてマルヤナギの「おいしい蒸し豆 蒸し大豆」を根拠にした。1袋が1つの商品（内容量90g、標準小売価格はオープン価格）。マスタの unit_gram（100g）とは内容量が違う"
       },
       "assign_note": "",
       "coeff_basis": null
@@ -649,11 +712,14 @@
       "water_per_unit": 0,
       "pack_size": 1,
       "pack_label": "1袋",
+      "size_note": "1袋（1人前）。レトルトの袋が箱に入っている",
       "desc": "温めずにおいしいタイプ。",
       "source": {
         "item_basis": "maff-guide-general",
         "nutrition_basis": "ハウス 温めずにおいしいカレー 200g",
-        "checked": "2026-07"
+        "checked": "2026-07",
+        "pack_url": "https://lohaco.yahoo.co.jp/store/h-lohaco/item/rj16686/",
+        "pack_note": "1個で売られている（LOHACO「ハウス食品 温めずにおいしいカレー まろやか野菜カレー 1個」）。2個・10個のセットもある"
       },
       "assign_note": "代表商品は常温可食を明示した製品とする",
       "coeff_basis": null
@@ -677,13 +743,16 @@
       "protein_per_unit": 15.12,
       "pack_size": 1,
       "pack_label": "1袋",
+      "size_note": "1袋（1人前）。レトルトの平たい袋",
       "desc": "要加熱。ご飯と組み合わせ。",
       "source": {
         "item_basis": "maff-guide-general",
         "nutrition_basis": "一般的なレトルト親子丼の具 180g",
         "checked": "2026-07",
         "protein_url": "https://fooddb.mext.go.jp/details/details.pl?ITEM_NO=18_18030_7",
-        "protein_note": "日本食品標準成分表（八訂）増補2023年 18030「親子丼の具」の可食部100gあたりたんぱく質 8.4g × 180g で換算。成分表の値は推計値"
+        "protein_note": "日本食品標準成分表（八訂）増補2023年 18030「親子丼の具」の可食部100gあたりたんぱく質 8.4g × 180g で換算。成分表の値は推計値",
+        "pack_url": "https://lohaco.yahoo.co.jp/store/h-lohaco/item/uh77988/",
+        "pack_note": "代表商品は特定の商品ではないため、例として LOHACO の「とろっと卵の親子丼の具 1個 アサヒグループ食品」を根拠にした。1個で売られている。この商品の内容量は確認できていない（マスタの unit_gram は180g）"
       },
       "assign_note": "",
       "coeff_basis": null
@@ -708,13 +777,16 @@
       "protein_per_unit": 20.1,
       "pack_size": 1,
       "pack_label": "1袋",
+      "size_note": "1袋（1人前）。レトルトの平たい袋",
       "desc": "子どもに人気の主菜。",
       "source": {
         "item_basis": "maff-guide-general",
         "nutrition_basis": "一般的なレトルトハンバーグ 150g",
         "checked": "2026-07",
         "protein_url": "https://fooddb.mext.go.jp/details/details.pl?ITEM_NO=18_18050_7",
-        "protein_note": "日本食品標準成分表（八訂）増補2023年 18050「合いびきハンバーグ」の可食部100gあたりたんぱく質 13.4g × 150g で換算。成分表の値は推計値。レトルト品に限った値ではない"
+        "protein_note": "日本食品標準成分表（八訂）増補2023年 18050「合いびきハンバーグ」の可食部100gあたりたんぱく質 13.4g × 150g で換算。成分表の値は推計値。レトルト品に限った値ではない",
+        "pack_url": "https://lohaco.yahoo.co.jp/store/h-lohaco/item/wuh5194/",
+        "pack_note": "代表商品は特定の商品ではないため、例として「丸美屋 レンジDELI ガーリック＆トマト煮込みハンバーグ 1袋（170g）」（LOHACO）を根拠にした。1袋で売られている。内容量は170gで、マスタの unit_gram（150g）とは違う"
       },
       "assign_note": "子育てテンプレ優先品",
       "coeff_basis": null
@@ -738,13 +810,16 @@
       "protein_per_unit": 4.94,
       "pack_size": 1,
       "pack_label": "1袋",
+      "size_note": "1袋（1人前）。レトルトの平たい袋",
       "desc": "乾麺(パスタ)と組み合わせ。",
       "source": {
         "item_basis": "maff-guide-general",
         "nutrition_basis": "一般的なミートソース 130g(1人前)",
         "checked": "2026-07",
         "protein_url": "https://fooddb.mext.go.jp/details/details.pl?ITEM_NO=17_17033_7",
-        "protein_note": "日本食品標準成分表（八訂）増補2023年 17033「ミートソース」の可食部100gあたりたんぱく質 3.8g × 130g で換算"
+        "protein_note": "日本食品標準成分表（八訂）増補2023年 17033「ミートソース」の可食部100gあたりたんぱく質 3.8g × 130g で換算",
+        "pack_url": "https://lohaco.yahoo.co.jp/store/h-lohaco/item/re24358/",
+        "pack_note": "代表商品は特定の商品ではないため、例として「マ・マー リッチセレクト お肉ごろごろのミートソース 1人前・140g 1個」（LOHACO）を根拠にした。1個で売られている。内容量は140gで、マスタの unit_gram（130g）とは違う"
       },
       "assign_note": "",
       "coeff_basis": null
@@ -769,13 +844,16 @@
       "protein_per_unit": 8.59,
       "pack_size": 6,
       "pack_label": "6枚入",
+      "size_note": "1枚 約16.5g、6枚で約99g。乾いた軽い四角い豆腐が袋に入っている",
       "desc": "常温長期保存できる植物性たんぱく。要調理。",
       "source": {
         "item_basis": "maff-guide-general",
         "nutrition_basis": "一般的な高野豆腐 1枚16.5g",
         "checked": "2026-07",
         "protein_url": "https://fooddb.mext.go.jp/details/details.pl?ITEM_NO=4_04042_7",
-        "protein_note": "日本食品標準成分表（八訂）増補2023年 04042「凍り豆腐 乾」の可食部100gあたりたんぱく質 50.5g × 17g で換算"
+        "protein_note": "日本食品標準成分表（八訂）増補2023年 04042「凍り豆腐 乾」の可食部100gあたりたんぱく質 50.5g × 17g で換算",
+        "pack_url": "https://www.asahimatsu.co.jp/products/kouya/kouya004-2.html",
+        "pack_note": "代表商品は特定の商品ではないため、例として旭松食品の「新あさひ豆腐 6個ポリ」を根拠にした（6枚入りの袋）。同じメーカーに5個入・10個入もある"
       },
       "assign_note": "",
       "coeff_basis": null
@@ -797,8 +875,9 @@
       "cal_per_unit": 76,
       "water_per_unit": 0,
       "protein_per_unit": 2.3,
-      "pack_size": 6,
-      "pack_label": "6缶パック",
+      "pack_size": 1,
+      "pack_label": "1缶",
+      "size_note": "1缶 190g。直径約5.3cm・高さ約10.4cm の細長い缶",
       "desc": "災害時に不足しがちなビタミン補給の柱。",
       "source": {
         "item_basis": "maff-guide-general",
@@ -807,7 +886,9 @@
         "protein_url": "https://www.itoen.jp/products/41247/",
         "protein_note": "メーカー公式の栄養成分表示（伊藤園 1日分の野菜 缶 190g、1本あたり）",
         "kcal_url": "https://www.itoen.jp/products/41247/",
-        "kcal_note": "メーカー公式の栄養成分表示（伊藤園 1日分の野菜 缶 190g、1本あたり）"
+        "kcal_note": "メーカー公式の栄養成分表示（伊藤園 1日分の野菜 缶 190g、1本あたり）",
+        "pack_url": "https://www.cainz.com/g/4901085662083.html",
+        "pack_note": "1缶で売られている（カインズ「1日分の野菜 190g 缶」、店舗販売あり。本体サイズ 幅5.3cm・高さ10.4cm）。旧値の6（6缶パック）は、1缶でも売られているため1に直した"
       },
       "assign_note": "水分寄与あり(water_per_unitはM-3で記録)",
       "coeff_basis": null
@@ -832,13 +913,16 @@
       "protein_per_unit": 2.12,
       "pack_size": 1,
       "pack_label": "1缶",
+      "size_note": "1缶 425g の大きめの缶（4号缶）",
       "desc": "果物の甘みで満足感も。",
       "source": {
         "item_basis": "maff-guide-general",
         "nutrition_basis": "一般的な黄桃缶詰 425g",
         "checked": "2026-07",
         "protein_url": "https://fooddb.mext.go.jp/details/details.pl?ITEM_NO=7_07175_7",
-        "protein_note": "日本食品標準成分表（八訂）増補2023年 07175「もも 缶詰 黄肉種 果肉」の可食部100gあたりたんぱく質 0.5g × 425g で換算。液汁を含む全量を果肉の値で換算した（液汁 07139 は100gあたり0.3g）"
+        "protein_note": "日本食品標準成分表（八訂）増補2023年 07175「もも 缶詰 黄肉種 果肉」の可食部100gあたりたんぱく質 0.5g × 425g で換算。液汁を含む全量を果肉の値で換算した（液汁 07139 は100gあたり0.3g）",
+        "pack_url": "https://sundrug-online.com/products/4562192364903",
+        "pack_note": "代表商品は特定の商品ではない。425g（4号缶）のフルーツ缶が1缶で売られている例として、サンドラッグの「三洋通商 白桃 4号缶 425g」を根拠にした（黄桃ではなく白桃）。黄桃425g の1缶売りのページは見つけられなかった（LOHACO のホテイ 黄桃 425g は2缶以上のセット）"
       },
       "assign_note": "",
       "coeff_basis": null
@@ -863,6 +947,7 @@
       "protein_per_unit": 0.5,
       "pack_size": 1,
       "pack_label": "1袋",
+      "size_note": "1袋 65g。チャック付きの小さな袋",
       "desc": "常温保存できる果物。",
       "source": {
         "item_basis": "maff-guide-general",
@@ -871,7 +956,9 @@
         "kcal_url": "https://www.kyoritsu-foods.co.jp/product/173/",
         "kcal_note": "メーカー公式の栄養成分表示（1袋65gあたり、推定値）",
         "protein_url": "https://www.kyoritsu-foods.co.jp/product/173/",
-        "protein_note": "メーカー公式の栄養成分表示（1袋65gあたり、推定値）"
+        "protein_note": "メーカー公式の栄養成分表示（1袋65gあたり、推定値）",
+        "pack_url": "https://www.kyoritsu-foods.co.jp/product/173/",
+        "pack_note": "メーカーの商品ページの規格が「65g」で、1袋が1つの商品。一般的な店で1袋売りされているページは見つけられなかった"
       },
       "assign_note": "",
       "coeff_basis": null
@@ -896,6 +983,7 @@
       "protein_per_unit": 3.264,
       "pack_size": 1,
       "pack_label": "1袋",
+      "size_note": "1袋 16g。チャック付きの小さな袋（水で戻すと大きく増える）",
       "desc": "汁物に入れるだけで野菜を補える。",
       "source": {
         "item_basis": "maff-guide-general",
@@ -904,7 +992,9 @@
         "kcal_url": "https://www.rikenvitamin.jp/products/fueruwakame/wakamechan/sanriku.html",
         "kcal_note": "メーカー公式の栄養成分表示は1g（みそ汁1杯分相当）あたり 2.13kcal・たんぱく質 0.204g。内容量16gを掛けて1袋あたりに換算（2.13×16＝34.08kcal、0.204×16＝3.264g）。乾燥野菜ミックスでは公式ページに表示のある大手の商品が見つからなかったため、品目名の「乾燥わかめ」から代表を決めた",
         "protein_url": "https://www.rikenvitamin.jp/products/fueruwakame/wakamechan/sanriku.html",
-        "protein_note": "メーカー公式の栄養成分表示は1g（みそ汁1杯分相当）あたり 2.13kcal・たんぱく質 0.204g。内容量16gを掛けて1袋あたりに換算（2.13×16＝34.08kcal、0.204×16＝3.264g）。乾燥野菜ミックスでは公式ページに表示のある大手の商品が見つからなかったため、品目名の「乾燥わかめ」から代表を決めた"
+        "protein_note": "メーカー公式の栄養成分表示は1g（みそ汁1杯分相当）あたり 2.13kcal・たんぱく質 0.204g。内容量16gを掛けて1袋あたりに換算（2.13×16＝34.08kcal、0.204×16＝3.264g）。乾燥野菜ミックスでは公式ページに表示のある大手の商品が見つからなかったため、品目名の「乾燥わかめ」から代表を決めた",
+        "pack_url": "https://lohaco.yahoo.co.jp/store/h-lohaco/item/j694224/",
+        "pack_note": "1袋で売られている（LOHACO「理研ビタミン ふえるわかめちゃん 三陸わかめ＜チャック付＞ 16g 1個」）。メーカーの商品ページ https://www.rikenvitamin.jp/products/fueruwakame/wakamechan/sanriku.html に16g袋の参考小売価格（税別438円）がある"
       },
       "assign_note": "",
       "coeff_basis": null
@@ -929,13 +1019,16 @@
       "protein_per_unit": 9.7,
       "pack_size": 1,
       "pack_label": "1袋",
+      "size_note": "乾物の小さな袋",
       "desc": "食物繊維・ミネラル源。要調理。",
       "source": {
         "item_basis": "maff-guide-general",
         "nutrition_basis": "一般的な切り干し大根 100g",
         "checked": "2026-07",
         "protein_url": "https://fooddb.mext.go.jp/details/details.pl?ITEM_NO=6_06136_7",
-        "protein_note": "日本食品標準成分表（八訂）増補2023年 06136「切干しだいこん 乾」の可食部100gあたりたんぱく質 9.7g × 100g で換算"
+        "protein_note": "日本食品標準成分表（八訂）増補2023年 06136「切干しだいこん 乾」の可食部100gあたりたんぱく質 9.7g × 100g で換算",
+        "pack_url": "https://lohaco.yahoo.co.jp/store/h-lohaco/item/xu99131/",
+        "pack_note": "代表商品は特定の商品ではないため、例として「みわび 有機切干大根 天日干し 60g 1袋」（LOHACO）を根拠にした。1袋で売られている。内容量は60gで、マスタの unit_gram（100g）とは違う。100g の切り干し大根の商品は見つけられなかった"
       },
       "assign_note": "",
       "coeff_basis": null
@@ -957,8 +1050,9 @@
       "cal_per_unit": 37,
       "water_per_unit": 0,
       "protein_per_unit": 2.4,
-      "pack_size": 10,
-      "pack_label": "10食入",
+      "pack_size": 1,
+      "pack_label": "1食",
+      "size_note": "1食 10g。お湯を注ぐだけの、小さな個包装のみそ汁",
       "desc": "温かい汁物は災害時の満足感に直結。",
       "source": {
         "item_basis": "maff-guide-general",
@@ -967,7 +1061,9 @@
         "kcal_url": "https://www.marukome.co.jp/product/detail/instant_159/",
         "kcal_note": "メーカー公式の栄養成分表示（1食10gあたり、表示値は目安）。アマノフーズの公式サイトは 403 で開けなかったため、接続できたマルコメのフリーズドライみそ汁から、具の定番であるとうふを代表にした",
         "protein_url": "https://www.marukome.co.jp/product/detail/instant_159/",
-        "protein_note": "メーカー公式の栄養成分表示（1食10gあたり、表示値は目安）。アマノフーズの公式サイトは 403 で開けなかったため、接続できたマルコメのフリーズドライみそ汁から、具の定番であるとうふを代表にした"
+        "protein_note": "メーカー公式の栄養成分表示（1食10gあたり、表示値は目安）。アマノフーズの公式サイトは 403 で開けなかったため、接続できたマルコメのフリーズドライみそ汁から、具の定番であるとうふを代表にした",
+        "pack_url": "https://www.marukome.co.jp/product/detail/instant_159/",
+        "pack_note": "メーカーの商品ページの内容量は10g（1食）で、1食が1つの商品。「1食（10g）×10」はメーカー通販のまとめ売り。LOHACO も4個・6個・10個のまとめ売りで、1食で売られている一般的な店のページは見つけられなかった。旧値の10（10食入）の商品は、メーカーの商品ページにはない"
       },
       "assign_note": "",
       "coeff_basis": null
@@ -990,13 +1086,16 @@
       "protein_per_unit": 1.38,
       "pack_size": 3,
       "pack_label": "3袋入",
+      "size_note": "1袋 約17g（カップ1杯分の粉末）。3袋が小さな箱に入っている",
       "desc": "子どもも飲みやすいスープ。",
       "source": {
         "item_basis": "tokyo-bichiku",
         "nutrition_basis": "ポッカサッポロ等粉末コーンスープ 1食",
         "checked": "2026-07",
         "protein_url": "https://fooddb.mext.go.jp/details/details.pl?ITEM_NO=18_18004_7",
-        "protein_note": "日本食品標準成分表（八訂）増補2023年 18004「コーンクリームスープ 粉末タイプ」の可食部100gあたりたんぱく質 8.1g × 17g で換算"
+        "protein_note": "日本食品標準成分表（八訂）増補2023年 18004「コーンクリームスープ 粉末タイプ」の可食部100gあたりたんぱく質 8.1g × 17g で換算",
+        "pack_url": "https://lohaco.yahoo.co.jp/store/h-lohaco/item/1727885/",
+        "pack_note": "代表商品は特定の商品ではないため、例として「クノール カップスープ コーンクリーム（3袋入） 1箱」（LOHACO）を根拠にした。3袋入りの箱で売られている"
       },
       "assign_note": "",
       "coeff_basis": null
@@ -1020,13 +1119,16 @@
       "protein_per_unit": 0.09,
       "pack_size": 10,
       "pack_label": "10個入",
+      "size_note": "1粒 約10g。個包装の梅干しが袋に入っている",
       "desc": "食欲増進・塩分補給。",
       "source": {
         "item_basis": "maff-guide-general",
         "nutrition_basis": "一般的な梅干し 1粒10g",
         "checked": "2026-07",
         "protein_url": "https://fooddb.mext.go.jp/details/details.pl?ITEM_NO=7_07022_7",
-        "protein_note": "日本食品標準成分表（八訂）増補2023年 07022「梅干し 塩漬」の可食部100gあたりたんぱく質 0.9g × 10g で換算"
+        "protein_note": "日本食品標準成分表（八訂）増補2023年 07022「梅干し 塩漬」の可食部100gあたりたんぱく質 0.9g × 10g で換算",
+        "pack_url": "https://lohaco.yahoo.co.jp/store/h-lohaco/item/xh64129/",
+        "pack_note": "不明：10個入りの梅干しの商品を見つけられなかった。個包装の梅干しは、LOHACO では「紀州調味梅個包装 40粒入 1個」などの大袋だった。値は今のままとした"
       },
       "assign_note": "",
       "coeff_basis": null
@@ -1050,6 +1152,7 @@
       "protein_per_unit": 0.585,
       "pack_size": 20,
       "pack_label": "20袋入",
+      "size_note": "1袋 2.5g（ごはん1杯分）の小袋。20袋が1つの袋に入っている",
       "desc": "主食の食べ飽き対策。",
       "source": {
         "item_basis": "maff-guide-general",
@@ -1058,7 +1161,9 @@
         "protein_url": "https://fooddb.mext.go.jp/details/details.pl?ITEM_NO=17_17127_7",
         "protein_note": "日本食品標準成分表（八訂）増補2023年 17127「ふりかけ たまご」の可食部100gあたり 428kcal・たんぱく質 23.4g（推計値）を、nutrition_basis の内容量 2.5g で換算（428×2.5/100＝10.7kcal、23.4×2.5/100＝0.585g）。代表商品に考えた丸美屋 のりたまミニパック（50g・20袋入＝1袋2.5g、https://www.marumiya.co.jp/product/series/furikake/mini/index.html ）は公式ページに栄養成分の表示がないため、成分表で換算した",
         "kcal_url": "https://fooddb.mext.go.jp/details/details.pl?ITEM_NO=17_17127_7",
-        "kcal_note": "日本食品標準成分表（八訂）増補2023年 17127「ふりかけ たまご」の可食部100gあたり 428kcal・たんぱく質 23.4g（推計値）を、nutrition_basis の内容量 2.5g で換算（428×2.5/100＝10.7kcal、23.4×2.5/100＝0.585g）。代表商品に考えた丸美屋 のりたまミニパック（50g・20袋入＝1袋2.5g、https://www.marumiya.co.jp/product/series/furikake/mini/index.html ）は公式ページに栄養成分の表示がないため、成分表で換算した"
+        "kcal_note": "日本食品標準成分表（八訂）増補2023年 17127「ふりかけ たまご」の可食部100gあたり 428kcal・たんぱく質 23.4g（推計値）を、nutrition_basis の内容量 2.5g で換算（428×2.5/100＝10.7kcal、23.4×2.5/100＝0.585g）。代表商品に考えた丸美屋 のりたまミニパック（50g・20袋入＝1袋2.5g、https://www.marumiya.co.jp/product/series/furikake/mini/index.html ）は公式ページに栄養成分の表示がないため、成分表で換算した",
+        "pack_url": "https://sundrug-online.com/products/4902388034195",
+        "pack_note": "代表商品に考えた丸美屋 のりたまミニパック（50g・20袋入）は、メーカーのページ（https://www.marumiya.co.jp/product/series/furikake/mini/index.html ）で内容量を確認できなかった。同じ形の商品として、サンドラッグの「永谷園 おとなのふりかけミニその1 20袋」を根拠にした。小袋のふりかけは20袋入りの袋で売られている"
       },
       "assign_note": "",
       "coeff_basis": null
@@ -1080,11 +1185,14 @@
       "water_per_unit": 0,
       "pack_size": 1,
       "pack_label": "1缶",
+      "size_note": "1缶 約200g。スープ缶",
       "desc": "常温のまま食べられる野菜スープ。",
       "source": {
         "item_basis": "maff-guide-general",
         "nutrition_basis": "一般的な具入り野菜スープ缶 200g",
-        "checked": "2026-07"
+        "checked": "2026-07",
+        "pack_url": "https://lohaco.yahoo.co.jp/store/h-lohaco/item/1866234/",
+        "pack_note": "不明：具入りの野菜スープ缶（200g）で、1缶で売られている例を見つけられなかった。LOHACO のキャンベル ミネストローネは3缶・6缶・12缶のセット（店がまとめたセット）。値は今のままとした"
       },
       "assign_note": "",
       "coeff_basis": null
@@ -1110,13 +1218,16 @@
       "protein_per_unit": 2.28,
       "pack_size": 5,
       "pack_label": "1箱(小袋5袋)",
+      "size_note": "小袋が5袋入った箱",
       "desc": "高カロリーのエネルギー補給。",
       "source": {
         "item_basis": "maff-guide-general",
         "nutrition_basis": "一般的なビスケット小袋 40g",
         "checked": "2026-07",
         "protein_url": "https://fooddb.mext.go.jp/details/details.pl?ITEM_NO=15_15098_7",
-        "protein_note": "日本食品標準成分表（八訂）増補2023年 15098「ソフトビスケット」の可食部100gあたりたんぱく質 5.7g × 40g で換算。kcal（200kcal/40g）がハードビスケット（15097、422kcal/100g）よりソフトビスケット（512kcal/100g）に近いため、ソフトビスケットを採用"
+        "protein_note": "日本食品標準成分表（八訂）増補2023年 15098「ソフトビスケット」の可食部100gあたりたんぱく質 5.7g × 40g で換算。kcal（200kcal/40g）がハードビスケット（15097、422kcal/100g）よりソフトビスケット（512kcal/100g）に近いため、ソフトビスケットを採用",
+        "pack_url": "https://lohaco.yahoo.co.jp/store/h-lohaco/item/wph7157/",
+        "pack_note": "代表商品は特定の商品ではないため、例として「全粒粉入り たべっ子どうぶつ 20g×5袋入 1個」（LOHACO）を根拠にした。5袋入りで売られている。ただし1袋20gで、マスタの1単位（40g）とは違う"
       },
       "assign_note": "consume_unit=小袋(個包装)単位で設計",
       "coeff_basis": null
@@ -1142,20 +1253,23 @@
       "protein_per_unit": 3.45,
       "pack_size": 1,
       "pack_label": "1枚",
+      "size_note": "1枚 50g の板チョコ",
       "desc": "夏季は溶けやすい点に注意。",
       "source": {
         "item_basis": "maff-guide-general",
         "nutrition_basis": "明治ミルクチョコレート 50g",
         "checked": "2026-07",
         "protein_url": "https://fooddb.mext.go.jp/details/details.pl?ITEM_NO=15_15116_7",
-        "protein_note": "日本食品標準成分表（八訂）増補2023年 15116「ミルクチョコレート」の可食部100gあたりたんぱく質 6.9g × 50g で換算。明治の公式サイトに接続できなかったため成分表で代用"
+        "protein_note": "日本食品標準成分表（八訂）増補2023年 15116「ミルクチョコレート」の可食部100gあたりたんぱく質 6.9g × 50g で換算。明治の公式サイトに接続できなかったため成分表で代用",
+        "pack_url": "https://www.meiji.co.jp/products/chocolate/04777.html",
+        "pack_note": "不明：メーカー（明治）の公式商品ページ（検索結果で「明治ミルクチョコレート 50g」の商品ページと確認）に接続できず、内容を開いて確認できなかった。1枚で売られている一般的な店のページも見つけられなかった（LOHACO は50g×20個の直送品だけ）。値は今のままとした"
       },
       "assign_note": "",
       "coeff_basis": null
     },
     {
       "id": "K003",
-      "name": "保存用ようかん",
+      "name": "ようかん",
       "category": "snack",
       "meal_role": "snack",
       "tags": [
@@ -1170,19 +1284,21 @@
       "units_per_serving": 1,
       "daily_coeff": null,
       "variant_group": null,
-      "unit_gram": 60,
-      "cal_per_unit": 171,
+      "unit_gram": 58,
+      "cal_per_unit": 161,
       "water_per_unit": 0,
-      "protein_per_unit": 2.16,
-      "pack_size": 5,
-      "pack_label": "1箱(5本入)",
-      "desc": "5年保存級。やわらかく高齢者にも食べやすい。",
+      "pack_size": 1,
+      "pack_label": "1本",
+      "size_note": "1本 58g。手で持てる細長い個包装のようかん",
+      "desc": "1本ずつ包装された小さなようかん。やわらかく高齢者にも食べやすい。",
       "source": {
         "item_basis": "maff-guide-general",
-        "nutrition_basis": "井村屋 えいようかん 60g",
+        "nutrition_basis": "井村屋 58gミニようかん 煉 58g",
         "checked": "2026-07",
-        "protein_url": "https://fooddb.mext.go.jp/details/details.pl?ITEM_NO=15_15038_7",
-        "protein_note": "日本食品標準成分表（八訂）増補2023年 15038「練りようかん」の可食部100gあたりたんぱく質 3.6g × 60g で換算。成分表の値は推計値。井村屋の公式商品ページにたんぱく質の表示がないため成分表で代用"
+        "kcal_url": "https://www.imuraya.co.jp/goods/yokan/c-nogt/58yokann/",
+        "kcal_note": "メーカー公式の商品ページの表示（161kcal／1本（58g）あたり）。たんぱく質は公式ページにも、ほかの公式の資料にも表示が見つからなかったため、protein_per_unit は入れていない（不明）。代表商品は、2026-10-22 のオーナー決定（統括から伝達）により、えいようかん（60g×5本の箱）からこの商品に替えた",
+        "pack_url": "https://lohaco.yahoo.co.jp/store/h-lohaco/item/u951081/",
+        "pack_note": "1本で売られている（LOHACO「井村屋 ミニようかん 煉 58g 1本」）。10本・30本のまとめ売りや、メーカーの「4本入ミニようかん」もある"
       },
       "assign_note": "",
       "coeff_basis": null
@@ -1208,13 +1324,16 @@
       "protein_per_unit": 0.0,
       "pack_size": 1,
       "pack_label": "1袋",
+      "size_note": "1袋 100g。個包装の飴が入った袋",
       "desc": "口さみしさ・喉の乾燥対策。",
       "source": {
         "item_basis": "maff-guide-general",
         "nutrition_basis": "一般的なキャンディ 100g袋",
         "checked": "2026-07",
         "protein_url": "https://fooddb.mext.go.jp/details/details.pl?ITEM_NO=15_15110_7",
-        "protein_note": "日本食品標準成分表（八訂）増補2023年 15110「ドロップ」の可食部100gあたりたんぱく質 0g × 100g で換算"
+        "protein_note": "日本食品標準成分表（八訂）増補2023年 15110「ドロップ」の可食部100gあたりたんぱく質 0g × 100g で換算",
+        "pack_url": "https://sundrug-online.com/products/4952106213784",
+        "pack_note": "代表商品は特定の商品ではないため、同じ内容量の例として「森川健康堂 プロポリスキャンディー 100g」（サンドラッグ）を根拠にした。1袋で売られている"
       },
       "assign_note": "乳幼児は誤嚥リスクのためbaby-ng",
       "coeff_basis": null
@@ -1238,8 +1357,9 @@
       "cal_per_unit": 164,
       "water_per_unit": 0,
       "protein_per_unit": 4.5,
-      "pack_size": 1,
-      "pack_label": "1袋(小分け)",
+      "pack_size": 6,
+      "pack_label": "1袋(小袋6袋)",
+      "size_note": "1袋 25g の小袋が6袋入った袋（150g）",
       "desc": "高カロリー・良質脂質。",
       "source": {
         "item_basis": "maff-guide-general",
@@ -1248,7 +1368,9 @@
         "kcal_url": "https://www.kyoritsu-foods.co.jp/product/1573/",
         "kcal_note": "メーカー公式の栄養成分表示（1袋25gあたり）",
         "protein_url": "https://www.kyoritsu-foods.co.jp/product/1573/",
-        "protein_note": "メーカー公式の栄養成分表示（1袋25gあたり）"
+        "protein_note": "メーカー公式の栄養成分表示（1袋25gあたり）",
+        "pack_url": "https://www.kyoritsu-foods.co.jp/product/1573/",
+        "pack_note": "代表商品の「素焼きミックスナッツ 6パック」は、メーカーの商品ページの規格が「150g(25g×6袋入）」で、6袋入りでしか売られていない。旧値の1は、小袋1袋を単位にしていたため直した（PR 本文の「オーナーの判断が要る品目」を参照）"
       },
       "assign_note": "乳幼児は誤嚥リスク(消費者庁注意喚起)のためbaby-ng",
       "coeff_basis": null
@@ -1272,15 +1394,18 @@
       "cal_per_unit": 60,
       "water_per_unit": 0,
       "protein_per_unit": 0.38,
-      "pack_size": 4,
-      "pack_label": "4連パック",
+      "pack_size": 3,
+      "pack_label": "1袋(15g×3袋)",
+      "size_note": "1袋 15g の小袋が3袋つながったもの。赤ちゃん用の小さなおやつ",
       "desc": "乳幼児も食べられる菓子。",
       "source": {
         "item_basis": "maff-guide-hairyo",
         "nutrition_basis": "一般的なたまごボーロ 15g",
         "checked": "2026-07",
         "protein_url": "https://fooddb.mext.go.jp/details/details.pl?ITEM_NO=15_15061_7",
-        "protein_note": "日本食品標準成分表（八訂）増補2023年 15061「ボーロ 小粒」の可食部100gあたりたんぱく質 2.5g × 15g で換算。成分表の値は推計値"
+        "protein_note": "日本食品標準成分表（八訂）増補2023年 15061「ボーロ 小粒」の可食部100gあたりたんぱく質 2.5g × 15g で換算。成分表の値は推計値",
+        "pack_url": "https://sundrug-online.com/products/4987244183491",
+        "pack_note": "代表商品は特定の商品ではないため、同じ1袋15gの例として「赤ちゃんのおやつ たまごボーロ 15G×3袋」（サンドラッグ、アサヒグループ食品 和光堂）を根拠にした。3袋つながりで売られている。旧値の4（4連パック）の根拠は見つからなかった"
       },
       "assign_note": "",
       "coeff_basis": null
@@ -1303,13 +1428,16 @@
       "unit_gram": 20,
       "cal_per_unit": 100,
       "water_per_unit": 0,
-      "pack_size": 4,
-      "pack_label": "1箱(4本)",
+      "pack_size": 2,
+      "pack_label": "1箱(2本)",
+      "size_note": "1本 20g の細長いブロック。2本入りの小さな箱",
       "desc": "ビタミン・ミネラル入りのエネルギー補給。",
       "source": {
         "item_basis": "maff-guide-general",
         "nutrition_basis": "大塚製薬 カロリーメイト 1本20g",
-        "checked": "2026-07"
+        "checked": "2026-07",
+        "pack_url": "https://www.otsuka.co.jp/cmt/product/block/",
+        "pack_note": "メーカーの製品一覧に、ブロックタイプの「４本入り」と「２本入り」がある。最小は2本入り（LOHACO にも「カロリーメイトブロック チーズ味2本入」などがある）。旧値の4は4本入りの箱"
       },
       "assign_note": "間食枠(snackロール)として配分に参加",
       "coeff_basis": null
@@ -1334,11 +1462,14 @@
       "water_per_unit": 0,
       "pack_size": 1,
       "pack_label": "1個",
+      "size_note": "1個 180g。飲み口の付いたパウチのゼリー",
       "desc": "食欲がない時でも摂りやすい。",
       "source": {
         "item_basis": "maff-guide-general",
         "nutrition_basis": "森永 inゼリー エネルギー 180g",
-        "checked": "2026-07"
+        "checked": "2026-07",
+        "pack_url": "https://sundrug-online.com/products/4902888711114",
+        "pack_note": "1個で売られている（サンドラッグ「森永 inゼリー エネルギー マスカット味 180g」）"
       },
       "assign_note": "水分寄与あり(M-3で記録)",
       "coeff_basis": null
@@ -1363,6 +1494,7 @@
       "protein_per_unit": 0.41,
       "pack_size": 30,
       "pack_label": "1袋(30日分)",
+      "size_note": "1袋で30日分（1日4粒）。1粒は長さ約9mm",
       "desc": "野菜不足が続く場合のビタミン・ミネラル補完。",
       "source": {
         "item_basis": "maff-guide-hairyo",
@@ -1371,7 +1503,9 @@
         "kcal_url": "https://www.dhc.co.jp/goods/70086.html",
         "kcal_note": "メーカー公式の栄養成分表示（4粒1,648mgあたり＝1日摂取目安量）",
         "protein_url": "https://www.dhc.co.jp/goods/70086.html",
-        "protein_note": "メーカー公式の栄養成分表示（4粒1,648mgあたり＝1日摂取目安量）"
+        "protein_note": "メーカー公式の栄養成分表示（4粒1,648mgあたり＝1日摂取目安量）",
+        "pack_url": "https://www.dhc.co.jp/goods/70086.html",
+        "pack_note": "代表商品は「パーフェクト サプリ マルチビタミン&ミネラル 30日分」（メーカーの通販・直営店で1袋で売られている）。1単位は1日分なので、1袋＝30。同じシリーズの「20日分 80粒」の商品もドラッグストアで売られている（サンドラッグ https://sundrug-online.com/products/4511413407936 ）"
       },
       "assign_note": "daily_coeff=1.0(1人1日1回分)仮。研究資料(災害時ビタミン栄養)が裏付け",
       "coeff_basis": "all"
@@ -1395,11 +1529,14 @@
       "water_per_unit": 0,
       "pack_size": 1,
       "pack_label": "1本",
+      "size_note": "1本 500ml。自動販売機で売っている飲み物と同じ大きさのペットボトル",
       "desc": "脱水時の水分・電解質補給。",
       "source": {
         "item_basis": "maff-guide-hairyo",
         "nutrition_basis": "大塚製薬工場 OS-1 500ml",
-        "checked": "2026-07"
+        "checked": "2026-07",
+        "pack_url": "https://netshop.create-sd.co.jp/shop/g/g4987035576419/",
+        "pack_note": "1本で売られている（ドラッグストアのクリエイトSD「オーエスワン 500ml」）。メーカーのサイトは調査時にメンテナンス中で開けなかった"
       },
       "assign_note": "daily_coeff=0.3(約2本/人/週)仮。L-1で東京備蓄ナビと突合",
       "coeff_basis": "all"
@@ -1423,13 +1560,16 @@
       "protein_per_unit": 3.6,
       "pack_size": 1,
       "pack_label": "1本",
+      "size_note": "1本 240ml の缶",
       "desc": "調乳不要でそのまま飲める。災害時の乳児栄養の第一選択。",
       "source": {
         "item_basis": "maff-guide-hairyo",
         "nutrition_basis": "明治 ほほえみ らくらくミルク 240ml",
         "checked": "2026-07",
         "protein_url": "https://fooddb.mext.go.jp/details/details.pl?ITEM_NO=13_13059_7",
-        "protein_note": "日本食品標準成分表（八訂）増補2023年 13059「乳児用液体ミルク」の可食部100gあたりたんぱく質 1.5g × 240g で換算。明治の公式サイトに接続できなかったため成分表で代用。240mlを240gとして換算（unit_gram）"
+        "protein_note": "日本食品標準成分表（八訂）増補2023年 13059「乳児用液体ミルク」の可食部100gあたりたんぱく質 1.5g × 240g で換算。明治の公式サイトに接続できなかったため成分表で代用。240mlを240gとして換算（unit_gram）",
+        "pack_url": "https://sundrug-online.com/products/4902705130678",
+        "pack_note": "1本で売られている（サンドラッグ「明治 ほほえみ らくらくミルク 240ml」）"
       },
       "assign_note": "coeff_basis=children: 子供0人なら自動的に0本。将来「乳幼児数」入力実装時にbasisをinfantsへ置換。daily_coeff=3.0本/乳児/日 仮。該当人数は現状(A+C)で代用→将来乳幼児数入力で置換",
       "coeff_basis": "children"
@@ -1453,13 +1593,16 @@
       "protein_per_unit": 99.2,
       "pack_size": 1,
       "pack_label": "1缶(約20日分)",
+      "size_note": "1缶 780g の大きな缶",
       "desc": "要湯。液体ミルクと併用備蓄を推奨。",
       "source": {
         "item_basis": "maff-guide-hairyo",
         "nutrition_basis": "明治 ほほえみ 800g缶",
         "checked": "2026-07",
         "protein_url": "https://fooddb.mext.go.jp/details/details.pl?ITEM_NO=13_13011_7",
-        "protein_note": "日本食品標準成分表（八訂）増補2023年 13011「乳児用調製粉乳」の可食部100gあたりたんぱく質 12.4g × 800g で換算。明治の公式サイトに接続できなかったため成分表で代用"
+        "protein_note": "日本食品標準成分表（八訂）増補2023年 13011「乳児用調製粉乳」の可食部100gあたりたんぱく質 12.4g × 800g で換算。明治の公式サイトに接続できなかったため成分表で代用",
+        "pack_url": "https://sundrug-online.com/products/4902705129559",
+        "pack_note": "1缶で売られている（サンドラッグ「明治 ほほえみ 780g」）。現在の商品の内容量は780gで、マスタの unit_gram（800g）とは違う。2缶パックもある"
       },
       "assign_note": "daily_coeff=0.05(1缶≒20日分)仮",
       "coeff_basis": "children"
@@ -1483,6 +1626,7 @@
       "protein_per_unit": 1.7,
       "pack_size": 1,
       "pack_label": "1袋",
+      "size_note": "1袋 80g の小さなレトルトの袋",
       "desc": "月齢に合ったものを選ぶこと(desc注記方式)。",
       "source": {
         "item_basis": "maff-guide-hairyo",
@@ -1491,7 +1635,9 @@
         "kcal_url": "https://www.kewpie.co.jp/babyfood/products/detail.php?code=4901577091537",
         "kcal_note": "メーカー公式の栄養成分表示（1袋80gあたり）。キユーピーのベビーフードのうち内容量80gのパウチ品（やさいとなかよし 3品）から、kcal が最も大きいミートソースを代表にした",
         "protein_url": "https://www.kewpie.co.jp/babyfood/products/detail.php?code=4901577091537",
-        "protein_note": "メーカー公式の栄養成分表示（1袋80gあたり）。キユーピーのベビーフードのうち内容量80gのパウチ品（やさいとなかよし 3品）から、kcal が最も大きいミートソースを代表にした"
+        "protein_note": "メーカー公式の栄養成分表示（1袋80gあたり）。キユーピーのベビーフードのうち内容量80gのパウチ品（やさいとなかよし 3品）から、kcal が最も大きいミートソースを代表にした",
+        "pack_url": "https://www.kewpie.co.jp/babyfood/products/detail.php?code=4901577091537",
+        "pack_note": "メーカーの商品ページに、1袋（80g）の参考小売価格（税込227円）がある。1袋で売られる商品と判断した"
       },
       "assign_note": "月齢区分は品目分割せずdesc注記で対応(確定)。daily_coeff=2.0食/乳児/日 仮",
       "coeff_basis": "children"
@@ -1515,13 +1661,16 @@
       "protein_per_unit": 6.3,
       "pack_size": 1,
       "pack_label": "1袋",
+      "size_note": "1袋 100g（お湯を入れると260gのごはんになる）。立てて置ける袋で、袋のままお湯を注いで食べる",
       "desc": "特定原材料不使用のアルファ米・レトルト等。該当者は最低2週間分推奨。",
       "source": {
         "item_basis": "maff-guide-hairyo",
         "nutrition_basis": "尾西食品 白飯(28品目不使用) 100g",
         "checked": "2026-07",
         "protein_url": "https://www.onisifoods.co.jp/products/hakuhan.html",
-        "protein_note": "メーカー公式の栄養成分表示（100g尾西の白飯（特定原材料等29品目不使用）、1食100gあたり）"
+        "protein_note": "メーカー公式の栄養成分表示（100g尾西の白飯（特定原材料等29品目不使用）、1食100gあたり）",
+        "pack_url": "https://lohaco.yahoo.co.jp/store/h-lohaco/item/waw3313/",
+        "pack_note": "代表商品は S001 と同じ尾西の白飯（特定原材料等を使っていない）。1袋（1食）で売られている（LOHACO「尾西食品 アルファ米 白飯1袋入り 101SE 1食」）"
       },
       "assign_note": "抽象品目。M-3では特定原材料28品目不使用のアルファ米を代表商品とする",
       "coeff_basis": "all"
@@ -1546,6 +1695,7 @@
       "protein_per_unit": 1.8,
       "pack_size": 1,
       "pack_label": "1袋",
+      "size_note": "1袋 100g の小さなレトルトの袋",
       "desc": "UDF区分(舌でつぶせる等)は購入時に本人に合わせて選択。",
       "source": {
         "item_basis": "maff-guide-hairyo",
@@ -1554,7 +1704,9 @@
         "kcal_url": "https://www.kewpie.co.jp/udfood/product/udf03/udf03/4901577033285/",
         "kcal_note": "メーカー公式の栄養成分表示（1袋100gあたり）。区分3「舌でつぶせる」の100g品（鯛雑炊・かに雑炊・鮭雑炊・鶏雑炊）のうち、一覧の最初に載っている鯛雑炊を代表にした",
         "protein_url": "https://www.kewpie.co.jp/udfood/product/udf03/udf03/4901577033285/",
-        "protein_note": "メーカー公式の栄養成分表示（1袋100gあたり）。区分3「舌でつぶせる」の100g品（鯛雑炊・かに雑炊・鮭雑炊・鶏雑炊）のうち、一覧の最初に載っている鯛雑炊を代表にした"
+        "protein_note": "メーカー公式の栄養成分表示（1袋100gあたり）。区分3「舌でつぶせる」の100g品（鯛雑炊・かに雑炊・鮭雑炊・鶏雑炊）のうち、一覧の最初に載っている鯛雑炊を代表にした",
+        "pack_url": "https://sundrug-online.com/products/4901577033285",
+        "pack_note": "1袋で売られている（サンドラッグ「キユーピー やさしい献立 鯛雑炊 【舌でつぶせる】 100g」）"
       },
       "assign_note": "coeff_basis=adults: 将来「高齢者数」入力実装時にbasisをelderlyへ置換。v1では補助的位置づけ(coeff=1.0/該当者/日 仮)。食事全置換モデルは将来課題",
       "coeff_basis": "adults"
@@ -1576,8 +1728,9 @@
       "cal_per_unit": 5,
       "water_per_unit": 0,
       "protein_per_unit": 0.008,
-      "pack_size": 30,
-      "pack_label": "1袋(30本入)",
+      "pack_size": 10,
+      "pack_label": "1袋(1.5g×10本入)",
+      "size_note": "1本 1.5g の細いスティック。10本入りの袋",
       "desc": "嚥下が心配な方の飲料・汁物用。",
       "source": {
         "item_basis": "maff-guide-hairyo",
@@ -1586,7 +1739,9 @@
         "kcal_url": "https://www.kewpie.co.jp/udfood/product/toromi/toromi/4901577063046",
         "kcal_note": "メーカー公式の栄養成分表示（1本1.5gあたり）。1.5g×50本入の商品ページ",
         "protein_url": "https://www.kewpie.co.jp/udfood/product/toromi/toromi/4901577063046",
-        "protein_note": "メーカー公式の栄養成分表示（1本1.5gあたり）。1.5g×50本入の商品ページ"
+        "protein_note": "メーカー公式の栄養成分表示（1本1.5gあたり）。1.5g×50本入の商品ページ",
+        "pack_url": "https://lohaco.yahoo.co.jp/store/h-lohaco/item/wka2677/",
+        "pack_note": "最小は10本入り（LOHACO「キユーピー やさしい献立 とろみファイン 1袋（1.5g×10包入）」）。メーカーの商品ページ https://www.kewpie.co.jp/udfood/product/toromi/toromi/4901577063046 の商品バリエーションにも「1.5g×10本」と「1.5g×50本」がある。旧値の30（30本入）の商品は見つからなかった"
       },
       "assign_note": "daily_coeff=1.0包/該当者/日 仮",
       "coeff_basis": "adults"
