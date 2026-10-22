@@ -1,0 +1,51 @@
+{
+  "_note": "東京備蓄ナビの計算の設定値。comparison/tokyo_navi.py が読む。値はすべて docs/tokyo_bichiku_navi.md（3.1〜3.4）の記録の転記で、推測で足したものはない。食品と水だけを載せ、日用品は省く。",
+  "source": {
+    "repository": "https://github.com/Tokyo-Metro-Gov/bichiku-navi",
+    "commit": "12f4f50",
+    "files": ["stockpile.config.js", "src/pages/tool/result.vue", "src/components/ToolStep02.vue"],
+    "site": "https://www.bichiku.metro.tokyo.lg.jp/tool/",
+    "accessed": "2026-10-22",
+    "record": "docs/tokyo_bichiku_navi.md"
+  },
+  "days_by_dwelling": {
+    "_note": "stockpile.config.js の downStairsRate = 3（戸建て）と upStairsRate = 7（マンションなど集合住宅）。結果ページで「3日分」「7日分」と表示される（docs 3.1）",
+    "detached": 3,
+    "apartment": 7
+  },
+  "age_groups": {
+    "_note": "household のキー → 東京の年代区分。高齢者（aged）と中学生以上（child2）はソルバーの入力にないので対応させない",
+    "adults": "adult",
+    "children": "child1",
+    "infants": "infant"
+  },
+  "fixed_quantity": {
+    "_note": "A2 の品目の固定値（docs 3.3）。世帯の人数が max_members_small 以下なら small、それより多ければ large",
+    "max_members_small": 5,
+    "detached": {"small": 3, "large": 6},
+    "apartment": {"small": 7, "large": 14}
+  },
+  "a1_apartment_multiplier": 2,
+  "items": [
+    {"id": "1",  "name": "水", "unit": "L", "calc": "basic", "required": {"infant": 2.4, "child1": 2.4, "child2": 3, "adult": 3, "aged": 3}},
+    {"id": "2",  "name": "レトルトご飯", "unit": "食", "calc": "basic", "required": {"infant": 0, "child1": 2.4, "child2": 3, "adult": 3, "aged": 3}},
+    {"id": "3",  "name": "レトルト食品", "unit": "個", "calc": "basic", "required": {"infant": 0, "child1": 0.8, "child2": 1, "adult": 1, "aged": 1}},
+    {"id": "4",  "name": "缶詰（さばの味噌煮、野菜など）", "unit": "缶", "calc": "basic", "required": {"infant": 0, "child1": 0.8, "child2": 1, "adult": 1, "aged": 1}},
+    {"id": "5",  "name": "栄養補助食品", "unit": "箱", "calc": "basic", "required": {"infant": 0, "child1": 0.8, "child2": 1, "adult": 1, "aged": 1}},
+    {"id": "6",  "name": "野菜ジュース", "unit": "本", "calc": "basic", "required": {"infant": 0, "child1": 0.8, "child2": 1, "adult": 1, "aged": 1}},
+    {"id": "7",  "name": "チーズ・プロテインバー等", "unit": "パック", "calc": "A1", "required": {"infant": 0, "child1": 1, "child2": 1, "adult": 1, "aged": 1}},
+    {"id": "8",  "name": "健康飲料粉末", "unit": "袋", "calc": "basic", "required": {"infant": 0, "child1": 0.8, "child2": 1, "adult": 1, "aged": 1}},
+    {"id": "9",  "name": "調味料セット", "unit": "適宜", "calc": "D2"},
+    {"id": "10", "name": "乾麺 即席麺", "unit": "パック", "calc": "A2"},
+    {"id": "11", "name": "無洗米", "unit": "kg", "calc": "basic", "required": {"infant": 0, "child1": 0.3, "child2": 0.375, "adult": 0.375, "aged": 0.375}},
+    {"id": "12", "name": "飲み物", "unit": "本", "calc": "basic", "required": {"infant": 0, "child1": 0.8, "child2": 1, "adult": 1, "aged": 1}},
+    {"id": "13", "name": "お菓子", "unit": "パック", "calc": "A2"},
+    {"id": "14", "name": "果物の缶詰", "unit": "缶", "calc": "A2"},
+    {"id": "55", "name": "フリーズドライ食品", "unit": "適量", "calc": "D2"},
+    {"id": "56", "name": "乾物", "unit": "適量", "calc": "D2"},
+    {"id": "45", "name": "粉ミルク スティックタイプ", "unit": "食", "calc": "basic", "required": {"infant": 6, "child1": 0, "child2": 0, "adult": 0, "aged": 0}},
+    {"id": "46", "name": "液体ミルク", "unit": "食", "calc": "basic", "required": {"infant": 6, "child1": 0, "child2": 0, "adult": 0, "aged": 0}},
+    {"id": "47", "name": "アレルギー対応離乳食", "unit": "食", "calc": "basic", "required": {"infant": 3, "child1": 0, "child2": 0, "adult": 0, "aged": 0}},
+    {"id": "51", "name": "おかゆ（高齢者用品）", "unit": "食", "calc": "basic", "required": {"infant": 0, "child1": 0, "child2": 0, "adult": 0, "aged": 3}}
+  ]
+}
