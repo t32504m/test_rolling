@@ -107,16 +107,20 @@ def check_plan(plan, household, template_id, master, config, exclude_tags=(), ex
     results.append(("エネルギーが過剰でない", total_kcal <= upper + FLOAT_TOLERANCE,
                     f"{total_kcal:.0f} / 上限 {upper:.0f} kcal"))
 
-    # たんぱく質：マスタに値が入るまでは判定しない（None を返す）
+    # たんぱく質：値のない品目は 0g とみなす（オーナー承認 2026-10-22）。
+    # 「目標以上」の判定なので、実際の値（0g 以上）で計算しても必ず合格する、安全側の扱いになる。
+    # 品目マスタにたんぱく質の値が1件もない場合だけ判定しない（None を返す）
     protein_cfg = config["protein"]
-    if all("protein_per_unit" in master[i] for i in food_ids) and food_ids:
+    if any("protein_per_unit" in item for item in master.values()) and food_ids:
         eff_people_p = adults + protein_cfg["child_factor"] * children
         target_p = protein_cfg["adult_g_per_day"] * eff_people_p * days
-        total_p = sum(master[i]["protein_per_unit"] * chosen[i] for i in food_ids)
+        total_p = sum((master[i].get("protein_per_unit") or 0) * chosen[i] for i in food_ids)
+        unknown = [i for i in food_ids if master[i].get("protein_per_unit") is None]
+        note = f"（値のない {len(unknown)} 品目は 0g として計算）" if unknown else ""
         results.append(("たんぱく質が目標以上", total_p + FLOAT_TOLERANCE >= target_p,
-                        f"{total_p:.0f} / 目標 {target_p:.0f} g"))
+                        f"{total_p:.0f} / 目標 {target_p:.0f} g{note}"))
     else:
-        results.append(("たんぱく質が目標以上", None, "品目マスタに protein_per_unit が未入力"))
+        results.append(("たんぱく質が目標以上", None, "品目マスタに protein_per_unit が1件もない"))
 
     # 水：必要量以上で、最大の水の1単位分を超えて過剰でない
     need_ml = config["water"]["ml_per_person_per_day"] * people * days
