@@ -11,6 +11,8 @@ from pathlib import Path
 
 import pulp
 
+from .explanations import explain_plan
+
 ROOT = Path(__file__).resolve().parent.parent
 TOLERANCE = 1e-6  # Numerical solver tolerance, not a nutrition threshold.
 
@@ -34,9 +36,12 @@ def _household(household):
             raise ValueError(f"{key} must be a nonnegative integer")
         values.append(value)
     adults, children, days = values
+    infants = household.get("infants", 0)
+    if isinstance(infants, bool) or not isinstance(infants, int) or infants < 0:
+        raise ValueError("infants must be a nonnegative integer")
     if days == 0 or adults + children == 0:
         raise ValueError("days and the total number of people must be positive")
-    return adults, children, days
+    return adults, children, infants, days
 
 
 def _pool(master, template_id, exclude_tags, exclude_ids):
@@ -67,7 +72,7 @@ def _water(pool, required_ml):
     for item_id, (item, weight) in pool.items():
         if item["meal_role"] == "drink" and item["water_per_unit"] > 0:
             unit = item["water_per_unit"]
-            count = math.ceil(required_ml / unit)
+            count = math.ceil((required_ml - TOLERANCE) / unit)
             choices.append((count * unit - required_ml, -weight, count, item_id))
     if not choices:
         raise InfeasiblePlanError("no drinking water remains after exclusions")
@@ -99,12 +104,15 @@ def solve(household, template_id=None, exclude_tags=None, exclude_ids=None):
     Missing protein values contribute zero to a conservative protein lower
     bound. Only a master without any protein values disables that constraint.
     """
-    adults, children, days = _household(household)
+    adults, children, infants, days = _household(household)
     people_days = (adults + children) * days
     master = {item["id"]: item for item in _read("data/items-master.json")["items"]}
     config = _read("tests/sanity_config.json")
     pool = _pool(master, template_id, exclude_tags, exclude_ids)
-    water_id, water_count = _water(pool, config["water"]["ml_per_person_per_day"] * people_days)
+    water = config["water"]
+    water_people = adults + water["child_factor"] * children + water["infant_factor"] * infants
+    required_water = water["ml_per_person_per_day"] * water_people * days
+    water_id, water_count = _water(pool, required_water)
     foods = {i: pair for i, pair in pool.items()
              if pair[0]["daily_coeff"] is None and pair[0]["meal_role"] != "drink"}
     if not foods or not any(item["cal_per_unit"] > 0 for item, _ in foods.values()):
@@ -150,6 +158,31 @@ def solve(household, template_id=None, exclude_tags=None, exclude_ids=None):
         target_protein = protein["adult_g_per_day"] * (adults + protein["child_factor"] * children) * days
         problem += pulp.lpSum(protein_values[i] * count for i, count in counts.items()) >= target_protein
 
+    # Highest-priority soft objective: avoid extra staple/main servings beyond
+    # the household's meals, allowing only the selected items' pack rounding.
+    meals = config["meals"]["per_person_per_day"] * people_days
+    meal_limits = config["meals"]["max_servings_per_meal_by_role"]
+    excess_vars = {}
+    for role, per_meal in meal_limits.items():
+        role_ids = [i for i, (item, _) in foods.items() if item["meal_role"] == role]
+        excess_vars[role] = pulp.LpVariable(f"meal_excess_{role}", lowBound=0)
+        net_servings = pulp.lpSum(
+            (counts[i] - (foods[i][0]["pack_size"] - 1) * selected[i])
+            / (foods[i][0].get("units_per_serving") or 1)
+            for i in role_ids
+        )
+        problem += excess_vars[role] >= net_servings - per_meal * meals
+    meal_excess = pulp.lpSum(excess_vars.values())
+    _optimize(problem, meal_excess, "minimum meal excess")
+    # Recompute from integer quantities to avoid CBC's output precision loss.
+    minimum_excess = sum(max(0, sum(
+        (round(pulp.value(counts[i])) - foods[i][0]["pack_size"] + 1)
+        / (foods[i][0].get("units_per_serving") or 1)
+        for i in foods if foods[i][0]["meal_role"] == role
+        and round(pulp.value(counts[i])) > 0
+    ) - per_meal * meals) for role, per_meal in meal_limits.items())
+    problem += meal_excess <= minimum_excess + TOLERANCE
+
     # Template weights express relative servings. Convert those servings to
     # units, scale to the energy target, and minimize absolute energy deviations
     # from that preferred mix. Nutrition/caps/diversity always take precedence.
@@ -169,7 +202,7 @@ def solve(household, template_id=None, exclude_tags=None, exclude_ids=None):
     _optimize(problem, preference_error, "template preference")
     # CBC serializes continuous values with limited decimal precision. Evaluate
     # the incumbent from integer counts rather than those rounded deviations
-    # before fixing the first objective for the lexicographic second phase.
+    # before fixing the preference objective for the final energy phase.
     optimum = sum(max(foods[i][0]["cal_per_unit"], 1)
                   * abs(round(pulp.value(counts[i])) - ideals[i]) for i in foods)
     problem += preference_error <= optimum + TOLERANCE
@@ -189,7 +222,8 @@ def solve(household, template_id=None, exclude_tags=None, exclude_ids=None):
     if template_id is not None:
         for item_id, (item, _) in pool.items():
             if item["daily_coeff"] is not None:
-                basis = {"all": adults + children, "adults": adults, "children": children}
+                basis = {"all": adults + children + infants, "adults": adults,
+                         "children": children, "infants": infants}
                 basis_name = item.get("coeff_basis") or "all"
                 if basis_name not in basis:
                     raise ValueError(f"{item_id}: unknown coeff_basis {basis_name!r}")
@@ -206,6 +240,10 @@ def solve(household, template_id=None, exclude_tags=None, exclude_ids=None):
                      if protein_active else None)
     if protein_active and total_protein + TOLERANCE < target_protein:
         raise RuntimeError("CBC solution violates the protein target after rounding")
+    rationale, meal_extras = explain_plan(
+        quantities, pool, config, adults, children, infants, days,
+        target_kcal, target_protein, ideals, required_water, TOLERANCE,
+    )
     return {
         "items": [{"id": i, "count": quantities[i]} for i in sorted(quantities)],
         "meta": {
@@ -220,5 +258,7 @@ def solve(household, template_id=None, exclude_tags=None, exclude_ids=None):
             "target_protein_g": target_protein,
             "total_protein_g": total_protein,
             "thresholds": "tests/sanity_config.json",
+            "rationale": rationale,
+            "meal_extras": meal_extras,
         },
     }
