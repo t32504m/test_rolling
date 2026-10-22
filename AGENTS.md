@@ -1,0 +1,25 @@
+# AGENTS.md（Codex など Claude Code 以外のAI向け）
+
+このリポジトリの指示書の本体は **CLAUDE.md** です。作業を始める前に、必ず CLAUDE.md を全部読んでください。
+ここには、Claude Code の仕組み（フック）が効かないAIのために、特に守るべき点だけを繰り返します。
+
+## 絶対に守ること
+
+1. **テストは自分で必ず実行する。** Claude Code では作業終了時にテストが自動実行されますが、
+   ほかのAIでは実行されません。PR を出す前に、次の二つを実行し、結果を PR 本文に貼ってください。
+
+   ```bash
+   python3 -m unittest discover -s tests -v
+   python3 scripts/sanity_report.py
+   ```
+
+2. **テストと閾値に触らない。** `tests/` 以下（特に `tests/sanity_config.json`）は、オーナーとの約束です。
+   テストを通すために閾値を緩めたり、テストをスキップ・削除したりしてはいけません。
+   閾値が不適切だと考える場合は、変更せずに PR 本文で理由を説明してください。
+3. **Issue に書かれたファイル以外は触らない。** 複数のAIが並行して作業しています。
+4. **ブランチ**：`feature/info-redesign` から `task/<Issue番号>-<短い名前>` を切り、PR は `feature/info-redesign` に向ける。main には push しない。
+5. **出典のない数値を入れない。** 栄養値やレシピなど、調べて入力するものにはすべて出典の URL を付ける。
+   見つからないものを推測で埋めない。
+6. **参加者のデータ（`private/`）を読まない・コミットしない。**
+
+PR を出すと GitHub Actions が同じテストを実行し、結果が PR に表示されます。

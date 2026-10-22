@@ -56,6 +56,15 @@ class MasterDataTest(unittest.TestCase):
                 self.assertTrue(isinstance(basis, str) and basis.strip(),
                                 "source.nutrition_basis（栄養値の根拠）が空")
 
+    def test_nutrients_have_their_own_source(self):
+        """たんぱく質などの栄養値を追加するときは、その値の根拠（URL）も必須。"""
+        for item in self.items:
+            with self.subTest(item=item["id"]):
+                if "protein_per_unit" in item:
+                    url = item["source"].get("protein_url")
+                    self.assertTrue(isinstance(url, str) and url.startswith("http"),
+                                    "protein_per_unit の根拠 source.protein_url がない")
+
     def test_drink_items_provide_water(self):
         for item in self.items:
             if item["meal_role"] == "drink":

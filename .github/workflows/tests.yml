@@ -1,0 +1,40 @@
+name: テストと常識チェック
+
+on:
+  push:
+    branches: [feature/info-redesign, "task/**"]
+  pull_request:
+    branches: [feature/info-redesign, main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: 依存ライブラリの導入（requirements.txt があれば）
+        run: |
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      - name: 単体テスト
+        run: python3 -m unittest discover -s tests -v
+
+      - name: 常識チェック報告
+        run: |
+          set +e
+          python3 scripts/sanity_report.py
+          status=$?
+          cat reports/sanity_report.md >> "$GITHUB_STEP_SUMMARY"
+          exit $status
+
+      - name: 報告ファイルの保存
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sanity-report
+          path: reports/sanity_report.md
+          if-no-files-found: ignore
