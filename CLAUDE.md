@@ -119,6 +119,16 @@
 
 ## コマンド
 
+ソルバーの導入（Python 3.11 以上。PuLP に同梱された CBC を使用。実行時の API キー・ネット接続は不要）：
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python3 -m pip install -r requirements.txt
+```
+
+ソルバーの使い方と制約の説明は `solver/README.md` を参照。
+
 ```bash
 python3 -m unittest discover -s tests -v   # 単体テスト
 python3 scripts/sanity_report.py           # 常識チェック報告（reports/sanity_report.md に出力）
