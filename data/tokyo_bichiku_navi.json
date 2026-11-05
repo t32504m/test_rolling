@@ -47,5 +47,30 @@
     {"id": "46", "name": "液体ミルク", "unit": "食", "calc": "basic", "required": {"infant": 6, "child1": 0, "child2": 0, "adult": 0, "aged": 0}},
     {"id": "47", "name": "アレルギー対応離乳食", "unit": "食", "calc": "basic", "required": {"infant": 3, "child1": 0, "child2": 0, "adult": 0, "aged": 0}},
     {"id": "51", "name": "おかゆ（高齢者用品）", "unit": "食", "calc": "basic", "required": {"infant": 0, "child1": 0, "child2": 0, "adult": 0, "aged": 3}}
-  ]
+  ],
+  "master_mapping": {
+    "_note": "東京の品目 → 品目マスタ（data/items-master.json）の対応。scripts/compare_tokyo.py が栄養の計算に使う。候補は docs/tokyo_bichiku_navi.md 7.3 の表。representative（代表品）は「近い」の品目について**仮**に決めたもので、オーナーの判断事項。仮の決め方：7.3 の候補のうち、単位が東京と同じで、たんぱく質の値がある最初の品目。basis は数量の換算の方法：count は同じ物の個数（1食＝1食、1缶＝1缶、1個＝1袋）、weight は東京の kg を g にして代表品の unit_gram で割る、volume は東京の L を mL にして代表品の water_per_unit で割る。いずれも品目マスタの値だけを使い、合と g などの外部の換算は使わない。",
+    "items": {
+      "1": {"status": "確か", "basis": "volume", "representative": "W004", "candidates": ["W001", "W002", "W003", "W004"]},
+      "2": {"status": "確か", "basis": "count", "representative": "S004", "candidates": ["S004"]},
+      "3": {"status": "近い（仮）", "basis": "count", "representative": "M007", "candidates": ["M006", "M007", "M008", "M009"], "note": "東京は「個」、マスタは「袋」。レトルト食品1個をパウチ1袋として数える（PR #18 の当てはめと同じ）"},
+      "4": {"status": "近い（仮）", "basis": "count", "representative": "M001", "candidates": ["M001", "M002", "M003", "M004", "V010"], "note": "東京の品目名「さばの味噌煮、野菜など」に合わせ M001 を代表にした。M005 は単位が袋なので候補から外した"},
+      "5": {"status": "対応なし", "reason": "東京の単位は「箱」で、1箱の中身（本数・重さ）がサイトにもソースコードにも書かれていない。マスタの N001 は1本20g"},
+      "6": {"status": "確か", "basis": "count", "representative": "V001", "candidates": ["V001"]},
+      "7": {"status": "対応なし", "reason": "マスタに対応する品目がない"},
+      "8": {"status": "対応なし", "reason": "マスタに対応する品目がない"},
+      "9": {"status": "対応なし", "reason": "マスタの範囲外。数量の表示もない（適宜）"},
+      "10": {"status": "対応なし", "reason": "1パックの大きさと、乾麺か即席麺かが分からない（候補 S008 は束、S009 は個）"},
+      "11": {"status": "確か", "basis": "weight", "representative": "S010", "candidates": ["S010"], "note": "東京の kg を g にし、マスタの S010 の unit_gram（150g）で割る"},
+      "12": {"status": "対応なし", "reason": "飲み物の種類と大きさが分からない（説明文は「水以外の普段飲んでいる飲み物」）"},
+      "13": {"status": "対応なし", "reason": "1パックの中身が分からない（候補 K001〜K006 の単位は袋・枚・本）"},
+      "14": {"status": "確か", "basis": "count", "representative": "V002", "candidates": ["V002"]},
+      "55": {"status": "数量なし", "candidates": ["V006"], "reason": "適量。品目の有無だけを比べる"},
+      "56": {"status": "数量なし", "candidates": ["V004", "V005", "M010"], "reason": "適量。品目の有無だけを比べる"},
+      "45": {"status": "特別食", "candidates": ["P002"], "reason": "乳幼児の食品。エネルギー・たんぱく質の目標は乳幼児を含まない（tests/sanity_config.json）ので、栄養の計算に入れない"},
+      "46": {"status": "特別食", "candidates": ["P001"], "reason": "同上"},
+      "47": {"status": "特別食", "candidates": ["P003", "P004"], "reason": "同上"},
+      "51": {"status": "特別食", "candidates": ["S005", "S003"], "reason": "高齢者のみ。ソルバーの入力に高齢者がないので使わない"}
+    }
+  }
 }
