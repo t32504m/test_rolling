@@ -119,6 +119,8 @@ class SanityConfigTest(unittest.TestCase):
         self.assertGreater(config["meals"]["per_person_per_day"], 0)
         for value in config["meals"]["max_servings_per_meal_by_role"].values():
             self.assertGreater(value, 0)
+        for role, value in config["meals"]["upper_servings_per_meal_by_role"].items():
+            self.assertGreaterEqual(value, config["meals"]["max_servings_per_meal_by_role"][role])
         caps = config["per_item_caps"]
         self.assertTrue(0 < caps["max_kcal_share_of_total"] <= 1)
         for value in caps["max_units_per_person_day_by_role"].values():
