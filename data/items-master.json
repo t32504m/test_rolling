@@ -1572,7 +1572,7 @@
         "pack_note": "1本で売られている（サンドラッグ「明治 ほほえみ らくらくミルク 240ml」）"
       },
       "assign_note": "coeff_basis=children: 子供0人なら自動的に0本。将来「乳幼児数」入力実装時にbasisをinfantsへ置換。daily_coeff=3.0本/乳児/日 仮。該当人数は現状(A+C)で代用→将来乳幼児数入力で置換",
-      "coeff_basis": "children"
+      "coeff_basis": "infants"
     },
     {
       "id": "P002",
@@ -1605,7 +1605,7 @@
         "pack_note": "1缶で売られている（サンドラッグ「明治 ほほえみ 780g」）。現在の商品の内容量は780gで、マスタの unit_gram（800g）とは違う。2缶パックもある"
       },
       "assign_note": "daily_coeff=0.05(1缶≒20日分)仮",
-      "coeff_basis": "children"
+      "coeff_basis": "infants"
     },
     {
       "id": "P003",
@@ -1640,7 +1640,7 @@
         "pack_note": "メーカーの商品ページに、1袋（80g）の参考小売価格（税込227円）がある。1袋で売られる商品と判断した"
       },
       "assign_note": "月齢区分は品目分割せずdesc注記で対応(確定)。daily_coeff=2.0食/乳児/日 仮",
-      "coeff_basis": "children"
+      "coeff_basis": "infants"
     },
     {
       "id": "P004",

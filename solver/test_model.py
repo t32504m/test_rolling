@@ -107,7 +107,7 @@ class SolverModelTest(unittest.TestCase):
                 foods = [
                     {"id": f"TEST{i}", "meal_role": role, "tags": [], "daily_coeff": None,
                      "cal_per_unit": total / 4, "protein_per_unit": round(protein_target, 6) / 4,
-                     "pack_size": 1, "units_per_serving": 1}
+                     "pack_size": 1, "units_per_serving": 1, "consume_unit": "個"}
                     for i, role in enumerate(("staple", "staple", "main", "main"))
                 ]
                 water = next(item for item in original_read("data/items-master.json")["items"]
@@ -161,6 +161,117 @@ class SolverModelTest(unittest.TestCase):
         plan = solve({"adults": 2, "children": 0, "days": 3}, "baby")
         self.assertNotIn("P001", {item["id"] for item in plan["items"]})
         self.assertNotIn("P003", {item["id"] for item in plan["items"]})
+
+    def test_infants_leave_food_unchanged_in_every_template(self):
+        master = {item["id"]: item for item in model._read("data/items-master.json")["items"]}
+        for template in model._read("templates/index.json"):
+            plans = [solve({**self.household, "infants": infants}, template["id"]) for infants in (0, 1)]
+            ordinary = [{item["id"]: item["count"] for item in plan["items"]
+                         if master[item["id"]]["daily_coeff"] is None
+                         and master[item["id"]]["meal_role"] != "drink"} for plan in plans]
+            with self.subTest(template=template["id"]):
+                self.assertEqual(*ordinary)
+                self.assertEqual(plans[0]["meta"]["target_protein_g"], plans[1]["meta"]["target_protein_g"])
+
+    def test_water_uses_both_child_and_infant_factors(self):
+        household = {**self.household, "infants": 1}
+        config = model._read("tests/sanity_config.json")["water"]
+        water = next(item for item in model._read("data/items-master.json")["items"] if item["id"] == "W004")
+        needed = config["ml_per_person_per_day"] * (household["adults"]
+                 + config["child_factor"] * household["children"]
+                 + config["infant_factor"] * household["infants"]) * household["days"]
+        plan = solve(household, "standard")
+        self.assertEqual(plan["meta"]["water_ml"], math.ceil(needed / water["water_per_unit"]) * water["water_per_unit"])
+        self.assertEqual(model._water({"W004": (water, 1)}, math.nextafter(9000, math.inf))[1], 9)
+
+    def test_special_food_basis_includes_infants_only_when_requested(self):
+        original_read = model._read
+        household = {"adults": 2, "children": 3, "infants": 1, "days": 3}
+        for basis, people in (("all", 6), ("adults", 2), ("children", 3), ("infants", 1)):
+            master = copy.deepcopy(original_read("data/items-master.json"))
+            item = next(item for item in master["items"] if item["id"] == "P001")
+            item["coeff_basis"] = basis
+            with self.subTest(basis=basis), patch.object(model, "_read", side_effect=lambda path:
+                              master if path == "data/items-master.json" else original_read(path)):
+                plan = solve(household, "baby")
+                counts = {entry["id"]: entry["count"] for entry in plan["items"]}
+                expected = math.ceil(item["daily_coeff"] * people * household["days"] / item["pack_size"]) * item["pack_size"]
+                self.assertEqual(counts["P001"], expected)
+
+    def test_meal_upper_limit_holds_under_extreme_template_preference(self):
+        # Preference comes first, but the per-meal upper limit is a hard constraint.
+        original_read = model._read
+        template = copy.deepcopy(original_read("templates/standard.json"))
+        for entry in template["items"]:
+            if entry["ref"] in ("S006", "M002"):
+                entry["weight"] *= 1000
+        with patch.object(model, "_read", side_effect=lambda path:
+                          template if path == "templates/standard.json" else original_read(path)):
+            plan = solve(self.household, "standard")
+        config = model._read("tests/sanity_config.json")["meals"]
+        master = {item["id"]: item for item in model._read("data/items-master.json")["items"]}
+        meals = config["per_person_per_day"] * (self.household["adults"] + self.household["children"]) * self.household["days"]
+        for role, upper in config["upper_servings_per_meal_by_role"].items():
+            entries = [entry for entry in plan["items"] if master[entry["id"]]["meal_role"] == role]
+            net = sum((entry["count"] - master[entry["id"]]["pack_size"] + 1)
+                      / master[entry["id"]]["units_per_serving"] for entry in entries)
+            with self.subTest(role=role):
+                self.assertLessEqual(net, upper * meals + model.TOLERANCE)
+        self.assert_meal_extras_match_counts(plan, self.household)
+
+    def test_shortfall_of_capped_mains_goes_to_staples(self):
+        # family-kids prefers more mains than one per meal; the energy left by
+        # the main limit must not be moved to snacks above their preference.
+        household = {"adults": 10, "children": 0, "days": 7}
+        master = {item["id"]: item for item in model._read("data/items-master.json")["items"]}
+        template = model._read("templates/family-kids.json")
+        weights = {entry["ref"]: entry["weight"] for entry in template["items"]}
+        foods = {i: w * (master[i]["units_per_serving"] or 1) for i, w in weights.items()
+                 if master[i]["meal_role"] != "drink" and master[i]["daily_coeff"] is None}
+        energy = model._read("tests/sanity_config.json")["energy"]
+        target = energy["adult_kcal_per_day"] * household["adults"] * household["days"]
+        scale = target / sum(master[i]["cal_per_unit"] * units for i, units in foods.items())
+        plan = solve(household, "family-kids")
+        counts = {entry["id"]: entry["count"] for entry in plan["items"]}
+        snack = next(i for i in foods if master[i]["meal_role"] == "snack")
+        limit = math.ceil(foods[snack] * scale) + master[snack]["pack_size"] - 1
+        self.assertLessEqual(counts.get(snack, 0), limit)
+        self.assertIn("staple", plan["meta"]["meal_extras"])
+
+    def assert_meal_extras_match_counts(self, plan, household):
+        config = model._read("tests/sanity_config.json")["meals"]
+        master = {item["id"]: item for item in model._read("data/items-master.json")["items"]}
+        meals = config["per_person_per_day"] * (household["adults"] + household["children"]) * household["days"]
+        for role, per_meal in config["max_servings_per_meal_by_role"].items():
+            entries = [entry for entry in plan["items"] if master[entry["id"]]["meal_role"] == role]
+            got = sum(entry["count"] / master[entry["id"]]["units_per_serving"] for entry in entries)
+            rounding = sum((master[entry["id"]]["pack_size"] - 1) / master[entry["id"]]["units_per_serving"] for entry in entries)
+            expected = max(0, got - meals * per_meal - rounding)
+            extra = plan["meta"]["meal_extras"].get(role)
+            if expected > model.TOLERANCE:
+                self.assertAlmostEqual(extra["servings"], expected)
+                self.assertTrue(extra["reason"].strip())
+            else:
+                self.assertIsNone(extra)
+
+    def test_necessary_extra_meals_are_explained(self):
+        for household, template in (({"adults": 10, "children": 0, "days": 7}, "standard"),
+                                    ({"adults": 4, "children": 0, "days": 7}, "family-kids")):
+            with self.subTest(template=template):
+                plan = solve(household, template)
+                self.assertTrue(plan["meta"]["meal_extras"])
+                self.assert_meal_extras_match_counts(plan, household)
+
+    def test_rationale_covers_water_specials_and_food(self):
+        plan = solve({**self.household, "infants": 1}, "baby")
+        rationale = plan["meta"]["rationale"]
+        self.assertEqual(set(rationale), {item["id"] for item in plan["items"]})
+        self.assertIn("乳幼児1人", rationale["P001"])
+        factor = model._read("tests/sanity_config.json")["water"]["infant_factor"]
+        self.assertIn(f"乳幼児{factor:g}×1", rationale["W004"])
+        self.assertIn("購入単位", rationale["S002"])
+        for text in rationale.values():
+            self.assertIn("×", text)
 
     def test_weights_change_the_preferred_mix(self):
         original_read = model._read
