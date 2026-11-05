@@ -15,6 +15,8 @@ from .explanations import explain_plan
 
 ROOT = Path(__file__).resolve().parent.parent
 TOLERANCE = 1e-6  # Numerical solver tolerance, not a nutrition threshold.
+# Roles that must not fill the energy shortfall beyond the template preference.
+TOPPING_ROLES = ("side", "snack")
 
 
 class InfeasiblePlanError(ValueError):
@@ -158,10 +160,13 @@ def solve(household, template_id=None, exclude_tags=None, exclude_ids=None):
         target_protein = protein["adult_g_per_day"] * (adults + protein["child_factor"] * children) * days
         problem += pulp.lpSum(protein_values[i] * count for i, count in counts.items()) >= target_protein
 
-    # Highest-priority soft objective: avoid extra staple/main servings beyond
-    # the household's meals, allowing only the selected items' pack rounding.
-    meals = config["meals"]["per_person_per_day"] * people_days
-    meal_limits = config["meals"]["max_servings_per_meal_by_role"]
+    # Staple/main servings are counted against the household's meals, allowing
+    # only the selected items' pack rounding. The upper limit (staples at most
+    # two servings per meal, mains one) is a hard constraint.
+    meals_cfg = config["meals"]
+    meals = meals_cfg["per_person_per_day"] * people_days
+    meal_limits = meals_cfg["max_servings_per_meal_by_role"]
+    upper_limits = meals_cfg.get("upper_servings_per_meal_by_role", {})
     excess_vars = {}
     for role, per_meal in meal_limits.items():
         role_ids = [i for i, (item, _) in foods.items() if item["meal_role"] == role]
@@ -172,20 +177,16 @@ def solve(household, template_id=None, exclude_tags=None, exclude_ids=None):
             for i in role_ids
         )
         problem += excess_vars[role] >= net_servings - per_meal * meals
+        if role in upper_limits:
+            problem += net_servings <= upper_limits[role] * meals
     meal_excess = pulp.lpSum(excess_vars.values())
-    _optimize(problem, meal_excess, "minimum meal excess")
-    # Recompute from integer quantities to avoid CBC's output precision loss.
-    minimum_excess = sum(max(0, sum(
-        (round(pulp.value(counts[i])) - foods[i][0]["pack_size"] + 1)
-        / (foods[i][0].get("units_per_serving") or 1)
-        for i in foods if foods[i][0]["meal_role"] == role
-        and round(pulp.value(counts[i])) > 0
-    ) - per_meal * meals) for role, per_meal in meal_limits.items())
-    problem += meal_excess <= minimum_excess + TOLERANCE
 
-    # Template weights express relative servings. Convert those servings to
-    # units, scale to the energy target, and minimize absolute energy deviations
-    # from that preferred mix. Nutrition/caps/diversity always take precedence.
+    # First objective: template weights express relative servings. Convert
+    # those servings to units, scale to the energy target, and minimize
+    # absolute energy deviations from that preferred mix. Because the ideal mix
+    # meets the energy target, sides and snacks stay near their preferred
+    # amounts and the shortfall of one serving per meal is filled by staples
+    # (within the hard upper limit). Nutrition/caps/diversity always hold.
     preferred_units = {i: weight * (item.get("units_per_serving") or 1)
                        for i, (item, weight) in foods.items()}
     preferred_kcal = sum(foods[i][0]["cal_per_unit"] * units for i, units in preferred_units.items())
@@ -202,10 +203,41 @@ def solve(household, template_id=None, exclude_tags=None, exclude_ids=None):
     _optimize(problem, preference_error, "template preference")
     # CBC serializes continuous values with limited decimal precision. Evaluate
     # the incumbent from integer counts rather than those rounded deviations
-    # before fixing the preference objective for the final energy phase.
+    # before fixing the preference objective for the next phases.
     optimum = sum(max(foods[i][0]["cal_per_unit"], 1)
                   * abs(round(pulp.value(counts[i])) - ideals[i]) for i in foods)
     problem += preference_error <= optimum + TOLERANCE
+
+    # Second objective: the preference error weighs every kcal equally, so a
+    # shortfall left by capped mains could equally go to staples or to sides
+    # and snacks. Fill it with staples: minimize the energy of sides/snacks
+    # above their preferred amounts.
+    overshoots = []
+    for item_id, (item, _) in foods.items():
+        if item["meal_role"] in TOPPING_ROLES:
+            over = pulp.LpVariable(f"overshoot_{item_id}", lowBound=0)
+            problem += over >= counts[item_id] - ideals[item_id]
+            overshoots.append(max(item["cal_per_unit"], 1) * over)
+    topping_overshoot = pulp.lpSum(overshoots)
+    if overshoots:
+        _optimize(problem, topping_overshoot, "side/snack overshoot")
+        minimum_overshoot = sum(
+            max(foods[i][0]["cal_per_unit"], 1) * max(0, round(pulp.value(counts[i])) - ideals[i])
+            for i in foods if foods[i][0]["meal_role"] in TOPPING_ROLES)
+        problem += topping_overshoot <= minimum_overshoot + TOLERANCE
+
+    # Third objective: avoid staple/main servings beyond one per meal.
+    _optimize(problem, meal_excess, "minimum meal excess")
+    # Recompute from integer quantities to avoid CBC's output precision loss.
+    minimum_excess = sum(max(0, sum(
+        (round(pulp.value(counts[i])) - foods[i][0]["pack_size"] + 1)
+        / (foods[i][0].get("units_per_serving") or 1)
+        for i in foods if foods[i][0]["meal_role"] == role
+        and round(pulp.value(counts[i])) > 0
+    ) - per_meal * meals) for role, per_meal in meal_limits.items())
+    problem += meal_excess <= minimum_excess + TOLERANCE
+
+    # Last objective: minimize surplus energy.
     _optimize(problem, total_kcal, "minimum energy excess")
 
     quantities = {water_id: water_count}

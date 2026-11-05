@@ -198,15 +198,45 @@ class SolverModelTest(unittest.TestCase):
                 expected = math.ceil(item["daily_coeff"] * people * household["days"] / item["pack_size"]) * item["pack_size"]
                 self.assertEqual(counts["P001"], expected)
 
-    def test_meal_priority_precedes_extreme_template_preference(self):
+    def test_meal_upper_limit_holds_under_extreme_template_preference(self):
+        # Preference comes first, but the per-meal upper limit is a hard constraint.
         original_read = model._read
         template = copy.deepcopy(original_read("templates/standard.json"))
-        next(item for item in template["items"] if item["ref"] == "S006")["weight"] *= 1000
+        for entry in template["items"]:
+            if entry["ref"] in ("S006", "M002"):
+                entry["weight"] *= 1000
         with patch.object(model, "_read", side_effect=lambda path:
                           template if path == "templates/standard.json" else original_read(path)):
             plan = solve(self.household, "standard")
-        self.assertEqual(plan["meta"]["meal_extras"], {})
+        config = model._read("tests/sanity_config.json")["meals"]
+        master = {item["id"]: item for item in model._read("data/items-master.json")["items"]}
+        meals = config["per_person_per_day"] * (self.household["adults"] + self.household["children"]) * self.household["days"]
+        for role, upper in config["upper_servings_per_meal_by_role"].items():
+            entries = [entry for entry in plan["items"] if master[entry["id"]]["meal_role"] == role]
+            net = sum((entry["count"] - master[entry["id"]]["pack_size"] + 1)
+                      / master[entry["id"]]["units_per_serving"] for entry in entries)
+            with self.subTest(role=role):
+                self.assertLessEqual(net, upper * meals + model.TOLERANCE)
         self.assert_meal_extras_match_counts(plan, self.household)
+
+    def test_shortfall_of_capped_mains_goes_to_staples(self):
+        # family-kids prefers more mains than one per meal; the energy left by
+        # the main limit must not be moved to snacks above their preference.
+        household = {"adults": 10, "children": 0, "days": 7}
+        master = {item["id"]: item for item in model._read("data/items-master.json")["items"]}
+        template = model._read("templates/family-kids.json")
+        weights = {entry["ref"]: entry["weight"] for entry in template["items"]}
+        foods = {i: w * (master[i]["units_per_serving"] or 1) for i, w in weights.items()
+                 if master[i]["meal_role"] != "drink" and master[i]["daily_coeff"] is None}
+        energy = model._read("tests/sanity_config.json")["energy"]
+        target = energy["adult_kcal_per_day"] * household["adults"] * household["days"]
+        scale = target / sum(master[i]["cal_per_unit"] * units for i, units in foods.items())
+        plan = solve(household, "family-kids")
+        counts = {entry["id"]: entry["count"] for entry in plan["items"]}
+        snack = next(i for i in foods if master[i]["meal_role"] == "snack")
+        limit = math.ceil(foods[snack] * scale) + master[snack]["pack_size"] - 1
+        self.assertLessEqual(counts.get(snack, 0), limit)
+        self.assertIn("staple", plan["meta"]["meal_extras"])
 
     def assert_meal_extras_match_counts(self, plan, household):
         config = model._read("tests/sanity_config.json")["meals"]
