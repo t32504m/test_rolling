@@ -1,5 +1,7 @@
 """Deterministic Japanese explanations of the solved quantities, not advice."""
 
+import math
+
 ROLE_NAMES = {"staple": "主食", "main": "主菜", "side": "副菜", "snack": "間食"}
 
 
@@ -14,6 +16,7 @@ def explain_plan(counts, pool, config, adults, children, infants, days,
     meal_count = meals_cfg["per_person_per_day"] * (adults + children) * days
     foods = {i: item for i, (item, _) in pool.items()
              if item["daily_coeff"] is None and item["meal_role"] != "drink"}
+    upper_cfg = meals_cfg.get("upper_servings_per_meal_by_role", {})
     meal_extras, meal_details = {}, {}
     nutrition_targets = f"エネルギー {number(target_kcal)} kcal"
     if target_protein is not None:
@@ -26,25 +29,27 @@ def explain_plan(counts, pool, config, adults, children, infants, days,
         allowed = meal_count * per_meal
         extra = max(0, got - allowed - rounding)
         label = ROLE_NAMES.get(role, role)
+        upper = upper_cfg.get(role)
+        upper_text = (f"上限は1食に{number(upper)}食分＝{number(meal_count * upper)}食分"
+                      if upper is not None else "")
         meal_details[role] = (
             f"{label}の目安は {number(meals_cfg['per_person_per_day'])}食 × "
             f"（大人{adults}＋子供{children}）× {days}日 × {number(per_meal)}食分"
             f"＝{number(allowed)}食分（乳幼児{infants}人は含めない）。"
             f"役割全体では{number(got)}食分、選択品目の購入丸め許容は"
             f"Σ（購入単位－1）÷1食分の量＝{number(rounding)}食分。"
+            + (f"{upper_text}（購入丸め分を除く）。" if upper_text else "")
         )
         if extra > tolerance:
             reason = (
                 f"{label}の目安{number(allowed)}食分と購入丸め許容{number(rounding)}食分に対し、"
                 f"{number(got)}食分を選び、超過は{number(extra)}食分。"
-                f"候補・除外・1品目の上限・多様性を守り、{nutrition_targets}を満たすため、"
-                "副菜・間食による補完も含め、主食・主菜の超過食数の合計を最小化した結果。"
+                f"エネルギーの不足を、間食ではなく{label}で補った。"
+                f"候補・除外・1品目の上限・多様性を守り、{nutrition_targets}を満たし、"
+                "テンプレートの好みからのずれを最小にしたうえで、主食・主菜の超過食数の合計を最小化した結果。"
             )
             meal_extras[role] = {"servings": extra, "reason": reason}
 
-    base_kcal = sum(foods[i]["cal_per_unit"] * count for i, count in counts.items()
-                    if i in foods and foods[i]["meal_role"] in meals_cfg["max_servings_per_meal_by_role"])
-    shortfall = max(0, target_kcal - base_kcal)
     preferred_kcal = sum(item["cal_per_unit"] * pool[i][1] * (item.get("units_per_serving") or 1)
                          for i, item in foods.items())
     basis_counts = {"all": adults + children + infants, "adults": adults,
@@ -81,16 +86,23 @@ def explain_plan(counts, pool, config, adults, children, infants, days,
                 if role in meal_extras:
                     reason += meal_extras[role]["reason"]
             else:
-                reason = (
-                    f"{ROLE_NAMES.get(role, role)}：主食・主菜{number(base_kcal)} kcalと"
-                    f"目標{number(target_kcal)} kcalとの差{number(shortfall)} kcalを、"
-                    "副菜・間食で補う構成。"
-                )
+                # Pack rounding above the preferred amount still counts as "as preferred".
+                if count <= math.ceil(ideals[item_id] - tolerance) + pack - 1:
+                    reason = (
+                        f"{ROLE_NAMES.get(role, role)}：テンプレートの好みの量のとおり。"
+                        "エネルギーの不足は主食で補い、副菜・間食を好みの量より増やして埋めない。"
+                    )
+                else:
+                    reason = (
+                        f"{ROLE_NAMES.get(role, role)}：好みの量より多い。{nutrition_targets}・"
+                        "主食と主菜の上限・1品目の上限・多様性を守り、全品目の好みからのずれ（kcal）の"
+                        "合計を最小にすると、ほかの品目の購入単位との組み合わせで、この数になった。"
+                    )
             reason += (
                 f"本品の理想量は重み{number(weight)} × 1食分{number(serving)}{unit} × "
                 f"目標{number(target_kcal)} kcal ÷ 候補の重み付き合計{number(preferred_kcal)} kcal"
                 f"＝{number(ideals[item_id])}{unit}。"
-                f"食数超過の最小値・栄養・偏り・多様性を守って好みからのずれを最小化し、"
+                f"栄養・偏り・多様性・主食と主菜の上限を守って、まず好みからのずれを最小化し、"
                 f"購入単位{pack}{unit}×{count // pack}＝{count}{unit}"
                 f"（{number(count / serving)}食分）を選択。"
                 f"{number(item['cal_per_unit'])} kcal×{count}＝"

@@ -7,6 +7,7 @@ import unittest
 
 from harness_common import (
     check_plan, iter_cases, load_config, load_master, load_template, solver_available,
+    template_ideal_counts,
 )
 
 SKIP_REASON = "solver パッケージが未実装（CLAUDE.md の「1. ソルバー」を参照）"
@@ -112,16 +113,26 @@ class SolverSanityTest(unittest.TestCase):
                     self.solve(household={**base, "infants": bad}, template_id="standard",
                                exclude_tags=[], exclude_ids=[])
 
-    def test_standard_template_fits_the_number_of_meals(self):
-        """標準テンプレート（実験で主に使う）は、食事の回数を超える主食・主菜を足さずに済む。"""
+    def test_standard_template_fills_shortfall_with_staples(self):
+        """回帰テスト：エネルギーの不足を、ようかんなどの間食で埋めていた（オーナー決定 2026-11-05）。
+        標準テンプレート（実験で主に使う）では、主食で補い、副菜・間食はテンプレートの好みの量を超えて足さない。
+        好みの量は template_ideal_counts（小数）を切り上げ、購入単位への切り上げ分を許容する。"""
         for case in iter_cases(self.config):
             if case["template_id"] != "standard":
                 continue
-            plan = self.solve(household=case["household"], template_id="standard",
+            household = case["household"]
+            plan = self.solve(household=household, template_id="standard",
                               exclude_tags=[], exclude_ids=[])
-            with self.subTest(**case["household"]):
-                self.assertFalse(plan["meta"].get("meal_extras"),
-                                 f"食事の回数を超えて追加した: {plan['meta'].get('meal_extras')}")
+            counts = {e["id"]: e["count"] for e in plan["items"]}
+            ideals = template_ideal_counts("standard", household, self.master, self.config)
+            for item_id, ideal in ideals.items():
+                item = self.master[item_id]
+                if item["meal_role"] not in ("side", "snack"):
+                    continue
+                limit = math.ceil(ideal - 1e-9) + item["pack_size"] - 1
+                with self.subTest(**household, item=item_id):
+                    self.assertLessEqual(counts.get(item_id, 0), limit,
+                                         f"{item['name']} を好みの量 {ideal:.1f} を超えて足した")
 
     def test_deterministic(self):
         household = {"adults": 2, "children": 1, "days": 3}

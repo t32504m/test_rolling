@@ -67,6 +67,28 @@ def servings(item, count):
     return count / (item.get("units_per_serving") or 1)
 
 
+def template_ideal_counts(template_id, household, master, config, exclude_tags=(), exclude_ids=()):
+    """テンプレートの好みどおりの量（品目ID → 消費単位の数、小数）。
+
+    重み × 1食分の量（units_per_serving）を、エネルギーの目標に合わせて拡大したもの。
+    普通の食品（水と特別食を除く）だけを対象にし、除外した品目は含めない。
+    """
+    template = load_template(template_id)
+    tags = set(exclude_tags) | set(template.get("exclude_tags", []))
+    weights = {ref["ref"]: ref["weight"] for ref in template["items"]
+               if ref["ref"] not in set(exclude_ids)
+               and not tags & set(master[ref["ref"]]["tags"])
+               and master[ref["ref"]]["daily_coeff"] is None
+               and master[ref["ref"]]["meal_role"] != "drink"}
+    energy = config["energy"]
+    target = (energy["adult_kcal_per_day"]
+              * (household["adults"] + energy["child_factor"] * household["children"])
+              * household["days"])
+    units = {i: w * (master[i].get("units_per_serving") or 1) for i, w in weights.items()}
+    kcal = sum(master[i]["cal_per_unit"] * u for i, u in units.items())
+    return {i: u * target / kcal for i, u in units.items()}
+
+
 def check_plan(plan, household, template_id, master, config, exclude_tags=(), exclude_ids=()):
     """解（plan）に対する常識チェックを行い、[(チェック名, 合否, 詳細)] を返す。"""
     results = []
@@ -176,8 +198,10 @@ def check_plan(plan, household, template_id, master, config, exclude_tags=(), ex
     results.append(("品目に多様性がある", not short, "; ".join(short) or "OK"))
 
     # 食事の回数：主食・主菜は「1食に1食分」が土台。購入単位への切り上げ分は許容する。
-    # 超える場合は、ソルバーが meta.meal_extras[役割].reason に理由を書いていれば合格とする
+    # 超える場合は、ソルバーが meta.meal_extras[役割].reason に理由を書いていれば合格とする。
+    # ただし、上限（upper_servings_per_meal_by_role。主食は1食に2食分）を超えたら、理由があっても不合格
     meals_cfg = config["meals"]
+    upper = meals_cfg.get("upper_servings_per_meal_by_role", {})
     meals = meals_cfg["per_person_per_day"] * people * days
     extras = plan.get("meta", {}).get("meal_extras") or {}
     over_meals = []
@@ -187,6 +211,9 @@ def check_plan(plan, household, template_id, master, config, exclude_tags=(), ex
         got = sum(servings(master[i], chosen[i]) for i in role_ids)
         rounding = sum(servings(master[i], master[i]["pack_size"] - 1) for i in role_ids)
         allowed = per_meal * meals
+        if role in upper and got > upper[role] * meals + rounding + FLOAT_TOLERANCE:
+            over_meals.append(f"{role} {got:g}食分が上限（1食に{upper[role]:g}食分 × 食事 {meals}回）を超えた")
+            continue
         if got <= allowed + rounding + FLOAT_TOLERANCE:
             meal_notes.append(f"{role} {got:g}食分 / 食事 {meals}回")
             continue

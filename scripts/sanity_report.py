@@ -34,6 +34,13 @@ def staple_vs_meals(plan, hh, master, config):
     return f"{got:g} / {meals}"
 
 
+def snacks_per_person_day(plan, hh, master):
+    people_days = (hh["adults"] + hh["children"]) * hh["days"]
+    got = sum(servings(master[e["id"]], e["count"]) for e in plan["items"]
+              if master[e["id"]]["meal_role"] == "snack")
+    return f"{got / people_days:.2f}"
+
+
 def example_section(solve, master, config):
     hh, template_id = EXAMPLE["household"], EXAMPLE["template_id"]
     plan = solve(household=hh, template_id=template_id, exclude_tags=[], exclude_ids=[])
@@ -95,7 +102,8 @@ def build_report():
         kinds = sum(1 for e in plan["items"] if e["count"] > 0)
         label = f"{case['template_id']} / {household_label(hh)}"
         staple = staple_vs_meals(plan, hh, master, config)
-        rows.append(f"| {label} | {kinds} | {staple} | {juice} | {'OK' if not ngs else '**NG**'} | {'; '.join(ngs) or '—'} |")
+        snack = snacks_per_person_day(plan, hh, master)
+        rows.append(f"| {label} | {kinds} | {staple} | {snack} | {juice} | {'OK' if not ngs else '**NG**'} | {'; '.join(ngs) or '—'} |")
 
     total = len(rows)
     lines += [
@@ -103,10 +111,11 @@ def build_report():
         "",
         f"{total} 通りの世帯条件のうち、NG があったのは {ng_count} 通りです。",
         "",
-        "「主食 / 食事」は、主食の食数と食事の回数（3食 × 大人と子供の人数 × 日数）です。",
+        "「主食 / 食事」は、主食の食数と食事の回数（3食 × 大人と子供の人数 × 日数）です。"
+        "「間食/人日」は、間食（ようかんなど）の1人1日あたりの数です。",
         "",
-        "| 条件 | 品目の種類数 | 主食 / 食事 | 野菜ジュースの本数 | 判定 | NG の内容 |",
-        "| --- | --- | --- | --- | --- | --- |",
+        "| 条件 | 品目の種類数 | 主食 / 食事 | 間食/人日 | 野菜ジュースの本数 | 判定 | NG の内容 |",
+        "| --- | --- | --- | --- | --- | --- | --- |",
         *rows,
         "",
         *example_section(solve, master, config),
@@ -117,7 +126,8 @@ def build_report():
         f"- 水：1人1日 {config['water']['ml_per_person_per_day']} ml（子供 {config['water']['child_factor']} 倍、"
         f"乳幼児 {config['water']['infant_factor']} 倍）",
         f"- 食事の回数：1人1日 {config['meals']['per_person_per_day']} 食。1食あたり "
-        f"{config['meals']['max_servings_per_meal_by_role']}（超える場合は理由が必要）",
+        f"{config['meals']['max_servings_per_meal_by_role']}（超える場合は理由が必要）、"
+        f"上限 {config['meals']['upper_servings_per_meal_by_role']}",
         f"- 1品目の上限：1人1日あたり {config['per_item_caps']['max_units_per_person_day_by_role']}、"
         f"エネルギーの {config['per_item_caps']['max_kcal_share_of_total']:.0%} まで",
         f"- 多様性：{config['diversity']['min_distinct_items_by_role']}",
