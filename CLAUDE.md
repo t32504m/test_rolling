@@ -32,6 +32,7 @@
 - `templates/index.json` と `templates/<id>.json` … 6種類のテンプレート（`{ref, weight}` 形式）。`debug-*.json` は旧形式の開発用
 - `tests/` … 単体テスト（標準ライブラリの unittest のみ）
 - `scripts/sanity_report.py` … オーナー向けの常識チェック報告を出力する
+- `docs/decisions.md` … オーナーが決めたことの記録（日付と理由）。新しい決定が出たら、統括がここに足す
 
 既知の問題：子供の係数が planner（0.8）と calendar（0.6）で一致していない。0.8 にそろえる（オーナー承認 2026-10-22）。
 
