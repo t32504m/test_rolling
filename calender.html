@@ -300,6 +300,35 @@
             flex: 0 0 auto;
         }
 
+        /* 消費日が2日以上の月：日ごとのまとまりの頭。カレンダーの消費日と同じ帯の上に日付 */
+        .day-group-head {
+            flex: 0 0 auto;
+            padding: 5px 1px 1px;
+            border-bottom: 2px solid var(--ink-color);
+        }
+
+        .day-group-date {
+            position: relative;
+            display: inline-block;
+            font-size: 0.95rem;
+            font-weight: 900;
+            line-height: 1;
+            padding: 0 6px;
+            z-index: 0;
+        }
+
+        .day-group-date::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 50%;
+            height: 0.8em;
+            background: rgba(251, 101, 66, 0.35);
+            transform: translateY(-50%) rotate(-2deg);
+            z-index: -1;
+        }
+
         .bar-prev {
             color: #9a9a9a;
         }
@@ -1053,21 +1082,31 @@
             }));
         }
 
-        // その月の、品目ごとの { name, qty（年間）, unit, accPrev（前の月までの合計）, monthlyQty }
+        // plan のときの、その月の行。days[d] は d 日目に食べる品目の行、rest は今月は食べない品目の行。
+        // 行は { name, qty（年間）, unit, accPrev（それより前に食べた数）, monthlyQty（その日に食べる数） }。
+        // 乳児用の品目は12か月の割り振りに入らないので、月のページには出さない（年間のページに出す）
+        function planDayRows(year, month) {
+            const k = planMonthIndex(year, month);
+            const items = PLAN.items.filter(item => !item.infant);
+            const eaten = {};
+            PLAN.months.slice(0, k).forEach(entries => entries.forEach(e => {
+                eaten[e.id] = (eaten[e.id] || 0) + e.count;
+            }));
+            const row = (item, count) => ({ name: item.name, qty: item.count, unit: item.unit, accPrev: eaten[item.id] || 0, monthlyQty: count });
+            const days = PLAN.days[k].map(entries => items.flatMap(item => {
+                const entry = entries.find(e => e.id === item.id);
+                if (!entry) return [];
+                const r = row(item, entry.count);
+                eaten[item.id] = (eaten[item.id] || 0) + entry.count;
+                return [r];
+            }));
+            const thisMonth = new Set(PLAN.months[k].map(e => e.id));
+            const rest = items.filter(item => !thisMonth.has(item.id)).map(item => row(item, 0));
+            return { days, rest, count: thisMonth.size };
+        }
+
+        // その月の、品目ごとの { name, qty（年間）, unit, accPrev（前の月までの合計）, monthlyQty }（plan でないとき）
         function monthlyRows(year, month) {
-            if (PLAN) {
-                const k = planMonthIndex(year, month);
-                return PLAN.items.map(item => {
-                    let accPrev = 0, monthlyQty = 0;
-                    PLAN.months.forEach((entries, i) => {
-                        const entry = entries.find(e => e.id === item.id);
-                        if (!entry) return;
-                        if (i < k) accPrev += entry.count;
-                        if (i === k) monthlyQty = entry.count;
-                    });
-                    return { name: item.name, qty: item.count, unit: item.unit, accPrev, monthlyQty };
-                });
-            }
             return yearlyRows().map(r => {
                 const accCurrent = Math.floor(((month + 1) * r.qty) / 12);
                 const accPrev = Math.floor((month * r.qty) / 12);
@@ -1124,7 +1163,15 @@
             planStart = { year: y, month: m - 1 };
         }
 
+        // plan のときの、その月の消費日（Date のリスト）。決めた曜日から、plan の消費日の数だけ続く
+        function planConsumptionDates(year, month) {
+            const startDay = getNthWeekDay(year, month, highlightPayload.weekNumber, highlightPayload.weekDay);
+            if (!startDay) return [];
+            return PLAN.days[planMonthIndex(year, month)].map((_, i) => new Date(year, month, startDay + i));
+        }
+
         function isConsumptionPeriod(year, month, day) {
+            if (PLAN) return planConsumptionDates(year, month).some(date => date.getMonth() === month && date.getDate() === day);
             const startDay = getNthWeekDay(year, month, highlightPayload.weekNumber, highlightPayload.weekDay);
             if (!startDay) return false;
             const startDate = new Date(year, month, startDay);
@@ -1264,13 +1311,19 @@
             const days = highlightPayload.days;
             const weeksJP = ["日", "月", "火", "水", "木", "金", "土"];
             const startDayNum = getNthWeekDay(year, month, highlightPayload.weekNumber, highlightPayload.weekDay);
-            const consumeRangeText = startDayNum ? `${month + 1}/${startDayNum}～${month + 1}/${startDayNum + days - 1}` : '—';
+            let consumeRangeText = startDayNum ? `${month + 1}/${startDayNum}～${month + 1}/${startDayNum + days - 1}` : '—';
+            const planDates = PLAN ? planConsumptionDates(year, month) : [];
+            const dateText = date => `${date.getMonth() + 1}/${date.getDate()}`;
+            if (PLAN && planDates.length) {
+                consumeRangeText = planDates.length === 1 ? dateText(planDates[0])
+                    : `${dateText(planDates[0])}～${dateText(planDates[planDates.length - 1])}`;
+            }
 
             const BAR_CAP = 16;
             const barSpan = (ch, n, cls) => n > 0 ? `<span class="${cls}">${ch.repeat(n)}</span>` : '';
 
             let shoppingCount = 0;
-            const rowsData = monthlyRows(year, month).map(item => {
+            const toRow = item => {
                 const totalQty = item.qty;
                 const accPrev = item.accPrev;
                 const monthlyQty = item.monthlyQty;
@@ -1290,16 +1343,39 @@
                 // plan のときは、その月に食べる数を出す（年間の数は年間のページにある）
                 const qtyText = PLAN ? (rotate ? `${monthlyQty}${item.unit}` : '') : `${totalQty}${item.unit}`;
                 return { name: item.name, qtyText, rotate, barHtml };
-            });
+            };
+
+            // 行のまとまり。消費日が2日以上の月は、日ごとにまとめ、その日の日付を頭に置く
+            let sections;
+            if (PLAN) {
+                const { days: dayRows, rest, count } = planDayRows(year, month);
+                sections = dayRows.map((rows, i) => ({
+                    date: dayRows.length > 1 && planDates[i] ? planDates[i] : null,
+                    rows: rows.map(toRow),
+                }));
+                sections.push({ date: null, rows: rest.map(toRow) });
+                shoppingCount = count;
+            } else {
+                sections = [{ date: null, rows: monthlyRows(year, month).map(toRow) }];
+            }
 
             const THRESHOLD = 13;
-            const stacked = rowsData.length <= THRESHOLD;
+            const rowCount = sections.reduce((n, sec) => n + sec.rows.length, 0);
+            const stacked = rowCount <= THRESHOLD;
 
             let rowsHtml = '';
-            rowsData.forEach(r => {
+            sections.forEach(sec => {
+                if (sec.date) {
+                    const label = sec.date.getMonth() === month ? sec.date.getDate() : dateText(sec.date);
+                    rowsHtml += `<div class="day-group-head"><span class="day-group-date">${label}</span></div>`;
+                }
+                sec.rows.forEach(r => rowsHtml += rowHtml(r));
+            });
+
+            function rowHtml(r) {
                 const nameStyle = r.rotate ? 'font-weight:800; color:var(--ink-color);' : 'font-weight:500; color:#a8a6a0;';
                 const dot = r.rotate ? '<span class="row-dot">●</span>' : '';
-                rowsHtml += `
+                return `
                     <div class="stock-row">
                         <div class="row-top">
                             <span class="row-name-wrap">${dot}<span class="row-name" style="${nameStyle}">${r.name}</span></span>
@@ -1308,7 +1384,7 @@
                         <div class="row-bar">${r.barHtml}</div>
                     </div>
                 `;
-            });
+            }
 
             return `
                 <header>

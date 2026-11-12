@@ -3,6 +3,6 @@
 使い方は rotation/README.md を参照。
 """
 
-from .allocate import MONTHS, allocate, build_plan
+from .allocate import MONTHS, allocate, build_plan, schedule
 
-__all__ = ["MONTHS", "allocate", "build_plan"]
+__all__ = ["MONTHS", "allocate", "build_plan", "schedule"]

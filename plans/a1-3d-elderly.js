@@ -11,67 +11,78 @@ window.ROLLING_PLAN = {
    "id": "K003",
    "name": "ようかん",
    "unit": "本",
-   "count": 2
+   "count": 2,
+   "infant": false
   },
   {
    "id": "M001",
    "name": "魚缶詰（サバ味噌煮/水煮）",
    "unit": "缶",
-   "count": 2
+   "count": 2,
+   "infant": false
   },
   {
    "id": "M002",
    "name": "魚缶詰（ツナ）",
    "unit": "缶",
-   "count": 6
+   "count": 6,
+   "infant": false
   },
   {
    "id": "M006",
    "name": "レトルトカレー（常温可食型）",
    "unit": "袋",
-   "count": 3
+   "count": 3,
+   "infant": false
   },
   {
    "id": "N002",
    "name": "ゼリー飲料（エネルギー補給型）",
    "unit": "個",
-   "count": 2
+   "count": 2,
+   "infant": false
   },
   {
    "id": "S002",
    "name": "アルファ米（味付き）",
    "unit": "食",
-   "count": 3
+   "count": 3,
+   "infant": false
   },
   {
    "id": "S003",
    "name": "アルファ米（おかゆ）",
    "unit": "食",
-   "count": 5
+   "count": 5,
+   "infant": false
   },
   {
    "id": "S005",
    "name": "レトルトおかゆ",
    "unit": "食",
-   "count": 2
+   "count": 2,
+   "infant": false
   },
   {
    "id": "V001",
    "name": "野菜ジュース（長期保存）",
    "unit": "本",
-   "count": 3
+   "count": 3,
+   "infant": false
   },
   {
    "id": "V002",
    "name": "フルーツ缶詰",
    "unit": "缶",
-   "count": 2
+   "count": 2,
+   "infant": false
   },
   {
    "id": "W004",
    "name": "保存水 (1L)",
    "unit": "本",
-   "count": 9
+   "count": 9,
+   "infant": false
   }
  ],
  "months": [
@@ -85,11 +96,19 @@ window.ROLLING_PLAN = {
     "count": 1
    },
    {
+    "id": "V001",
+    "count": 1
+   },
+   {
     "id": "W004",
     "count": 1
    }
   ],
   [
+   {
+    "id": "K003",
+    "count": 1
+   },
    {
     "id": "M006",
     "count": 1
@@ -97,9 +116,83 @@ window.ROLLING_PLAN = {
    {
     "id": "S002",
     "count": 1
+   }
+  ],
+  [
+   {
+    "id": "M001",
+    "count": 1
+   },
+   {
+    "id": "M002",
+    "count": 1
+   },
+   {
+    "id": "W004",
+    "count": 1
+   }
+  ],
+  [
+   {
+    "id": "N002",
+    "count": 1
+   },
+   {
+    "id": "S003",
+    "count": 1
+   },
+   {
+    "id": "S005",
+    "count": 1
+   },
+   {
+    "id": "W004",
+    "count": 1
+   }
+  ],
+  [
+   {
+    "id": "M002",
+    "count": 1
+   },
+   {
+    "id": "M006",
+    "count": 1
+   },
+   {
+    "id": "W004",
+    "count": 1
+   }
+  ],
+  [
+   {
+    "id": "S002",
+    "count": 1
+   },
+   {
+    "id": "V002",
+    "count": 1
+   },
+   {
+    "id": "W004",
+    "count": 1
+   }
+  ],
+  [
+   {
+    "id": "M002",
+    "count": 1
+   },
+   {
+    "id": "S003",
+    "count": 1
    },
    {
     "id": "V001",
+    "count": 1
+   },
+   {
+    "id": "W004",
     "count": 1
    }
   ],
@@ -113,7 +206,7 @@ window.ROLLING_PLAN = {
     "count": 1
    },
    {
-    "id": "W004",
+    "id": "S003",
     "count": 1
    }
   ],
@@ -127,83 +220,13 @@ window.ROLLING_PLAN = {
     "count": 1
    },
    {
-    "id": "S005",
-    "count": 1
-   },
-   {
-    "id": "V002",
-    "count": 1
-   }
-  ],
-  [
-   {
-    "id": "S003",
-    "count": 1
-   },
-   {
     "id": "W004",
-    "count": 2
+    "count": 1
    }
   ],
   [
-   {
-    "id": "M002",
-    "count": 1
-   },
    {
     "id": "M006",
-    "count": 1
-   },
-   {
-    "id": "S002",
-    "count": 1
-   }
-  ],
-  [
-   {
-    "id": "S003",
-    "count": 1
-   },
-   {
-    "id": "V001",
-    "count": 1
-   },
-   {
-    "id": "W004",
-    "count": 1
-   }
-  ],
-  [
-   {
-    "id": "M002",
-    "count": 1
-   },
-   {
-    "id": "S003",
-    "count": 1
-   },
-   {
-    "id": "W004",
-    "count": 2
-   }
-  ],
-  [
-   {
-    "id": "K003",
-    "count": 1
-   },
-   {
-    "id": "M001",
-    "count": 1
-   },
-   {
-    "id": "M002",
-    "count": 1
-   }
-  ],
-  [
-   {
-    "id": "N002",
     "count": 1
    },
    {
@@ -217,15 +240,15 @@ window.ROLLING_PLAN = {
   ],
   [
    {
-    "id": "M006",
-    "count": 1
-   },
-   {
     "id": "S002",
     "count": 1
    },
    {
-    "id": "V001",
+    "id": "S003",
+    "count": 1
+   },
+   {
+    "id": "W004",
     "count": 1
    }
   ],
@@ -235,13 +258,231 @@ window.ROLLING_PLAN = {
     "count": 1
    },
    {
-    "id": "S003",
+    "id": "V001",
     "count": 1
    },
    {
     "id": "W004",
-    "count": 2
+    "count": 1
    }
+  ]
+ ],
+ "days": [
+  [
+   [
+    {
+     "id": "M002",
+     "count": 1
+    },
+    {
+     "id": "S003",
+     "count": 1
+    },
+    {
+     "id": "W004",
+     "count": 1
+    }
+   ],
+   [
+    {
+     "id": "V001",
+     "count": 1
+    }
+   ]
+  ],
+  [
+   [
+    {
+     "id": "M006",
+     "count": 1
+    },
+    {
+     "id": "S002",
+     "count": 1
+    }
+   ],
+   [
+    {
+     "id": "K003",
+     "count": 1
+    }
+   ]
+  ],
+  [
+   [
+    {
+     "id": "M001",
+     "count": 1
+    },
+    {
+     "id": "M002",
+     "count": 1
+    },
+    {
+     "id": "W004",
+     "count": 1
+    }
+   ]
+  ],
+  [
+   [
+    {
+     "id": "S003",
+     "count": 1
+    },
+    {
+     "id": "S005",
+     "count": 1
+    },
+    {
+     "id": "W004",
+     "count": 1
+    }
+   ],
+   [
+    {
+     "id": "N002",
+     "count": 1
+    }
+   ]
+  ],
+  [
+   [
+    {
+     "id": "M002",
+     "count": 1
+    },
+    {
+     "id": "M006",
+     "count": 1
+    },
+    {
+     "id": "W004",
+     "count": 1
+    }
+   ]
+  ],
+  [
+   [
+    {
+     "id": "S002",
+     "count": 1
+    },
+    {
+     "id": "V002",
+     "count": 1
+    },
+    {
+     "id": "W004",
+     "count": 1
+    }
+   ]
+  ],
+  [
+   [
+    {
+     "id": "M002",
+     "count": 1
+    },
+    {
+     "id": "S003",
+     "count": 1
+    },
+    {
+     "id": "W004",
+     "count": 1
+    }
+   ],
+   [
+    {
+     "id": "V001",
+     "count": 1
+    }
+   ]
+  ],
+  [
+   [
+    {
+     "id": "M001",
+     "count": 1
+    },
+    {
+     "id": "S003",
+     "count": 1
+    }
+   ],
+   [
+    {
+     "id": "K003",
+     "count": 1
+    }
+   ]
+  ],
+  [
+   [
+    {
+     "id": "M002",
+     "count": 1
+    },
+    {
+     "id": "N002",
+     "count": 1
+    },
+    {
+     "id": "W004",
+     "count": 1
+    }
+   ]
+  ],
+  [
+   [
+    {
+     "id": "M006",
+     "count": 1
+    },
+    {
+     "id": "S005",
+     "count": 1
+    }
+   ],
+   [
+    {
+     "id": "V002",
+     "count": 1
+    }
+   ]
+  ],
+  [
+   [
+    {
+     "id": "S002",
+     "count": 1
+    },
+    {
+     "id": "S003",
+     "count": 1
+    },
+    {
+     "id": "W004",
+     "count": 1
+    }
+   ]
+  ],
+  [
+   [
+    {
+     "id": "M002",
+     "count": 1
+    },
+    {
+     "id": "V001",
+     "count": 1
+    },
+    {
+     "id": "W004",
+     "count": 1
+    }
+   ]
   ]
  ]
 };
