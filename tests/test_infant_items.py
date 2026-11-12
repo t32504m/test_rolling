@@ -65,6 +65,15 @@ class TestInfantItems(unittest.TestCase):
                         covered = sum(counts.get(i, 0) / master[i]["daily_coeff"] for i in MILK_IDS)
                         self.assertGreaterEqual(covered + 1e-9, infants * max(days, min_days))
 
+    def test_warns_when_milk_is_all_excluded(self):
+        # 乳幼児がいるのに、除外の指定でミルクが出せないときは、meta["warnings"] に日本語で知らせる
+        result = self.solve({"adults": 2, "children": 0, "infants": 1, "days": 3}, "standard",
+                            exclude_ids=["P001", "P002"])
+        self.assertFalse(MILK_IDS & {i["id"] for i in result["items"]})
+        self.assertTrue(result["meta"].get("warnings"), "ミルクが出ないのに警告がない")
+        ok = self.solve({"adults": 2, "children": 0, "infants": 1, "days": 3}, "standard")
+        self.assertFalse(ok["meta"].get("warnings"), "ミルクが出ているのに警告がある")
+
     def test_infant_items_have_rationale(self):
         result = self.solve({"adults": 2, "children": 0, "infants": 1, "days": 3}, "standard")
         for item in result["items"]:
