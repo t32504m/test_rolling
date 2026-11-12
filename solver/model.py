@@ -279,9 +279,12 @@ def solve(household, template_id=None, exclude_tags=None, exclude_ids=None):
     # not presume dysphagia or supplementation needs for every person.
     basis = {"all": adults + children + infants, "adults": adults,
              "children": children, "infants": infants}
+    # Infant foods cover at least infant.min_days (MAFF: at least two weeks of
+    # special foods), even when the household stocks fewer days.
+    infant_days = max(days, config["infant"]["min_days"])
     for item_id in _infant_items(master, allowed, infants):
         pool[item_id] = (master[item_id], None)
-        quantities[item_id] = _special_count(master[item_id], infants, days)
+        quantities[item_id] = _special_count(master[item_id], infants, infant_days)
     if template_id is not None:
         for item_id, (item, _) in pool.items():
             basis_name = item.get("coeff_basis") or "all"
@@ -305,7 +308,7 @@ def solve(household, template_id=None, exclude_tags=None, exclude_ids=None):
     rationale, meal_extras = explain_plan(
         quantities, pool, config, adults, children, infants, days,
         target_kcal, target_protein, ideals, required_water, TOLERANCE,
-        {i: master[i]["name"] for i in INFANT_MILK_PREFERENCE if i in master},
+        {i: master[i]["name"] for i in INFANT_MILK_PREFERENCE if i in master}, infant_days,
     )
     return {
         "items": [{"id": i, "count": quantities[i]} for i in sorted(quantities)],
