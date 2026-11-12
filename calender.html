@@ -1013,9 +1013,67 @@
             days: 3,
             adults: 2,
             children: 0,
+            infants: 0,
             weekNumber: 2,
             weekDay: 2
         };
+
+        // planner からの受け渡しのときだけ使う子供の係数（tests/sanity_config.json の energy.child_factor と同じ値）
+        const CHILD_FACTOR = 0.8;
+
+        // calender.html?plan=<名前> で読み込んだ plans/<名前>.js（scripts/build_plan.py が作る）。
+        // plan があるときは、量を計算し直さず、plan の数量と月ごとの割り振りをそのまま使う
+        let PLAN = null;
+        let planStart = null; // { year, month }：plan の1か月目
+
+        function planMonthIndex(year, month) {
+            const diff = (year * 12 + month) - (planStart.year * 12 + planStart.month);
+            return ((diff % 12) + 12) % 12; // 12か月で一周し、次の年も同じ割り振りをくり返す
+        }
+
+        function stockDays() {
+            return PLAN ? PLAN.household.days : highlightPayload.days;
+        }
+
+        function householdText() {
+            const h = PLAN ? PLAN.household : highlightPayload;
+            let text = `大人${h.adults} 子供${h.children}`;
+            if (h.infants > 0) text += ` 乳幼児${h.infants}`;
+            return text;
+        }
+
+        // 年間の数量（plan があれば plan の数量）
+        function yearlyRows() {
+            if (PLAN) return PLAN.items.map(item => ({ name: item.name, qty: item.count, unit: item.unit }));
+            const weightedPeople = highlightPayload.adults + (highlightPayload.children * CHILD_FACTOR);
+            return STOCK_ITEMS.map(item => ({
+                name: item.name,
+                qty: item.isTotal ? item.count : Math.ceil(item.count * weightedPeople * highlightPayload.days),
+                unit: item.unit
+            }));
+        }
+
+        // その月の、品目ごとの { name, qty（年間）, unit, accPrev（前の月までの合計）, monthlyQty }
+        function monthlyRows(year, month) {
+            if (PLAN) {
+                const k = planMonthIndex(year, month);
+                return PLAN.items.map(item => {
+                    let accPrev = 0, monthlyQty = 0;
+                    PLAN.months.forEach((entries, i) => {
+                        const entry = entries.find(e => e.id === item.id);
+                        if (!entry) return;
+                        if (i < k) accPrev += entry.count;
+                        if (i === k) monthlyQty = entry.count;
+                    });
+                    return { name: item.name, qty: item.count, unit: item.unit, accPrev, monthlyQty };
+                });
+            }
+            return yearlyRows().map(r => {
+                const accCurrent = Math.floor(((month + 1) * r.qty) / 12);
+                const accPrev = Math.floor((month * r.qty) / 12);
+                return { ...r, accPrev, monthlyQty: accCurrent - accPrev };
+            });
+        }
 
         function loadExternalData() {
             const bridgeDataRaw = localStorage.getItem('dorksense_bridge_data');
@@ -1055,12 +1113,15 @@
             if (pDays) highlightPayload.days = parseInt(pDays, 10);
             if (pAdults) highlightPayload.adults = parseInt(pAdults, 10);
             if (pChildren) highlightPayload.children = parseInt(pChildren, 10);
+            const pInfants = params.get('infants');
+            if (pInfants) highlightPayload.infants = parseInt(pInfants, 10);
             if (pWeekNum) highlightPayload.weekNumber = parseInt(pWeekNum, 10);
             if (pWeekDay) highlightPayload.weekDay = parseInt(pWeekDay, 10);
 
             const normalized = highlightPayload.startDate.replace(/\//g, '-');
             const [y, m, d] = normalized.split('-').map(Number);
             currentDate = new Date(y, m - 1, 1);
+            planStart = { year: y, month: m - 1 };
         }
 
         function isConsumptionPeriod(year, month, day) {
@@ -1092,7 +1153,32 @@
         const MONTHS = ["１月", "２月", "３月", "４月", "５月", "６月", "７月", "８月", "９月", "１０月", "１１月", "１２月"];
 
         function init() {
-            loadExternalData();
+            const planName = new URLSearchParams(window.location.search).get('plan');
+            if (planName === null) {
+                start();
+                return;
+            }
+            if (!/^[A-Za-z0-9_-]+$/.test(planName)) {
+                showPlanError(planName);
+                return;
+            }
+            const script = document.createElement('script');
+            script.src = `plans/${planName}.js`;
+            script.onload = () => {
+                if (!window.ROLLING_PLAN) { showPlanError(planName); return; }
+                PLAN = window.ROLLING_PLAN;
+                start();
+            };
+            script.onerror = () => showPlanError(planName);
+            document.head.appendChild(script);
+        }
+
+        function showPlanError(planName) {
+            document.getElementById('screen-canvas').textContent = `plans/${planName}.js を読み込めません`;
+        }
+
+        function start() {
+            if (!PLAN) loadExternalData();
             setupHighlightRange();
             renderScreen();
             adjustMobileScale(); // Initial adjustment
@@ -1175,7 +1261,6 @@
             const calAspect = `7 / ${(weeksCount * 0.92).toFixed(2)}`;
             const daysGridStyle = `grid-template-rows:repeat(${weeksCount},1fr); aspect-ratio:${calAspect};`;
 
-            const weightedPeople = highlightPayload.adults + (highlightPayload.children * 0.6);
             const days = highlightPayload.days;
             const weeksJP = ["日", "月", "火", "水", "木", "金", "土"];
             const startDayNum = getNthWeekDay(year, month, highlightPayload.weekNumber, highlightPayload.weekDay);
@@ -1185,13 +1270,11 @@
             const barSpan = (ch, n, cls) => n > 0 ? `<span class="${cls}">${ch.repeat(n)}</span>` : '';
 
             let shoppingCount = 0;
-            const rowsData = STOCK_ITEMS.map(item => {
-                const totalQty = item.isTotal
-                    ? item.count
-                    : Math.ceil(item.count * weightedPeople * days);
-                const accCurrent = Math.floor(((month + 1) * totalQty) / 12);
-                const accPrev = Math.floor((month * totalQty) / 12);
-                const monthlyQty = accCurrent - accPrev;
+            const rowsData = monthlyRows(year, month).map(item => {
+                const totalQty = item.qty;
+                const accPrev = item.accPrev;
+                const monthlyQty = item.monthlyQty;
+                const accCurrent = accPrev + monthlyQty;
                 const rotate = monthlyQty > 0;
                 if (rotate) shoppingCount++;
 
@@ -1204,7 +1287,9 @@
                 }
                 const barHtml = barSpan('◆', prev, 'bar-prev') + barSpan('◆', cur, 'bar-cur') + barSpan('◇', rem, 'bar-rem');
 
-                return { name: item.name, qty: totalQty, unit: item.unit, monthlyQty, rotate, barHtml };
+                // plan のときは、その月に食べる数を出す（年間の数は年間のページにある）
+                const qtyText = PLAN ? (rotate ? `${monthlyQty}${item.unit}` : '') : `${totalQty}${item.unit}`;
+                return { name: item.name, qtyText, rotate, barHtml };
             });
 
             const THRESHOLD = 13;
@@ -1218,7 +1303,7 @@
                     <div class="stock-row">
                         <div class="row-top">
                             <span class="row-name-wrap">${dot}<span class="row-name" style="${nameStyle}">${r.name}</span></span>
-                            <span class="row-qty">${r.qty}${r.unit}</span>
+                            <span class="row-qty">${r.qtyText}</span>
                         </div>
                         <div class="row-bar">${r.barHtml}</div>
                     </div>
@@ -1248,7 +1333,7 @@
                         </div>
                         <div class="legend-line">
                             <span><span class="legend-swatch"></span> 消費期間 ${consumeRangeText}</span>
-                            <span>設定: 大人${highlightPayload.adults} 子供${highlightPayload.children} ×${days}日分／第${highlightPayload.weekNumber}${weeksJP[highlightPayload.weekDay]}曜</span>
+                            <span>設定: ${householdText()} ×${stockDays()}日分／第${highlightPayload.weekNumber}${weeksJP[highlightPayload.weekDay]}曜</span>
                         </div>
                         <div class="memo-box">
                             <div class="box-header"><span>MEMO</span><span style="font-size:0.65rem; color:#999; font-weight:normal;">[ 自由記入 ]</span></div>
@@ -1266,16 +1351,19 @@
 
         function generateYearlyPageHTML(year) {
             let gridHTML = '';
-            for (let m = 0; m < 12; m++) {
-                const firstDay = new Date(year, m, 1).getDay();
+            const first = PLAN ? planStart : { year, month: 0 };
+            for (let i = 0; i < 12; i++) {
+                const y = first.year + Math.floor((first.month + i) / 12);
+                const m = (first.month + i) % 12;
+                const firstDay = new Date(y, m, 1).getDay();
                 let startSlot = firstDay - 1;
                 if (startSlot === -1) startSlot = 6;
-                const daysInMonth = new Date(year, m + 1, 0).getDate();
+                const daysInMonth = new Date(y, m + 1, 0).getDate();
                 let miniDays = '';
                 for (let s = 0; s < startSlot; s++) miniDays += `<div class="mini-day"></div>`;
 
                 for (let d = 1; d <= daysInMonth; d++) {
-                    const currentDayDate = new Date(year, m, d);
+                    const currentDayDate = new Date(y, m, d);
                     const dayOfWeek = currentDayDate.getDay();
                     let dayClass = 'mini-day has-date';
                     if (dayOfWeek === 6) dayClass += ' sat';
@@ -1290,12 +1378,9 @@
             }
 
             let stockListHTML = '';
-            const weightedPeople = highlightPayload.adults + (highlightPayload.children * 0.6);
-            const days = highlightPayload.days;
-            STOCK_ITEMS.forEach(item => {
-                const totalQty = item.isTotal
-                    ? item.count
-                    : Math.ceil(item.count * weightedPeople * days);
+            const rows = yearlyRows();
+            rows.forEach(item => {
+                const totalQty = item.qty;
                 stockListHTML += `
                 <div class="yearly-stock-item">
                     <div class="item-name">${item.name}</div>
@@ -1304,13 +1389,13 @@
             });
 
             return `
-                <header><div class="meta-info">${year} // YEARLY</div></header>
+                <header><div class="meta-info">${first.month === 0 ? first.year : `${first.year}/${first.month + 1}–${first.year + 1}/${first.month}`} // YEARLY</div></header>
                 <div class="deco-bar"><div style="background:var(--ink-color);width:100%;"></div></div>
                 <div class="yearly-grid">${gridHTML}</div>
                 <div class="footer-section-yearly">
                     <div style="font-weight:bold;border-bottom:2px solid var(--ink-color);margin-bottom:8px; display:flex; justify-content:space-between;">
                         <span>STOCK LIST (YEARLY GOAL)</span>
-                        <span style="font-size:0.8em; font-weight:normal;">[備蓄目標総量 / ${STOCK_ITEMS.length}品目]</span>
+                        <span style="font-size:0.8em; font-weight:normal;">[備蓄目標総量 / ${rows.length}品目]</span>
                     </div>
                     <div class="yearly-stock-grid">${stockListHTML}</div>
                 </div>
@@ -1381,11 +1466,18 @@
             printContainer.innerHTML = '';
             const year = currentDate.getFullYear();
 
-            // 常に今日の月～12月 + 年間の両方を印刷
-            const todayMonth = new Date().getMonth();
-            for (let m = todayMonth; m < 12; m++) {
-                printContainer.innerHTML += `<div class="canvas-page neo-box mode-monthly" style="margin:0; border:none; box-shadow:none;">${generateMonthlyPageHTML(year, m)}</div>`;
+            // plan のときは plan の1か月目から12か月。そうでなければ今日の月～12月。そのあとに年間
+            const pages = [];
+            if (PLAN) {
+                for (let i = 0; i < 12; i++) {
+                    pages.push([planStart.year + Math.floor((planStart.month + i) / 12), (planStart.month + i) % 12]);
+                }
+            } else {
+                for (let m = new Date().getMonth(); m < 12; m++) pages.push([year, m]);
             }
+            pages.forEach(([y, m]) => {
+                printContainer.innerHTML += `<div class="canvas-page neo-box mode-monthly" style="margin:0; border:none; box-shadow:none;">${generateMonthlyPageHTML(y, m)}</div>`;
+            });
             // 年間ページを最後に追加
             printContainer.innerHTML += `<div class="canvas-page neo-box" style="margin:0; border:none; box-shadow:none;">${generateYearlyPageHTML(year)}</div>`;
 
@@ -1640,7 +1732,7 @@
             highlightPayload.days = selectedDays;
 
             // Also update bridge data so it persists
-            const bridgeDataRaw = localStorage.getItem('dorksense_bridge_data');
+            const bridgeDataRaw = PLAN ? null : localStorage.getItem('dorksense_bridge_data');
             if (bridgeDataRaw) {
                 try {
                     const bridgeData = JSON.parse(bridgeDataRaw);
