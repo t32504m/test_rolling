@@ -11,7 +11,9 @@ def number(value):
 
 
 def explain_plan(counts, pool, config, adults, children, infants, days,
-                 target_kcal, target_protein, ideals, required_water, tolerance):
+                 target_kcal, target_protein, ideals, required_water, tolerance,
+                 milk_names=None):
+    milk_names = milk_names or {}
     meals_cfg = config["meals"]
     meal_count = meals_cfg["per_person_per_day"] * (adults + children) * days
     foods = {i: item for i, (item, _) in pool.items()
@@ -78,6 +80,11 @@ def explain_plan(counts, pool, config, adults, children, infants, days,
                 f"購入単位{pack}{unit}へ切り上げ、{pack}×{count // pack}＝{count}{unit}。"
                 "普通の食事のエネルギー・たんぱく質には加算しない。"
             )
+            if basis == "infants":
+                rationale[item_id] += "乳幼児がいるので、テンプレートにかかわらず出す。"
+                if item_id in milk_names:
+                    rationale[item_id] += ("ミルクは二重に数えず、" + "、".join(milk_names.values())
+                                           + "の順に、除外されていない1品目だけを選ぶ。")
         else:
             role = item["meal_role"]
             serving = item.get("units_per_serving") or 1

@@ -17,6 +17,10 @@ ROOT = Path(__file__).resolve().parent.parent
 TOLERANCE = 1e-6  # Numerical solver tolerance, not a nutrition threshold.
 # Roles that must not fill the energy shortfall beyond the template preference.
 TOPPING_ROLES = ("side", "snack")
+# Infant milks are substitutes: one is chosen, in this order of preference.
+# Liquid milk needs no hot water (the master calls it the first choice in a
+# disaster); powdered milk is the fallback when liquid milk is excluded.
+INFANT_MILK_PREFERENCE = ("P001", "P002")
 
 
 class InfeasiblePlanError(ValueError):
@@ -60,11 +64,31 @@ def _pool(master, template_id, exclude_tags, exclude_ids):
     for item_id, weight in weights.items():
         if not isinstance(weight, (int, float)) or not math.isfinite(weight) or weight <= 0:
             raise ValueError(f"{item_id}: template weight must be finite and positive")
-    return {
-        item_id: (master[item_id], weights[item_id])
-        for item_id in sorted(weights)
-        if item_id not in ids and not tags.intersection(master[item_id]["tags"])
-    }
+    allowed = {item_id for item_id, item in master.items()
+               if item_id not in ids and not tags.intersection(item["tags"])}
+    pool = {item_id: (master[item_id], weights[item_id])
+            for item_id in sorted(weights) if item_id in allowed}
+    return pool, allowed
+
+
+def _special_count(item, people, days):
+    return math.ceil(item["daily_coeff"] * people * days / item["pack_size"]) * item["pack_size"]
+
+
+def _infant_items(master, allowed, infants):
+    """Infant foods come from the household, not from template weights.
+
+    Milk is consumed by the infants only, unlike a template's household-wide
+    preference (owner decision 2026-11-05/11-12), so every template gets the
+    same infant items. Exclusions still apply; one milk is chosen among the
+    substitutes, and other infant foods (baby food) are added as well.
+    """
+    if infants == 0:
+        return []
+    candidates = [i for i in sorted(allowed) if master[i]["daily_coeff"] is not None
+                  and master[i].get("coeff_basis") == "infants"]
+    milks = [i for i in INFANT_MILK_PREFERENCE if i in candidates]
+    return milks[:1] + [i for i in candidates if i not in INFANT_MILK_PREFERENCE]
 
 
 def _water(pool, required_ml):
@@ -110,7 +134,7 @@ def solve(household, template_id=None, exclude_tags=None, exclude_ids=None):
     people_days = (adults + children) * days
     master = {item["id"]: item for item in _read("data/items-master.json")["items"]}
     config = _read("tests/sanity_config.json")
-    pool = _pool(master, template_id, exclude_tags, exclude_ids)
+    pool, allowed = _pool(master, template_id, exclude_tags, exclude_ids)
     water = config["water"]
     water_people = adults + water["child_factor"] * children + water["infant_factor"] * infants
     required_water = water["ml_per_person_per_day"] * water_people * days
@@ -249,19 +273,25 @@ def solve(household, template_id=None, exclude_tags=None, exclude_ids=None):
         if rounded:
             quantities[item_id] = rounded
     # Special foods are supplementary, not a replacement for normal food.
-    # Only an explicit template opts into them; unrestricted selection must not
-    # presume infant care, dysphagia or supplementation needs for every person.
+    # Infant foods follow the household's infants in every template (and with
+    # template_id=None), because the number of infants is given explicitly.
+    # Other special foods need an explicit template: unrestricted selection must
+    # not presume dysphagia or supplementation needs for every person.
+    basis = {"all": adults + children + infants, "adults": adults,
+             "children": children, "infants": infants}
+    for item_id in _infant_items(master, allowed, infants):
+        pool[item_id] = (master[item_id], None)
+        quantities[item_id] = _special_count(master[item_id], infants, days)
     if template_id is not None:
         for item_id, (item, _) in pool.items():
-            if item["daily_coeff"] is not None:
-                basis = {"all": adults + children + infants, "adults": adults,
-                         "children": children, "infants": infants}
-                basis_name = item.get("coeff_basis") or "all"
-                if basis_name not in basis:
-                    raise ValueError(f"{item_id}: unknown coeff_basis {basis_name!r}")
-                count = math.ceil(item["daily_coeff"] * basis[basis_name] * days / item["pack_size"]) * item["pack_size"]
-                if count:
-                    quantities[item_id] = count
+            basis_name = item.get("coeff_basis") or "all"
+            if item["daily_coeff"] is None or basis_name == "infants":
+                continue
+            if basis_name not in basis:
+                raise ValueError(f"{item_id}: unknown coeff_basis {basis_name!r}")
+            count = _special_count(item, basis[basis_name], days)
+            if count:
+                quantities[item_id] = count
 
     actual_kcal = sum(foods[i][0]["cal_per_unit"] * quantities.get(i, 0) for i in foods)
     # Accept representation noise at a boundary, but reject actual nutrition
@@ -275,6 +305,7 @@ def solve(household, template_id=None, exclude_tags=None, exclude_ids=None):
     rationale, meal_extras = explain_plan(
         quantities, pool, config, adults, children, infants, days,
         target_kcal, target_protein, ideals, required_water, TOLERANCE,
+        {i: master[i]["name"] for i in INFANT_MILK_PREFERENCE if i in master},
     )
     return {
         "items": [{"id": i, "count": quantities[i]} for i in sorted(quantities)],

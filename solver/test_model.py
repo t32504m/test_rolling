@@ -287,6 +287,28 @@ class SolverModelTest(unittest.TestCase):
         counts_after = {item["id"]: item["count"] for item in second["items"]}
         self.assertGreater(counts_after["S006"], counts_before["S006"])
 
+    def infant_counts(self, template_id, **kwargs):
+        plan = solve({**self.household, "infants": 1}, template_id, **kwargs)
+        return {item["id"]: item["count"] for item in plan["items"] if item["id"] in ("P001", "P002", "P003")}
+
+    def test_infant_items_are_the_same_in_every_template(self):
+        expected = self.infant_counts("baby")
+        self.assertEqual(set(expected), {"P001", "P003"})
+        for template in model._read("templates/index.json"):
+            with self.subTest(template=template["id"]):
+                self.assertEqual(self.infant_counts(template["id"]), expected)
+        self.assertEqual(self.infant_counts(None), expected)
+
+    def test_only_one_milk_is_chosen(self):
+        self.assertNotIn("P002", self.infant_counts("standard"))
+        self.assertEqual(set(self.infant_counts("standard", exclude_ids=["P001"])), {"P002", "P003"})
+
+    def test_no_cook_uses_liquid_milk_and_exclusions_hold(self):
+        self.assertIn("P001", self.infant_counts("no-cook"))
+        # Powdered milk needs hot water, so no-cook without liquid milk has no milk.
+        self.assertEqual(set(self.infant_counts("no-cook", exclude_ids=["P001"])), {"P003"})
+        self.assertEqual(self.infant_counts("standard", exclude_tags=["baby"]), {})
+
 
 if __name__ == "__main__":
     unittest.main()
