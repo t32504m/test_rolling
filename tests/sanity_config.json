@@ -78,6 +78,6 @@
   "infant": {
     "min_days": 14,
     "status": "decided",
-    "basis": "農林水産省「要配慮者のための災害時に備えた食品ストックガイド」p.4「平時から少なくとも2週間分を備蓄することが推奨されます」（https://www.maff.go.jp/j/zyukyu/foodstock/guidebook/pdf/need_consideration_stockguide-4-5.pdf）。乳児用のミルクは、世帯の備蓄日数が14日より短くても14日分を備える（オーナー決定 2026-11-12。docs/reference_infant_milk.md）"
+    "basis": "農林水産省「要配慮者のための災害時に備えた食品ストックガイド」p.4「平時から少なくとも2週間分を備蓄することが推奨されます」（https://www.maff.go.jp/j/zyukyu/foodstock/guidebook/pdf/need_consideration_stockguide-4-5.pdf）。乳児用の品目（ミルク・ベビーフード）は、世帯の備蓄日数が14日より短くても14日分を備える。ベビーフードは同じガイド p.11「離乳食を、少なくとも2週間分」（オーナー決定 2026-11-12。docs/reference_infant_milk.md）"
   }
 }

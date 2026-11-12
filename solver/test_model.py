@@ -195,7 +195,11 @@ class SolverModelTest(unittest.TestCase):
                               master if path == "data/items-master.json" else original_read(path)):
                 plan = solve(household, "baby")
                 counts = {entry["id"]: entry["count"] for entry in plan["items"]}
-                expected = math.ceil(item["daily_coeff"] * people * household["days"] / item["pack_size"]) * item["pack_size"]
+                # 乳児用の品目は、少なくとも infant.min_days 日分（オーナー決定 2026-11-12）
+                days = household["days"]
+                if basis == "infants":
+                    days = max(days, original_read("tests/sanity_config.json")["infant"]["min_days"])
+                expected = math.ceil(item["daily_coeff"] * people * days / item["pack_size"]) * item["pack_size"]
                 self.assertEqual(counts["P001"], expected)
 
     def test_meal_upper_limit_holds_under_extreme_template_preference(self):
