@@ -4,7 +4,7 @@
 """
 import unittest
 
-from harness_common import load_template_index, solver_available
+from harness_common import load_json, load_master, load_template_index, solver_available
 
 MILK_IDS = {"P001", "P002"}          # 乳児用液体ミルク、乳児用粉ミルク
 BABY_FOOD_IDS = {"P003"}             # ベビーフード
@@ -51,6 +51,19 @@ class TestInfantItems(unittest.TestCase):
         ids = {i["id"] for i in result["items"]}
         self.assertNotIn("P001", ids)
         self.assertIn("P002", ids)
+
+    def test_milk_covers_at_least_min_days(self):
+        # 乳児用のミルクは、世帯の備蓄日数が短くても、少なくとも min_days 日分（農林水産省の「2週間分」）
+        min_days = load_json("tests/sanity_config.json")["infant"]["min_days"]
+        master = load_master()
+        for template in load_template_index():
+            for infants in (1, 2):
+                for days in (3, 7, 21):
+                    household = {"adults": 2, "children": 0, "infants": infants, "days": days}
+                    with self.subTest(template=template["id"], infants=infants, days=days):
+                        counts = self._counts(household, template["id"])
+                        covered = sum(counts.get(i, 0) / master[i]["daily_coeff"] for i in MILK_IDS)
+                        self.assertGreaterEqual(covered + 1e-9, infants * max(days, min_days))
 
     def test_infant_items_have_rationale(self):
         result = self.solve({"adults": 2, "children": 0, "infants": 1, "days": 3}, "standard")
