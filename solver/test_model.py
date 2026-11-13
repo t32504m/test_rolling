@@ -195,7 +195,11 @@ class SolverModelTest(unittest.TestCase):
                               master if path == "data/items-master.json" else original_read(path)):
                 plan = solve(household, "baby")
                 counts = {entry["id"]: entry["count"] for entry in plan["items"]}
-                expected = math.ceil(item["daily_coeff"] * people * household["days"] / item["pack_size"]) * item["pack_size"]
+                # 乳児用の品目は、少なくとも infant.min_days 日分（オーナー決定 2026-11-12）
+                days = household["days"]
+                if basis == "infants":
+                    days = max(days, original_read("tests/sanity_config.json")["infant"]["min_days"])
+                expected = math.ceil(item["daily_coeff"] * people * days / item["pack_size"]) * item["pack_size"]
                 self.assertEqual(counts["P001"], expected)
 
     def test_meal_upper_limit_holds_under_extreme_template_preference(self):
@@ -286,6 +290,28 @@ class SolverModelTest(unittest.TestCase):
         counts_before = {item["id"]: item["count"] for item in first["items"]}
         counts_after = {item["id"]: item["count"] for item in second["items"]}
         self.assertGreater(counts_after["S006"], counts_before["S006"])
+
+    def infant_counts(self, template_id, **kwargs):
+        plan = solve({**self.household, "infants": 1}, template_id, **kwargs)
+        return {item["id"]: item["count"] for item in plan["items"] if item["id"] in ("P001", "P002", "P003")}
+
+    def test_infant_items_are_the_same_in_every_template(self):
+        expected = self.infant_counts("baby")
+        self.assertEqual(set(expected), {"P001", "P003"})
+        for template in model._read("templates/index.json"):
+            with self.subTest(template=template["id"]):
+                self.assertEqual(self.infant_counts(template["id"]), expected)
+        self.assertEqual(self.infant_counts(None), expected)
+
+    def test_only_one_milk_is_chosen(self):
+        self.assertNotIn("P002", self.infant_counts("standard"))
+        self.assertEqual(set(self.infant_counts("standard", exclude_ids=["P001"])), {"P002", "P003"})
+
+    def test_no_cook_uses_liquid_milk_and_exclusions_hold(self):
+        self.assertIn("P001", self.infant_counts("no-cook"))
+        # Powdered milk needs hot water, so no-cook without liquid milk has no milk.
+        self.assertEqual(set(self.infant_counts("no-cook", exclude_ids=["P001"])), {"P003"})
+        self.assertEqual(self.infant_counts("standard", exclude_tags=["baby"]), {})
 
 
 if __name__ == "__main__":

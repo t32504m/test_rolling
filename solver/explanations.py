@@ -10,8 +10,26 @@ def number(value):
     return f"{value:.6f}".rstrip("0").rstrip(".")
 
 
+def _infant_rationale(item_id, item, count, infants, days, infant_days, milk_names):
+    """Plain words for parents: daily amount, number of days, and the milk choice."""
+    unit = item["consume_unit"]
+    raw = item["daily_coeff"] * infants * infant_days
+    text = (f"乳幼児{infants}人に、1人1日{number(item['daily_coeff'])}{unit} × "
+            f"{infant_days}日分＝{number(raw)}{unit}")
+    text += "。" if abs(count - raw) < 1e-9 else f"なので、{count}{unit}。"
+    if infant_days > days:
+        text += (f"農林水産省が乳児用などの特殊食品は少なくとも2週間分の備蓄を勧めているため、"
+                 f"世帯の{days}日分ではなく{infant_days}日分にした。")
+    preferred = next(iter(milk_names), None)
+    if item_id in milk_names and item_id != preferred:
+        text += f"{milk_names[preferred]}を外したので、{item['name']}にした。"
+    return text
+
+
 def explain_plan(counts, pool, config, adults, children, infants, days,
-                 target_kcal, target_protein, ideals, required_water, tolerance):
+                 target_kcal, target_protein, ideals, required_water, tolerance,
+                 milk_names=None, infant_days=None):
+    milk_names = milk_names or {}
     meals_cfg = config["meals"]
     meal_count = meals_cfg["per_person_per_day"] * (adults + children) * days
     foods = {i: item for i, (item, _) in pool.items()
@@ -69,6 +87,9 @@ def explain_plan(counts, pool, config, adults, children, infants, days,
                 f"1本{number(item['water_per_unit'] / 1000)} Lで必要量以上に切り上げ、"
                 f"{count}{unit}＝{number(count * item['water_per_unit'] / 1000)} L。ケース単位には丸めない。"
             )
+        elif item.get("coeff_basis") == "infants" and infant_days:
+            rationale[item_id] = _infant_rationale(item_id, item, count, infants, days,
+                                                   infant_days, milk_names)
         elif item["daily_coeff"] is not None:
             basis = item.get("coeff_basis") or "all"
             raw = item["daily_coeff"] * basis_counts[basis] * days

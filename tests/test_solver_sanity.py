@@ -84,9 +84,11 @@ class SolverSanityTest(unittest.TestCase):
         one_infant = {"adults": 2, "children": 0, "infants": 1, "days": 3}
         plan = self.solve(household=one_infant, template_id="baby", exclude_tags=[], exclude_ids=[])
         counts = {e["id"]: e["count"] for e in plan["items"]}
+        # 乳児用の品目は、世帯の日数が短くても少なくとも infant.min_days 日分（オーナー決定 2026-11-12）
+        infant_days = max(one_infant["days"], self.config["infant"]["min_days"])
         for item_id in infant_ids:
             item = self.master[item_id]
-            expected = math.ceil(item["daily_coeff"] * 1 * 3 / item["pack_size"]) * item["pack_size"]
+            expected = math.ceil(item["daily_coeff"] * 1 * infant_days / item["pack_size"]) * item["pack_size"]
             with self.subTest(household="乳幼児1人", item=item_id):
                 self.assertEqual(counts.get(item_id, 0), expected)
         assert_plan_passes(self, plan, one_infant, "baby", self.master, self.config)
